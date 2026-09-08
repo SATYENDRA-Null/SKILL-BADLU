@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKILL BADLU P2P LEDGER — Neo-Brutalist Skill Marketplace</title>
+  <meta name="description"
+    content="Skill Badlu is a peer-to-peer skill-swap marketplace. List skills you have and skills you want, get matched with compatible peers, complete teach/learn sessions, and earn credits recorded in a transparent, immutable ledger that can be cashed out into real fiat money." />
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Stylesheet with Cache Buster -->
+  <link rel="stylesheet" href="css/styles.css?v=4.3.0" />
+
+  <!-- Critical Embedded Neo-Brutalist Styling to Prevent Stale Browser Cache -->
+  <style>
+    /* Matchmaker Layout & Candidate Cards */
+    .matchmaker-layout-grid {
+      display: grid !important;
+      grid-template-columns: 340px 1fr !important;
+      gap: 32px !important;
+      align-items: flex-start !important;
+    }
+
+    @media (max-width: 900px) {
+      .matchmaker-layout-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    .match-card {
+      background-color: #ffffff !important;
+      border: 4px solid #000000 !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+      padding: 24px !important;
+      margin-bottom: 24px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 18px !important;
+      transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .match-card:hover {
+      transform: translate(-3px, -3px) !important;
+      box-shadow: 10px 10px 0px #000000 !important;
+    }
+
+    .match-card-top {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex-wrap: wrap !important;
+      gap: 14px !important;
+    }
+
+    .candidate-profile {
+      display: flex !important;
+      align-items: center !important;
+      gap: 16px !important;
+    }
+
+    .candidate-avatar {
+      width: 54px !important;
+      height: 54px !important;
+      background-color: #ffe600 !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 3px 3px 0px #000000 !important;
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 1.35rem !important;
+      font-weight: 900 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .candidate-name {
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 1.3rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      color: #000000 !important;
+      letter-spacing: -0.01em !important;
+    }
+
+    .candidate-rating {
+      font-size: 0.85rem !important;
+      font-weight: 700 !important;
+      color: #4b5563 !important;
+      margin-top: 3px !important;
+    }
+
+    .match-score-badge {
+      background-color: #00ff66 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 4px 4px 0px #000000 !important;
+      padding: 6px 18px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .score-number {
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 1.85rem !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+      color: #000000 !important;
+    }
+
+    .score-caption {
+      font-size: 0.65rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      color: #000000 !important;
+      margin-top: 2px !important;
+    }
+
+    .swap-skills-preview {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      background-color: #f7f5ed !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 3px 3px 0px #000000 !important;
+      padding: 14px 18px !important;
+      gap: 16px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .swap-side {
+      flex: 1 !important;
+      min-width: 140px !important;
+    }
+
+    .swap-side-title {
+      font-size: 0.72rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      color: #6b7280 !important;
+    }
+
+    .swap-skill-pill {
+      font-size: 1rem !important;
+      font-weight: 800 !important;
+      color: #000000 !important;
+      margin-top: 3px !important;
+    }
+
+    .swap-arrow {
+      font-size: 1.5rem !important;
+      font-weight: 900 !important;
+      color: #000000 !important;
+      background: #ffe600 !important;
+      width: 38px !important;
+      height: 38px !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .match-breakdown {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr)) !important;
+      gap: 10px !important;
+    }
+
+    .breakdown-stat {
+      background-color: #ffffff !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2.5px 2.5px 0px #000000 !important;
+      padding: 8px 12px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3px !important;
+    }
+
+    .breakdown-label {
+      font-size: 0.68rem !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      color: #6b7280 !important;
+    }
+
+    .breakdown-val {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.95rem !important;
+      font-weight: 900 !important;
+      color: #000000 !important;
+    }
+
+    .mutual-swap-tag {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background-color: #00ff66 !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2.5px 2.5px 0px #000000 !important;
+      font-size: 0.82rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      padding: 6px 14px !important;
+    }
+
+    /* Buttons */
+    .btn-primary,
+    .neo-btn-primary {
+      background-color: #00ff66 !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 4px 4px 0px #000000 !important;
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-weight: 900 !important;
+      padding: 10px 20px !important;
+      cursor: pointer !important;
+      text-transform: uppercase !important;
+      transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+    }
+
+    .btn-primary:hover,
+    .neo-btn-primary:hover {
+      background-color: #33ff85 !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+    }
+
+    .btn-primary:active,
+    .neo-btn-primary:active {
+      transform: translate(2px, 2px) !important;
+      box-shadow: 1px 1px 0px #000000 !important;
+    }
+
+    /* Header Get Started Button Hover Fix (Guarantees White on Hover) */
+    .btn-getstarted-green {
+      background-color: #00ff66 !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 4px 4px 0px #000000 !important;
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 0.92rem !important;
+      padding: 9px 24px !important;
+      cursor: pointer !important;
+      text-transform: uppercase !important;
+      letter-spacing: -0.01em !important;
+      transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .btn-getstarted-green:hover {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border-color: #000000 !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+    }
+
+    .btn-getstarted-green:active {
+      background-color: #f3f4f6 !important;
+      color: #000000 !important;
+      transform: translate(2px, 2px) !important;
+      box-shadow: 1px 1px 0px #000000 !important;
+    }
+
+    /* Range Sliders Webkit & Firefox */
+    input[type="range"] {
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      width: 100% !important;
+      height: 12px !important;
+      background: #ffffff !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+      outline: none !important;
+      margin: 8px 0 !important;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      width: 24px !important;
+      height: 24px !important;
+      margin-top: -6px !important;
+      background-color: #ffe600 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 3px 3px 0px #000000 !important;
+      cursor: pointer !important;
+      border-radius: 0px !important;
+      transition: transform 0.1s ease, background-color 0.1s ease !important;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #00ff66 !important;
+      transform: scale(1.15) !important;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 12px !important;
+      background: #ffffff !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 24px !important;
+      height: 24px !important;
+      background-color: #ffe600 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 3px 3px 0px #000000 !important;
+      cursor: pointer !important;
+      border-radius: 0px !important;
+      transition: transform 0.1s ease, background-color 0.1s ease !important;
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      background-color: #00ff66 !important;
+      transform: scale(1.15) !important;
+    }
+
+    /* How Skill Badlu Works Section Critical Styles */
+    .how-it-works-section {
+      background-color: #ffffff !important;
+      padding: 48px 48px 60px !important;
+    }
+
+    .how-it-works-header {
+      margin-bottom: 28px !important;
+    }
+
+    .how-it-works-title {
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-size: 2.2rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: -0.02em !important;
+      color: #000000 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .how-it-works-divider {
+      width: 100% !important;
+      height: 4px !important;
+      background-color: #000000 !important;
+      margin-top: 14px !important;
+    }
+
+    .how-it-works-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 22px !important;
+    }
+
+    .step-card-neo {
+      background-color: #ffffff !important;
+      border: 3.5px solid #000000 !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+      padding: 26px 22px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .step-card-neo:hover {
+      transform: translate(-3px, -3px) !important;
+      box-shadow: 9px 9px 0px #000000 !important;
+    }
+
+    .step-pill {
+      display: inline-block !important;
+      border: 2.5px solid #000000 !important;
+      padding: 4px 12px !important;
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-size: 0.8rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.04em !important;
+      margin-bottom: 18px !important;
+    }
+
+    .step-pill-yellow {
+      background-color: #ffe600 !important;
+      color: #000000 !important;
+    }
+
+    .step-pill-red {
+      background-color: #ff2d55 !important;
+      color: #ffffff !important;
+    }
+
+    .step-pill-green {
+      background-color: #00ff66 !important;
+      color: #000000 !important;
+    }
+
+    .step-pill-black {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+    }
+
+    .step-card-title {
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-size: 1.22rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: -0.01em !important;
+      color: #000000 !important;
+      margin: 0 0 12px 0 !important;
+      line-height: 1.25 !important;
+    }
+
+    .step-card-desc {
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 0.88rem !important;
+      line-height: 1.55 !important;
+      color: #374151 !important;
+      margin: 0 !important;
+    }
+
+    @media (max-width: 1024px) {
+      .how-it-works-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .how-it-works-section {
+        padding: 36px 20px 48px !important;
+      }
+      .how-it-works-title {
+        font-size: 1.7rem !important;
+      }
+      .how-it-works-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    body.state-logged-out .status-bar-right {
+      margin-left: auto !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-wrapper">
+    <!-- Main Window Frame (Neo-Brutalist Dashboard Card) -->
+    <div class="app-window-frame">
+
+      <!-- =========================================================
+           1. TOP BLACK BAR:
+           Logo 'SB SKILL BADLU', green tag 'P2P LEDGER',
+           - Guest: Public links (HOME, FEATURES, DEMO ACCOUNTS, AUDIT)
+           - Logged-in: Full platform tabs (MARKETPLACE, AI MATCHMAKER, SESSIONS, LEDGER, etc.)
+           ========================================================= -->
+      <header class="top-black-bar">
+        <!-- Logo: 'SB SKILL BADLU' + Green Tag 'P2P LEDGER' -->
+        <a href="#" class="brand-group" id="brand-logo-link">
+          <span class="brand-badge-sb">SB</span>
+          <span class="brand-title-text">SKILL BADLU</span>
+          <span class="tag-p2p-ledger">P2P LEDGER</span>
+        </a>
+
+        <!-- GUEST NAVIGATION: Displayed only when logged out -->
+        <nav class="guest-nav-row guest-only" aria-label="Guest Navigation">
+          <a href="#hero-section" class="guest-nav-link" id="nav-guest-home">HOME</a>
+          <a href="#features-section" class="guest-nav-link" id="nav-guest-features">FEATURES</a>
+          <a href="#how-it-works-section" class="guest-nav-link" id="nav-guest-howitworks">HOW IT WORKS</a>
+        </nav>
+
+        <!-- AUTHENTICATED PLATFORM NAVIGATION: Displayed only AFTER login (5 Core Swapper Tabs) -->
+        <nav class="nav-tabs-row auth-only" id="auth-platform-nav" role="tablist" aria-label="Platform Navigation">
+          <button class="nav-tab-white active" data-tab="tab-marketplace" id="nav-btn-marketplace" role="tab">
+            <span>MARKETPLACE</span>
+          </button>
+
+          <button class="nav-tab-white" data-tab="tab-matchmaker" id="nav-btn-matchmaker" role="tab">
+            <span>AI MATCHMAKER</span>
+            <span class="badge-live-green">LIVE</span>
+          </button>
+
+          <button class="nav-tab-white" data-tab="tab-sessions" id="nav-btn-sessions" role="tab">
+            <span>SESSIONS</span>
+            <span class="badge-sessions-red" id="sessions-tab-badge">2</span>
+          </button>
+
+          <button class="nav-tab-white" data-tab="tab-payouts" id="nav-btn-payouts" role="tab">
+            <span>CASHOUT (FIAT)</span>
+          </button>
+        </nav>
+      </header>
+
+      <!-- =========================================================
+           2. BLACK STATUS BAR:
+           - Left: LEDGER VERIFIED (Always) + BALANCE (Auth only)
+           - Right: SIGN IN / GET STARTED (Guest only) OR User Profile / SIGN OUT (Auth only)
+           ========================================================= -->
+      <section class="black-status-bar">
+        <div class="status-bar-left">
+          <!-- 'BALANCE: [X] CR' text (Auth only, Swapper dashboard) -->
+          <div class="balance-badge auth-only" id="header-balance-pill">
+            <span>BALANCE:</span>
+            <span class="val-green" id="header-balance-amount">150 CR</span>
+          </div>
+        </div>
+
+        <!-- GUEST CONTROLS: Displayed when logged out -->
+        <div class="status-bar-right guest-only">
+          <a href="login.html?tab=signin" class="btn-signin-white" id="header-btn-signin">
+            SIGN IN
+          </a>
+          <a href="login.html?tab=signup" class="btn-getstarted-green" id="header-btn-getstarted">
+            GET STARTED
+          </a>
+        </div>
+
+        <!-- AUTHENTICATED CONTROLS: Displayed when logged in -->
+        <div class="status-bar-right auth-only" style="display:flex; align-items:center; gap:12px;">
+          <div class="auth-user-pill" id="auth-user-pill" title="Current verified swapper profile">
+            <div class="auth-avatar-box" id="auth-user-avatar">LV</div>
+            <div class="auth-user-name" id="auth-user-name">Leo Vance</div>
+            <span class="auth-verified-tag" id="auth-user-role-badge">VERIFIED</span>
+          </div>
+          <button class="btn-signout-neo" id="header-btn-signout" title="Sign out of platform">
+            SIGN OUT
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           3. HERO SPLIT-SCREEN SECTION (GUEST ONLY - HIDDEN AFTER LOGIN):
+           Left: 3D render of gold coins engraved 'SKILL BADLU'
+           Right: Green block headers 'LEARN SKILLS.' and 'EARN MONEY.',
+                  clean legible text block, white button 'JOIN THE COMMUNITY ->'
+           ========================================================= -->
+      <section class="hero-split-section guest-only" id="hero-section">
+        <!-- Left: Photo-realistic 3D render of stacked textured gold coins -->
+        <div class="hero-coin-container">
+          <img src="assets/images/gold_coins.jpg" alt="SKILL BADLU Stacked Textured Gold Coins Spilling Out"
+            class="hero-coin-img" id="hero-coin-image" />
+        </div>
+
+        <!-- Right: Green Block Headers, Clean Text Block, White CTA Button -->
+        <div class="hero-text-container">
+          <div class="green-blocks-wrap">
+            <span class="neon-block-heading">LEARN SKILLS.</span>
+            <span class="neon-block-heading tilt-right">EARN MONEY.</span>
+          </div>
+
+          <!-- Clean, legible sans-serif text block (ZERO background dots) -->
+          <p class="hero-body-paragraph" id="hero-main-paragraph">
+            Skill Badlu is a peer-to-peer skill-swap marketplace. List skills you have and skills you want, get matched
+            with compatible peers, complete teach/learn sessions, and earn credits recorded in a transparent, immutable
+            ledger that can be cashed out into real fiat money.
+          </p>
+
+          <!-- White button with 'JOIN THE COMMUNITY ->' text (navigates to login.html) -->
+          <a href="login.html?tab=signup" class="btn-cta-white" id="hero-btn-join" style="text-decoration:none;">
+            <span>JOIN THE COMMUNITY -&gt;</span>
+          </a>
+        </div>
+      </section>
+
+      <div class="heavy-divider guest-only"></div>
+
+      <!-- =========================================================
+           4. BOTTOM SECTION: THREE DISTINCT OUTLINED FEATURE CARDS (GUEST ONLY)
+           Green icon for 'Verified Members'
+           Orange icon for 'Credit Ledger'
+           Red icon for 'AI Matchmaker'
+           ========================================================= -->
+      <section class="bottom-features-section guest-only" id="features-section">
+        <div class="features-grid-3">
+          <!-- Card 1: Green icon for 'Verified Members' -->
+          <div class="feature-box-neo">
+            <div class="icon-container-box icon-box-green">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title-text">Verified Members</h3>
+            <p class="feature-description-text">
+              Multi-stage verified onboarding with email verification, a one-time screening fee, and manual admin review
+              to keep the skill-swap ecosystem trusted and fraud-free.
+            </p>
+          </div>
+
+          <!-- Card 2: Orange icon for 'Credit Ledger' -->
+          <div class="feature-box-neo">
+            <div class="icon-container-box icon-box-orange">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="18" rx="2"></rect>
+                <line x1="2" y1="9" x2="22" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title-text">Credit Ledger</h3>
+            <p class="feature-description-text">
+              Double-entry, append-only accounting ledger. Balances are derived dynamically from transaction history.
+              Two-party confirmation prevents one side from unilaterally minting credits.
+            </p>
+          </div>
+
+          <!-- Card 3: Red icon for 'AI Matchmaker' -->
+          <div class="feature-box-neo">
+            <div class="icon-container-box icon-box-red">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+            </div>
+            <h3 class="feature-title-text">AI Matchmaker</h3>
+            <p class="feature-description-text">
+              Rule-based multi-factor matching pipeline computing Jaccard skill tag overlap, proficiency compatibility,
+              recency decay, and high-weight mutual reciprocal swap bonuses.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="heavy-divider guest-only"></div>
+
+      <!-- =========================================================
+           4B. HOW SKILL BADLU WORKS (GUEST LANDING PAGE ONLY)
+           ========================================================= -->
+      <section class="how-it-works-section guest-only" id="how-it-works-section">
+        <div class="how-it-works-header">
+          <h2 class="how-it-works-title">HOW SKILL BADLU WORKS</h2>
+          <div class="how-it-works-divider"></div>
+        </div>
+
+        <div class="how-it-works-grid">
+          <!-- Step 01: Register & Verify -->
+          <div class="step-card-neo">
+            <span class="step-pill step-pill-yellow">STEP 01</span>
+            <h3 class="step-card-title">REGISTER &amp; VERIFY</h3>
+            <p class="step-card-desc">
+              Sign up securely, confirm your email address, and get your identity verified by our admin curators to maintain premium community trust.
+            </p>
+          </div>
+
+          <!-- Step 02: List Skills -->
+          <div class="step-card-neo">
+            <span class="step-pill step-pill-red">STEP 02</span>
+            <h3 class="step-card-title">LIST SKILLS</h3>
+            <p class="step-card-desc">
+              Post the skills you possess ('Have') and the skills you want to learn ('Want'). Our directory categorizes them across technology, languages, arts, and business.
+            </p>
+          </div>
+
+          <!-- Step 03: Get Matched -->
+          <div class="step-card-neo">
+            <span class="step-pill step-pill-green">STEP 03</span>
+            <h3 class="step-card-title">GET MATCHED</h3>
+            <p class="step-card-desc">
+              Our AI-powered Matchmaker automatically pairs your offerings with members looking to swap. Accept bids and organize a peer-to-peer sharing session.
+            </p>
+          </div>
+
+          <!-- Step 04: Earn & Trade -->
+          <div class="step-card-neo">
+            <span class="step-pill step-pill-black">STEP 04</span>
+            <h3 class="step-card-title">EARN &amp; TRADE</h3>
+            <p class="step-card-desc">
+              Every completed session earns you credits. Trade these transparently via our commission-free ledger for other services or premium content.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="heavy-divider guest-only"></div>
+
+      <!-- GUEST TEASER & ACCESS CARD: Displayed when logged out -->
+      <section class="guest-only" style="background-color: #ffffff; padding: 48px 48px 64px; text-align: center;"
+        id="guest-access-banner">
+        <div class="neo-card" style="max-width: 720px; margin: 0 auto; padding: 40px 32px; background: #fffde6;">
+          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:12px;">
+            <span style="font-size:1.5rem;">🔒</span>
+            <span
+              style="font-family:var(--font-heading); font-size:0.85rem; font-weight:900; background:#ffe600; border:2px solid #000; padding:3px 10px; box-shadow:2px 2px 0px #000; text-transform:uppercase;">
+              AUTHENTICATED ACCESS ONLY
+            </span>
+          </div>
+          <h2
+            style="font-size: 2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; letter-spacing: -0.02em;">
+            Enter the Skill Badlu Platform
+          </h2>
+          <p style="font-size: 1.05rem; color: #4b5563; line-height: 1.6; max-width: 540px; margin: 0 auto 26px;">
+            Sign in to declare your skills in the <strong>Skill Matrix</strong>, run the real-time <strong>AI
+              Matchmaker</strong> with custom algorithmic tuning, confirm 2-way verified swap sessions, and manage your
+            tamper-proof <strong>Credit Ledger</strong>.
+          </p>
+          <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="login.html?tab=signin" class="neo-btn neo-btn-primary"
+              style="padding: 14px 28px; font-size: 1rem; text-decoration: none;">
+              Sign In to Your Account →
+            </a>
+            <a href="login.html?tab=demo" class="neo-btn neo-btn-yellow"
+              style="padding: 14px 28px; font-size: 1rem; text-decoration: none;">
+              ⚡ 1-Click Fast Demo Login
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           5. INTERACTIVE PLATFORM SUB-VIEWS (GATED TO AUTHENTICATED USERS)
+           ========================================================= -->
+      <div class="subviews-container auth-only" id="platform-dashboard-container">
+
+        <!-- 1. Marketplace & Skill Matrix Tab -->
+        <section class="app-section active swapper-only" id="tab-marketplace">
+          <div class="section-head-neo">
+            <div>
+              <h2 class="section-head-title">My Skill Matrix</h2>
+              <p class="section-head-desc">
+                Declare the skills you teach (*Have*) and skills you wish to learn (*Want*).
+                Our matchmaker calculates affinity based on these declarations.
+              </p>
+            </div>
+            <button class="neo-btn neo-btn-primary" id="btn-add-skill-modal">
+              + Declare New Skill
+            </button>
+          </div>
+
+          <div class="skills-grid-layout">
+            <!-- Skills Have Box -->
+            <div class="neo-card">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:3px solid #000;">
+                <h3 style="font-size:1.3rem;">Skills I Teach (Have)</h3>
+                <span class="mono" id="skills-have-count"
+                  style="font-weight:900; background:#ffe600; padding:2px 8px; border:2px solid #000; box-shadow:2px 2px 0px #000;">2
+                  Skills</span>
+              </div>
+              <div id="skills-have-list"></div>
+            </div>
+
+            <!-- Skills Want Box -->
+            <div class="neo-card">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:3px solid #000;">
+                <h3 style="font-size:1.3rem;">Skills I Want (Learn)</h3>
+                <span class="mono" id="skills-want-count"
+                  style="font-weight:900; background:#00ff66; padding:2px 8px; border:2px solid #000; box-shadow:2px 2px 0px #000;">2
+                  Skills</span>
+              </div>
+              <div id="skills-want-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. AI Matchmaking Playground Tab -->
+        <section class="app-section swapper-only" id="tab-matchmaker">
+          <div class="section-head-neo">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span
+                  style="font-family:var(--font-heading); font-size:0.75rem; font-weight:900; background:#00ff66; border:2px solid #000; padding:2px 8px; box-shadow:2px 2px 0px #000; text-transform:uppercase;">
+                  ● LIVE MATCH ENGINE
+                </span>
+                <span
+                  style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800; background:#ffe600; border:2px solid #000; padding:2px 8px; box-shadow:2px 2px 0px #000;">
+                  P2P AFFINITY HEURISTIC
+                </span>
+              </div>
+              <h2 class="section-head-title">AI Matchmaker Playground</h2>
+              <div class="formula-banner-neo">
+                <span class="formula-tag">WEIGHTED FORMULA</span>
+                <span class="formula-code">
+                  Score = (<em>w₁</em>·Overlap) + (<em>w₂</em>·Level) + (<em>w₃</em>·MutualBonus) + (<em>w₄</em>·Rating)
+                  + (<em>w₅</em>·Recency)
+                </span>
+              </div>
+            </div>
+            <button class="neo-btn neo-btn-yellow" id="btn-reset-weights"
+              title="Reset all sliders to default algorithm weights">
+              <span>↺</span> RESET WEIGHTS
+            </button>
+          </div>
+
+          <div class="matchmaker-layout-grid">
+            <!-- Weight Sliders Drawer -->
+            <aside class="neo-card" style="padding:24px;">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:3px solid #000; padding-bottom:10px;">
+                <h3 style="font-size:1.2rem; font-weight:900; text-transform:uppercase;">
+                  Weight Parameters
+                </h3>
+                <span
+                  style="font-size:0.7rem; font-family:var(--font-mono); font-weight:900; background:#ffe600; padding:2px 6px; border:2px solid #000;">TUNING</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:20px;">
+                <div class="weight-control-group">
+                  <div class="weight-label-row">
+                    <span class="weight-title">w₁: Skill Tag Overlap</span>
+                    <span class="weight-badge-neo" id="val-w1">0.30</span>
+                  </div>
+                  <input type="range" class="neo-slider" id="slider-w1" min="0.0" max="1.0" step="0.05" value="0.30" />
+                  <div class="weight-hint">Jaccard similarity on skill tags</div>
+                </div>
+
+                <div class="weight-control-group">
+                  <div class="weight-label-row">
+                    <span class="weight-title">w₂: Level Compatibility</span>
+                    <span class="weight-badge-neo" id="val-w2">0.15</span>
+                  </div>
+                  <input type="range" class="neo-slider" id="slider-w2" min="0.0" max="1.0" step="0.05" value="0.15" />
+                  <div class="weight-hint">Proficiency level alignment</div>
+                </div>
+
+                <div class="weight-control-group">
+                  <div class="weight-label-row">
+                    <span class="weight-title">w₃: Mutual Swap Bonus</span>
+                    <span class="weight-badge-neo" id="val-w3">0.35</span>
+                  </div>
+                  <input type="range" class="neo-slider" id="slider-w3" min="0.0" max="1.0" step="0.05" value="0.35" />
+                  <div class="weight-hint">Two-way reciprocal learning bonus</div>
+                </div>
+
+                <div class="weight-control-group">
+                  <div class="weight-label-row">
+                    <span class="weight-title">w₄: Peer Rating</span>
+                    <span class="weight-badge-neo" id="val-w4">0.10</span>
+                  </div>
+                  <input type="range" class="neo-slider" id="slider-w4" min="0.0" max="1.0" step="0.05" value="0.10" />
+                  <div class="weight-hint">Historical peer review quality</div>
+                </div>
+
+                <div class="weight-control-group">
+                  <div class="weight-label-row">
+                    <span class="weight-title">w₅: Recency Decay</span>
+                    <span class="weight-badge-neo" id="val-w5">0.10</span>
+                  </div>
+                  <input type="range" class="neo-slider" id="slider-w5" min="0.0" max="1.0" step="0.05" value="0.10" />
+                  <div class="weight-hint">Activity decay in last 14 days</div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Ranked Candidate Matches -->
+            <div id="matches-container"></div>
+          </div>
+        </section>
+
+        <!-- 3. Active Sessions Simulator Tab -->
+        <section class="app-section swapper-only" id="tab-sessions">
+          <div class="section-head-neo">
+            <div>
+              <h2 class="section-head-title">Swap Sessions & Two-Way Confirmation</h2>
+              <p class="section-head-desc">
+                Neither party can unilaterally mint credits. Both the Learner and Teacher must submit verification.
+              </p>
+            </div>
+          </div>
+          <div id="sessions-container"></div>
+        </section>
+
+        <!-- 5. Cashout (Fiat) Hub Tab -->
+        <section class="app-section swapper-only" id="tab-payouts">
+          <div class="section-head-neo">
+            <div>
+              <h2 class="section-head-title">Credit-to-Cash Payout Hub</h2>
+              <p class="section-head-desc">
+                Convert platform credits into bank transfers via Razorpay/Stripe with automatic compensating reversals.
+              </p>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:36px;">
+            <div class="neo-card">
+              <h3 style="font-size:1.3rem; margin-bottom:16px;">Request Cashout</h3>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Available Balance</label>
+                <div class="mono" id="payout-available-balance"
+                  style="font-size:1.6rem; font-weight:900; background:#f4f4f0; padding:10px 14px; border:2px solid #000; margin-top:4px;">
+                  150 CR
+                </div>
+              </div>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Withdrawal Amount
+                  (Credits)</label>
+                <input type="number" id="input-payout-amount" class="neo-input" placeholder="e.g. 50" min="10" />
+                <div style="font-size:0.75rem; color:#4b5563; margin-top:4px;">1 Credit = ₹10 INR ($0.12 USD)</div>
+              </div>
+
+              <!-- Compensating Reversal Failure Simulation Toggle -->
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; background:#fff0f3; border:3px solid #000; padding:14px; margin-bottom:20px;">
+                <div>
+                  <div style="font-weight:800; font-size:0.85rem; color:#ff3366; text-transform:uppercase;">Simulate
+                    Gateway Failure</div>
+                  <div style="font-size:0.75rem; color:#4b5563;">Demonstrates automated compensating reversal entry
+                  </div>
+                </div>
+                <input type="checkbox" id="toggle-simulate-failure" style="width:20px; height:20px; cursor:pointer;" />
+              </div>
+
+              <button class="neo-btn neo-btn-primary" id="btn-submit-payout" style="width:100%; padding:14px;">
+                Withdraw Funds via Razorpay
+              </button>
+            </div>
+
+            <div class="neo-card" style="background-color:#ffe600;">
+              <h3 style="font-size:1.3rem; margin-bottom:12px;">Compensating Reversals</h3>
+              <p style="font-size:0.95rem; line-height:1.6; margin-bottom:16px;">
+                In traditional systems, a failed payment often mutates or deletes state. Skill Badlu guarantees that
+                when a payment gateway rail fails, an equal-and-opposite <strong>PAYOUT_COMPENSATING_REVERSAL</strong>
+                entry is written to the append-only ledger.
+              </p>
+              <div style="background:#ffffff; border:3px solid #000; padding:14px; box-shadow:4px 4px 0px #000;">
+                <div style="font-size:0.75rem; text-transform:uppercase; font-weight:800;">Estimated Liquidity Value
+                </div>
+                <div class="mono" id="payout-fiat-equivalent" style="font-size:1.8rem; font-weight:900;">₹1,500 INR
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+      </div>
+      <!-- /subviews-container -->
+
+    </div>
+    <!-- /app-window-frame -->
+  </div>
+  <!-- /page-wrapper -->
+
+  <!-- Modal: Add Skill -->
+  <div class="modal-overlay" id="modal-add-skill">
+    <div class="modal-box-neo">
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:3px solid #000; padding-bottom:12px;">
+        <h3 style="font-size:1.4rem;">Declare a Skill</h3>
+        <button class="neo-btn neo-btn-white neo-btn-sm" id="modal-skill-close">✕</button>
+      </div>
+      <form id="form-add-skill">
+        <div style="margin-bottom:16px;">
+          <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Skill Name</label>
+          <input type="text" id="input-skill-name" class="neo-input"
+            placeholder="e.g. Next.js App Router, French Dialogue" required />
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Declaration Type</label>
+          <select id="select-skill-type" class="neo-select">
+            <option value="HAVE">I Can Teach This </option>
+            <option value="WANT">I Wish to Learn This </option>
+          </select>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Category</label>
+          <select id="select-skill-cat" class="neo-select">
+            <option value="tech">Technology & Engineering</option>
+            <option value="lang">Languages & Linguistics</option>
+            <option value="art">Arts & Creative Design</option>
+            <option value="biz">Business & Growth</option>
+          </select>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label style="font-weight:800; font-size:0.85rem; text-transform:uppercase;">Proficiency Level</label>
+          <select id="select-skill-level" class="neo-select">
+            <option value="1">Level 1: Beginner</option>
+            <option value="2">Level 2: Intermediate</option>
+            <option value="3">Level 3: Advanced</option>
+            <option value="4">Level 4: Expert</option>
+          </select>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:12px;">
+          <button type="button" class="neo-btn neo-btn-white"
+            onclick="document.getElementById('modal-add-skill').classList.remove('active')">
+            Cancel
+          </button>
+          <button type="submit" class="neo-btn neo-btn-primary">
+            Save Skill
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Reconciliation Audit -->
+  <div class="modal-overlay" id="modal-reconciliation">
+    <div class="modal-box-neo" style="max-width:720px;">
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:3px solid #000; padding-bottom:12px;">
+        <div>
+          <h3 style="font-size:1.4rem;">Ledger Mathematical Audit Report</h3>
+          <p style="font-size:0.8rem; color:#4b5563;">Real-time proof verifying circulating supply against mint/cashout
+            logs</p>
+        </div>
+        <button class="neo-btn neo-btn-white neo-btn-sm" id="modal-recon-close">✕</button>
+      </div>
+
+      <div
+        style="background:#ffe600; border:3px solid #000; padding:16px; margin-bottom:20px; box-shadow:4px 4px 0px #000;">
+        <div style="display:flex; justify-content:space-between; font-weight:800; text-transform:uppercase;">
+          <span>System Status:</span>
+          <span class="mono" id="recon-status-badge">100% RECONCILED (OK)</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px; font-size:0.85rem;">
+          <div><strong>Total Txs:</strong> <span class="mono" id="recon-total-tx">4</span></div>
+          <div><strong>Minted:</strong> <span class="mono" id="recon-total-minted">300 CR</span></div>
+          <div><strong>Cashed Out:</strong> <span class="mono" id="recon-total-cashed">0 CR</span></div>
+          <div><strong>Discrepancy (Δ):</strong> <span class="mono" id="recon-discrepancy" style="color:#000;">0
+              CR</span></div>
+        </div>
+      </div>
+
+      <div class="table-scroll-wrapper" style="max-height:220px;">
+        <table class="brutal-table" style="font-size:0.85rem;">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>User ID</th>
+              <th>Derived Balance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recon-user-tbody"></tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button class="neo-btn neo-btn-primary"
+          onclick="document.getElementById('modal-reconciliation').classList.remove('active')">
+          Close Audit Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts in Proper Dependency Order -->
+  <script src="js/store.js"></script>
+  <script src="js/ledger.js"></script>
+  <script src="js/matchmaker.js"></script>
+  <script src="js/sessions.js"></script>
+  <script src="js/payouts.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
