@@ -101,30 +101,40 @@ SKILL-BADLU/
 
 Skill Badlu has **zero external package dependencies** for frontend runtime, meaning it runs directly in any modern browser!
 
-### 1. Clone the Repository
+### 🌐 Live Demo & GitHub Pages
+
+To view the live application directly in your browser without running any code locally:
+👉 **[Live App (GitHub Pages)](https://satyendra-null.github.io/SKILL-BADLU/)** *(Enable in GitHub Repo **Settings** > **Pages** > Select `main` branch > **Save**)*
+
+---
+
+### 💻 Running Locally
+
+#### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/SATYENDRA-Null/SKILL-BADLU.git
 cd SKILL-BADLU
 ```
 
-### 2. Run with Any Local HTTP Server
-You can launch a local development server using Python, Node.js, or any static file server:
+#### Step 2: Start a Local Server
+Because the app uses ES6 JavaScript modules and assets, run a simple local web server in your terminal:
 
-**Using Python:**
+**Using Python (Recommended):**
 ```bash
-# Python 3
 python -m http.server 8000
 ```
 
-**Using Node / npx (optional):**
+**Or using Node / npx:**
 ```bash
 npx serve .
 ```
 
-### 3. Open in Browser
-- **Main App & Marketplace:** [http://localhost:8000/index.html](http://localhost:8000/index.html)
-- **Login / Role Selector:** [http://localhost:8000/login.html](http://localhost:8000/login.html)
-- **Admin & Arbitration Portal:** [http://localhost:8000/admin.html](http://localhost:8000/admin.html)
+#### Step 3: Open in Browser *(while server is running)*
+> 💡 *Note: The `localhost` links below will only load after starting the local server in Step 2 above.*
+
+- **Main App & Marketplace:** [http://localhost:8000/index.html](http://localhost:8000/index.html) *(or view file: [`index.html`](./index.html))*
+- **Login / Role Selector:** [http://localhost:8000/login.html](http://localhost:8000/login.html) *(or view file: [`login.html`](./login.html))*
+- **Admin & Arbitration Portal:** [http://localhost:8000/admin.html](http://localhost:8000/admin.html) *(or view file: [`admin.html`](./admin.html))*
 
 ---
 
