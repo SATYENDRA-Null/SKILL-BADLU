@@ -222,25 +222,26 @@
       padding: 8px 16px;
       cursor: pointer;
       text-transform: uppercase;
-      transition: all 0.1s ease;
+      transition: background-color 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      user-select: none;
     }
 
     .admin-nav-tab:hover {
       background-color: #ffe600;
-      transform: translate(-1px, -1px);
     }
 
     .admin-nav-tab.active {
       background-color: #ffe600;
-      box-shadow: 2px 2px 0px #ffffff;
+      box-shadow: 3px 3px 0px #ffffff;
       border-color: #000000;
     }
 
     .admin-section-pane {
       display: none;
+      min-height: 520px;
     }
 
     .admin-section-pane.active {
@@ -324,7 +325,7 @@
 
         <!-- Global Platform Metrics KPI Grid -->
         <div class="admin-stats-grid">
-          <div class="admin-stat-card">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-ledger')" style="cursor:pointer;" title="View Ledger Audit">
             <div class="admin-stat-label">
               <span>Total Circulating Credits</span>
               <span>🪙</span>
@@ -333,7 +334,7 @@
             <div class="admin-stat-subtext">Sum of all active swapper wallets</div>
           </div>
 
-          <div class="admin-stat-card">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-courses')" style="cursor:pointer;" title="View Educator Accounts">
             <div class="admin-stat-label">
               <span>Verified Swapper Accounts</span>
               <span>👥</span>
@@ -342,7 +343,7 @@
             <div class="admin-stat-subtext">Screened &amp; KYC Approved Members</div>
           </div>
 
-          <div class="admin-stat-card" style="border: 3.5px solid #000; background: #fffde6;">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-courses')" style="border: 3.5px solid #000; background: #fffde6; cursor:pointer;" title="Review Video Upload Approvals">
             <div class="admin-stat-label">
               <span style="color:#000; font-weight:900;">Video Upload Approvals</span>
               <span>📹</span>
@@ -351,7 +352,7 @@
             <div class="admin-stat-subtext" style="color:#000; font-weight:700;">Awaiting admin video approval</div>
           </div>
 
-          <div class="admin-stat-card">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-kyc')" style="cursor:pointer;" title="Review KYC Queue">
             <div class="admin-stat-label">
               <span>Pending KYC Queue</span>
               <span>⏳</span>
@@ -386,7 +387,7 @@
                   <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
                     📹 Pending Video Upload Approvals
                   </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW QUEUE →</a>
+                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW QUEUE →</a>
                 </div>
                 <div id="overview-courses-container"></div>
               </div>
@@ -397,7 +398,7 @@
                   <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
                     📋 Pending KYC Applications
                   </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
+                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
                 </div>
                 <div id="overview-pending-container"></div>
               </div>
@@ -408,7 +409,7 @@
                   <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
                     ⚖️ Open Session Disputes
                   </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-disputes')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
+                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-disputes')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
                 </div>
                 <div id="overview-disputes-container"></div>
               </div>
@@ -647,7 +648,6 @@
       adminPanes.forEach(pane => {
         pane.classList.toggle("active", pane.id === targetId);
       });
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     // Current Video Moderation SubTab ('pending', 'published', 'creators')
@@ -1023,7 +1023,7 @@
                   <button class="btn-admin-action btn-admin-approve" style="padding:5px 10px; font-size:0.75rem;" onclick="approveCourse('${c.id}')">
                     ✓ Approve
                   </button>
-                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" class="btn-admin-action btn-admin-neutral" style="padding:5px 10px; font-size:0.75rem; text-decoration:none;">
+                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-courses')" class="btn-admin-action btn-admin-neutral" style="padding:5px 10px; font-size:0.75rem; text-decoration:none;">
                     Preview
                   </a>
                 </div>
