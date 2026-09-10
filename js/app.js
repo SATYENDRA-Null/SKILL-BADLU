@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sync Authentication and initial render
     syncAuthState();
     renderHeroMetrics();
+    renderEducationSection();
 
     if (store.isAuthenticated()) {
       updateHeader();
@@ -758,14 +759,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderEducationSection() {
-    const currentUser = store.getCurrentUser();
+    const currentUser = store.getCurrentUser() || store.getUser("user_a") || store.users[1];
     const container = document.getElementById("education-grid-container");
-    if (!currentUser || !container) return;
+    if (!container) return;
 
     const allCourses = store.getCourses();
     const approvedCourses = store.getApprovedCourses();
-    const userEnrollments = store.getUserEnrollments(currentUser.id);
-    const userUploads = allCourses.filter(c => c.creator_id === currentUser.id);
+    const userEnrollments = currentUser ? store.getUserEnrollments(currentUser.id) : [];
+    const userUploads = currentUser ? allCourses.filter(c => c.creator_id === currentUser.id) : [];
 
     // Update Counter Badges
     const countAppEl = document.getElementById("edu-count-approved");

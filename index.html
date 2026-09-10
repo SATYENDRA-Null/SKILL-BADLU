@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <!-- Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="css/styles.css?v=4.3.0" />
+  <link rel="stylesheet" href="css/styles.css?v=5.0.0" />
 
   <!-- Critical Embedded Neo-Brutalist Styling to Prevent Stale Browser Cache -->
   <style>
@@ -424,6 +424,270 @@
       margin: 0 !important;
     }
 
+    /* =========================================================
+       CRITICAL EMBEDDED EDUCATION & SEARCH TOOLBAR STYLING
+       ========================================================= */
+    .edu-toolbar-neo {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 16px !important;
+      margin-bottom: 22px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .edu-search-wrap {
+      display: flex !important;
+      align-items: center !important;
+      background-color: #ffffff !important;
+      border: 3.5px solid #000000 !important;
+      box-shadow: 4px 4px 0px #000000 !important;
+      padding: 0 16px !important;
+      flex: 1 !important;
+      min-width: 280px !important;
+      height: 52px !important;
+      transition: all 0.12s ease !important;
+    }
+
+    .edu-search-wrap:focus-within {
+      background-color: #fffde6 !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+    }
+
+    .edu-search-icon {
+      font-size: 1.3rem !important;
+      line-height: 1 !important;
+      margin-right: 12px !important;
+      user-select: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .edu-search-wrap input,
+    #edu-search-input {
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      width: 100% !important;
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 0.96rem !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .edu-cat-pills {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .edu-cat-btn {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 3px 3px 0px #000000 !important;
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-size: 0.8rem !important;
+      font-weight: 900 !important;
+      padding: 10px 16px !important;
+      cursor: pointer !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.02em !important;
+      transition: all 0.1s ease !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+
+    .edu-cat-btn:hover {
+      background-color: #fffde6 !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 5px 5px 0px #000000 !important;
+    }
+
+    .edu-cat-btn.active {
+      background-color: #000000 !important;
+      color: #00ff66 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+      transform: translate(1px, 1px) !important;
+    }
+
+    .edu-subnav-tabs {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      border-bottom: 3.5px solid #000000 !important;
+      padding-bottom: 14px !important;
+      margin-bottom: 24px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .edu-subtab-btn {
+      background-color: #f7f5ed !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 4px 4px 0px #000000 !important;
+      font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif !important;
+      font-size: 0.88rem !important;
+      font-weight: 900 !important;
+      padding: 10px 20px !important;
+      cursor: pointer !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.02em !important;
+      transition: all 0.1s ease !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .edu-subtab-btn:hover {
+      background-color: #ffe600 !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+    }
+
+    .edu-subtab-btn.active {
+      background-color: #ffe600 !important;
+      color: #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+      transform: translate(2px, 2px) !important;
+    }
+
+    .edu-course-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+      gap: 24px !important;
+    }
+
+    .edu-course-card {
+      background-color: #ffffff !important;
+      border: 3.5px solid #000000 !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .edu-course-card:hover {
+      transform: translate(-3px, -3px) !important;
+      box-shadow: 10px 10px 0px #000000 !important;
+    }
+
+    .edu-card-banner {
+      background-color: #1a1a1a !important;
+      padding: 16px 20px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      border-bottom: 3.5px solid #000000 !important;
+    }
+
+    .edu-banner-badge-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .edu-duration-badge {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.72rem !important;
+      font-weight: 800 !important;
+      color: #ffffff !important;
+      background-color: #333333 !important;
+      padding: 3px 8px !important;
+      border: 1.5px solid #000000 !important;
+    }
+
+    .edu-price-tag {
+      background-color: #ffe600 !important;
+      color: #000000 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 0.95rem !important;
+      padding: 4px 12px !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+    }
+
+    .edu-card-body {
+      padding: 22px !important;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .edu-course-title {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-size: 1.22rem !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: -0.01em !important;
+      line-height: 1.25 !important;
+      margin: 0 0 10px 0 !important;
+      color: #000000 !important;
+    }
+
+    .edu-course-desc {
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
+      font-size: 0.88rem !important;
+      color: #4b5563 !important;
+      line-height: 1.55 !important;
+      margin: 0 0 16px 0 !important;
+      flex: 1 !important;
+    }
+
+    .edu-creator-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding-top: 14px !important;
+      border-top: 2.5px solid #f0efe8 !important;
+      margin-bottom: 14px !important;
+    }
+
+    .edu-creator-avatar {
+      width: 40px !important;
+      height: 40px !important;
+      background-color: #ffe600 !important;
+      color: #000000 !important;
+      border: 2.5px solid #000000 !important;
+      box-shadow: 2px 2px 0px #000000 !important;
+      font-family: 'Space Grotesk', sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 1rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .edu-creator-name {
+      font-family: 'Space Grotesk', sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 0.95rem !important;
+      color: #000000 !important;
+      text-transform: uppercase !important;
+    }
+
+    .edu-course-rating {
+      font-size: 0.78rem !important;
+      color: #6b7280 !important;
+      font-weight: 700 !important;
+      margin-top: 2px !important;
+    }
+
+    .edu-card-footer {
+      padding: 18px 22px !important;
+      background-color: #faf9f5 !important;
+      border-top: 3px solid #000000 !important;
+    }
+
     @media (max-width: 1024px) {
       .how-it-works-grid {
         grid-template-columns: repeat(2, 1fr) !important;
@@ -439,6 +703,13 @@
       }
       .how-it-works-grid {
         grid-template-columns: 1fr !important;
+      }
+      .edu-toolbar-neo {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+      .edu-search-wrap {
+        width: 100% !important;
       }
     }
 
