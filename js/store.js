@@ -212,6 +212,99 @@ const INITIAL_TRANSACTIONS = [
   }
 ];
 
+const INITIAL_COURSES = [
+  {
+    id: "course_fastapi",
+    title: "FastAPI REST Architecture & Async Microservices",
+    category: "tech",
+    creator_id: "user_a",
+    credit_cost: 30,
+    duration: "15 mins",
+    duration_seconds: 45,
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    description: "Learn production async Python patterns, dependency injection, and Pydantic v2 schemas for high-concurrency APIs.",
+    status: "APPROVED", // APPROVED, PENDING_REVIEW, REJECTED
+    rating: 4.95,
+    enrolled_count: 14,
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5)
+  },
+  {
+    id: "course_docker",
+    title: "Docker & Kubernetes Deployment Architecture",
+    category: "tech",
+    creator_id: "user_a",
+    credit_cost: 40,
+    duration: "20 mins",
+    duration_seconds: 60,
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    description: "Container orchestration, Helm charts, ingress controllers, and zero-downtime rolling updates in production.",
+    status: "APPROVED",
+    rating: 4.88,
+    enrolled_count: 9,
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4)
+  },
+  {
+    id: "course_french",
+    title: "Conversational French: Accent & Travel Mastery",
+    category: "lang",
+    creator_id: "user_b",
+    credit_cost: 25,
+    duration: "12 mins",
+    duration_seconds: 30,
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    description: "Master Parisian cadence, slang, and everyday conversational confidence without memorizing rigid grammar tables.",
+    status: "APPROVED",
+    rating: 4.92,
+    enrolled_count: 22,
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6)
+  },
+  {
+    id: "course_uiux",
+    title: "Design Systems & Figma Auto-Layout Pro",
+    category: "art",
+    creator_id: "user_c",
+    credit_cost: 35,
+    duration: "18 mins",
+    duration_seconds: 50,
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    description: "Build scalable tokens, responsive auto-layout components, and neo-brutalist micro-interactions with Figma.",
+    status: "APPROVED",
+    rating: 4.85,
+    enrolled_count: 17,
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2)
+  },
+  {
+    id: "course_finance_pending",
+    title: "Startup Valuation & Cap Table Engineering",
+    category: "biz",
+    creator_id: "user_e",
+    credit_cost: 50,
+    duration: "25 mins",
+    duration_seconds: 60,
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    description: "DCF models, convertible notes, SAFE agreements, and seed round term sheet negotiations for founders.",
+    status: "PENDING_REVIEW", // In admin review queue
+    rating: 5.00,
+    enrolled_count: 0,
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2)
+  }
+];
+
+const INITIAL_ENROLLMENTS = [
+  // Leo Vance is pre-enrolled in Camille's French course for instant testing
+  {
+    id: "enr_leo_french",
+    user_id: "user_a",
+    course_id: "course_french",
+    enrolled_at: new Date(Date.now() - 1000 * 60 * 60 * 12),
+    completed: false,
+    watched_seconds: 0,
+    certificate_id: null
+  }
+];
+
+const INITIAL_CERTIFICATES = [];
+
 class StateStore {
   constructor() {
     this.currentUserId = localStorage.getItem("sb_current_user_id") || null;
@@ -219,6 +312,9 @@ class StateStore {
     this.users = [...INITIAL_USERS];
     this.sessions = [...INITIAL_SESSIONS];
     this.transactions = [...INITIAL_TRANSACTIONS];
+    this.courses = [...INITIAL_COURSES];
+    this.enrollments = [...INITIAL_ENROLLMENTS];
+    this.certificates = [...INITIAL_CERTIFICATES];
     this.payouts = [];
     this.subscribers = [];
   }
@@ -264,6 +360,64 @@ class StateStore {
 
   getSkill(skillId) {
     return this.skills.find(s => s.id === skillId);
+  }
+
+  // Course & Education State Accessors
+  getCourses() {
+    return this.courses;
+  }
+
+  getApprovedCourses() {
+    return this.courses.filter(c => c.status === "APPROVED");
+  }
+
+  getPendingCourses() {
+    return this.courses.filter(c => c.status === "PENDING_REVIEW");
+  }
+
+  getCourse(courseId) {
+    return this.courses.find(c => c.id === courseId);
+  }
+
+  getUserEnrollment(userId, courseId) {
+    return this.enrollments.find(e => e.user_id === userId && e.course_id === courseId) || null;
+  }
+
+  getUserEnrollments(userId) {
+    return this.enrollments.filter(e => e.user_id === userId);
+  }
+
+  getUserCertificates(userId) {
+    return this.certificates.filter(c => c.user_id === userId);
+  }
+
+  getCertificate(certId) {
+    return this.certificates.find(c => c.id === certId);
+  }
+
+  submitCourse({ title, category, creditCost, duration, durationSeconds, videoUrl, description }) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) throw new Error("User must be authenticated to submit a course.");
+
+    const newCourse = {
+      id: "course_" + Math.random().toString(36).substring(2, 9),
+      title,
+      category,
+      creator_id: currentUser.id,
+      credit_cost: parseInt(creditCost, 10) || 10,
+      duration: duration || "10 mins",
+      duration_seconds: durationSeconds || 45,
+      video_url: videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      description,
+      status: "PENDING_REVIEW", // Always starts in review queue for admin approval
+      rating: 5.0,
+      enrolled_count: 0,
+      created_at: new Date()
+    };
+
+    this.courses.unshift(newCourse);
+    this.notify("COURSE_SUBMITTED", { course: newCourse });
+    return newCourse;
   }
 }
 

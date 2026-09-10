@@ -491,6 +491,11 @@
             <span class="badge-sessions-red" id="sessions-tab-badge">2</span>
           </button>
 
+          <button class="nav-tab-white" data-tab="tab-education" id="nav-btn-education" role="tab">
+            <span>EDUCATION &amp; COURSES</span>
+            <span class="badge-live-green" style="background:#ffe600; color:#000;">NEW</span>
+          </button>
+
           <button class="nav-tab-white" data-tab="tab-payouts" id="nav-btn-payouts" role="tab">
             <span>CASHOUT (FIAT)</span>
           </button>
@@ -927,14 +932,65 @@
               <div style="background:#ffffff; border:3px solid #000; padding:14px; box-shadow:4px 4px 0px #000;">
                 <div style="font-size:0.75rem; text-transform:uppercase; font-weight:800;">Estimated Liquidity Value
                 </div>
-                <div class="mono" id="payout-fiat-equivalent" style="font-size:1.8rem; font-weight:900;">₹1,500 INR
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
+        <!-- 4. Education & Masterclass Academy Tab -->
+        <section class="app-section swapper-only" id="tab-education">
+          <div class="section-head-neo">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span
+                  style="font-family:var(--font-heading); font-size:0.75rem; font-weight:900; background:#ffe600; border:2px solid #000; padding:2px 8px; box-shadow:2px 2px 0px #000; text-transform:uppercase;">
+                  ⚡ PEER ACADEMY
+                </span>
+                <span
+                  style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800; background:#00ff66; border:2px solid #000; padding:2px 8px; box-shadow:2px 2px 0px #000;">
+                  ANTI-SKIP VERIFIED
+                </span>
+              </div>
+              <h2 class="section-head-title">Video Academy &amp; Masterclasses</h2>
+              <p class="section-head-desc">
+                Learn high-income skills through credit-unlocked video masterclasses. All videos require complete, unskipped playback to earn accredited cryptographic certificates.
+              </p>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="neo-btn neo-btn-yellow" id="btn-view-my-learnings" title="View my enrolled courses and earned certificates">
+                🎓 My Enrolled &amp; Certificates
+              </button>
+              <button class="neo-btn neo-btn-primary" id="btn-open-submit-course" title="Upload and submit a new educational video">
+                + Submit New Video Course
+              </button>
+            </div>
+          </div>
 
+          <!-- Filter & Search Toolbar -->
+          <div class="edu-toolbar-neo">
+            <div class="edu-search-wrap">
+              <span class="edu-search-icon">🔍</span>
+              <input type="text" id="edu-search-input" class="neo-input" placeholder="Search masterclasses (e.g. FastAPI, Docker, Figma, French)..." />
+            </div>
+
+            <div class="edu-cat-pills" id="edu-category-pills">
+              <button class="edu-cat-btn active" data-cat="all">ALL CATEGORIES</button>
+              <button class="edu-cat-btn" data-cat="tech">💻 TECH &amp; DEV</button>
+              <button class="edu-cat-btn" data-cat="lang">🗣️ LANGUAGES</button>
+              <button class="edu-cat-btn" data-cat="art">🎨 DESIGN &amp; ART</button>
+              <button class="edu-cat-btn" data-cat="biz">📈 BUSINESS &amp; VC</button>
+            </div>
+          </div>
+
+          <!-- Section Sub-Tabs (Catalog vs My Learning vs Creator Uploads) -->
+          <div class="edu-subnav-tabs" style="margin-bottom: 24px;">
+            <button class="edu-subtab-btn active" id="edu-tab-btn-catalog">📚 Public Course Library (<span id="edu-count-approved">0</span>)</button>
+            <button class="edu-subtab-btn" id="edu-tab-btn-enrolled">🎯 My Active Learning (<span id="edu-count-enrolled">0</span>)</button>
+            <button class="edu-subtab-btn" id="edu-tab-btn-creator">📤 My Uploaded Courses (<span id="edu-count-uploads">0</span>)</button>
+          </div>
+
+          <!-- Dynamic Grid Container -->
+          <div id="education-grid-container" class="edu-course-grid">
+            <!-- Rendered dynamically by education.js / app.js -->
+          </div>
+        </section>
 
       </div>
       <!-- /subviews-container -->
@@ -1047,7 +1103,301 @@
     </div>
   </div>
 
+  <!-- Modal: Unlock Course Confirmation -->
+  <div class="modal-overlay" id="modal-unlock-course">
+    <div class="modal-box-neo" style="max-width:540px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:3px solid #000; padding-bottom:10px;">
+        <h3 style="font-size:1.3rem;">Unlock Masterclass</h3>
+        <button class="neo-btn neo-btn-white neo-btn-sm" onclick="document.getElementById('modal-unlock-course').classList.remove('active')">✕</button>
+      </div>
 
+      <div style="background:#fffde6; border:2.5px solid #000; padding:16px; margin-bottom:18px; box-shadow:3px 3px 0px #000;">
+        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#6b7280;">Selected Video Course</div>
+        <div style="font-size:1.15rem; font-weight:900; margin:4px 0;" id="modal-unlock-course-title">FastAPI REST Architecture</div>
+        <div style="font-size:0.82rem; color:#4b5563;">Instructor: <strong id="modal-unlock-course-author">Leo Vance</strong> &bull; Duration: <strong id="modal-unlock-course-duration">15 mins</strong></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+        <div style="background:#f4f4f0; border:2px solid #000; padding:12px;">
+          <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#6b7280;">Your Balance</div>
+          <div class="mono" id="modal-unlock-user-bal" style="font-size:1.3rem; font-weight:900; color:#000;">150 CR</div>
+        </div>
+        <div style="background:#ffe600; border:2px solid #000; padding:12px;">
+          <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#000;">Unlock Cost</div>
+          <div class="mono" id="modal-unlock-cost" style="font-size:1.3rem; font-weight:900; color:#000;">30 CR</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.82rem; color:#555; line-height:1.45; margin-bottom:20px;">
+        Credits are transferred atomically via the double-entry ledger to the course creator. Unlocking grants permanent video streaming access, anti-skip playback verification, and accredited certificate issuance upon 100% completion.
+      </p>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button type="button" class="neo-btn neo-btn-white" onclick="document.getElementById('modal-unlock-course').classList.remove('active')">
+          Cancel
+        </button>
+        <button type="button" class="neo-btn neo-btn-primary" id="btn-confirm-unlock-course">
+          ✓ Confirm &amp; Spend Credits
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Video Player with Anti-Skip Integrity Tracker -->
+  <div class="modal-overlay" id="modal-video-player">
+    <div class="modal-box-neo" style="max-width:920px; width:95%;">
+      
+      <!-- Video Player Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:3px solid #000; padding-bottom:10px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span class="skill-category-tag cat-tech" id="player-category-tag">TECH</span>
+            <span class="mono" style="font-size:0.75rem; font-weight:800; background:#f4f4f0; border:1.5px solid #000; padding:2px 6px;">PEER MASTERCLASS</span>
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:900; text-transform:uppercase; margin:0;" id="player-video-title">Course Title</h3>
+        </div>
+        <button class="neo-btn neo-btn-white neo-btn-sm" id="btn-close-video-player" title="Close video player">✕</button>
+      </div>
+
+      <!-- HTML5 Video Screen Container -->
+      <div class="video-screen-container" style="position:relative; background:#000000; border:3px solid #000000; box-shadow:4px 4px 0px #000000; overflow:hidden; min-height:280px; max-height:460px; display:flex; align-items:center; justify-content:center;">
+        <video id="academy-video-element" controls playsinline controlsList="nodownload" style="width:100%; height:100%; max-height:440px; background:#000; outline:none; display:block;">
+          <source src="" type="video/mp4" />
+          Your browser does not support HTML5 video streaming.
+        </video>
+      </div>
+
+      <!-- Anti-Skip Live Tracking Bar -->
+      <div style="background:#ffffff; border:3px solid #000000; box-shadow:3px 3px 0px #000000; padding:14px 18px; margin-top:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.75rem; font-weight:900; text-transform:uppercase;">Anti-Skip Integrity:</span>
+            <span id="player-integrity-badge" style="font-family:var(--font-heading); font-size:0.72rem; font-weight:900; background:#00ff66; color:#000; border:2px solid #000; padding:2px 8px; text-transform:uppercase;">
+              ✓ VERIFIED CONTINUOUS WATCHING
+            </span>
+          </div>
+          <div style="font-family:var(--font-mono); font-size:0.85rem; font-weight:800;">
+            Watch Progress: <span id="player-watched-percent" style="color:#000; font-weight:900;">0%</span> &bull; 
+            <span id="player-time-current">0:00</span> / <span id="player-time-total">0:45</span>
+          </div>
+        </div>
+
+        <!-- Custom Neo Progress Track -->
+        <div style="width:100%; height:14px; background:#e5e7eb; border:2px solid #000; box-shadow:2px 2px 0px #000; position:relative; overflow:hidden;">
+          <div id="player-watched-progress-fill" style="width:0%; height:100%; background:#00ff66; transition:width 0.2s ease;"></div>
+        </div>
+      </div>
+
+      <!-- SKIPPED WARNING ALERT BANNER (Displayed if user fast-forwards/skips) -->
+      <div id="player-skip-warning" class="neo-alert-box-warning" style="display:none; margin-top:14px; background:#fff0f3; border:3px solid #ff2d55; box-shadow:4px 4px 0px #000; padding:16px;">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <span style="font-size:2.2rem; line-height:1;">⚠️</span>
+          <div>
+            <h4 style="font-size:1.15rem; font-weight:900; text-transform:uppercase; color:#ff2d55; margin:0 0 4px 0;">
+              Video Was Skipped — Course Not Completed!
+            </h4>
+            <p style="font-size:0.88rem; color:#111; line-height:1.5; margin:0 0 10px 0;">
+              You fast-forwarded or skipped video segments. To maintain accredited skill standards, certificate generation requires full, unskipped continuous playback. Please rewatch the full video without skipping to earn your certificate.
+            </p>
+            <button type="button" class="neo-btn neo-btn-sm neo-btn-yellow" onclick="education.resetPlaybackToRewatch()">
+              ↺ Rewatch Full Video from Beginning
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COURSE COMPLETION BANNER (Displayed when fully watched) -->
+      <div id="player-complete-banner" class="neo-alert-box-success" style="display:none; margin-top:14px; background:#e6fffa; border:3px solid #00aa44; box-shadow:4px 4px 0px #000; padding:14px 18px; align-items:center; gap:12px;">
+        <span style="font-size:2rem;">🎓</span>
+        <div>
+          <h4 style="font-size:1.05rem; font-weight:900; text-transform:uppercase; color:#006622; margin:0;">
+            Masterclass 100% Watched &amp; Verified!
+          </h4>
+          <p style="font-size:0.82rem; color:#222; margin:2px 0 0 0;">
+            Anti-skip integrity check passed. Your official Certificate of Completion is ready to claim.
+          </p>
+        </div>
+      </div>
+
+      <!-- Video Player Actions Footer -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:12px;">
+        <div style="font-size:0.78rem; color:#6b7280;">
+          Instructor: <strong id="player-author-name">Leo Vance</strong> &bull; Verified P2P Academy
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="neo-btn neo-btn-white" id="btn-player-dismiss">
+            Close Player
+          </button>
+          <button type="button" class="neo-btn" id="btn-claim-certificate" disabled style="background:#e5e7eb; color:#888;">
+            🔒 Complete Video to Earn Certificate
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Official Accredited Certificate of Completion -->
+  <div class="modal-overlay" id="modal-course-certificate">
+    <div class="modal-box-neo" style="max-width:780px; width:95%;">
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:3px solid #000; padding-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="background:#ffe600; font-family:var(--font-heading); font-size:0.75rem; font-weight:900; padding:2px 8px; border:2px solid #000;">
+            VERIFIED CREDENTIAL
+          </span>
+          <h3 style="font-size:1.2rem; margin:0;">Certificate of Mastery</h3>
+        </div>
+        <button class="neo-btn neo-btn-white neo-btn-sm" onclick="document.getElementById('modal-course-certificate').classList.remove('active')">✕</button>
+      </div>
+
+      <!-- Printable Neo-Brutalist Certificate Card -->
+      <div class="certificate-paper-neo" id="certificate-printable-area">
+        <div class="cert-outer-border">
+          <div class="cert-inner-box">
+            
+            <div class="cert-header">
+              <div class="cert-brand-row">
+                <span class="brand-badge-sb" style="background:#000; color:#fff;">SB</span>
+                <span style="font-family:var(--font-heading); font-size:1.3rem; font-weight:900; letter-spacing:-0.02em;">SKILL BADLU ACADEMY</span>
+              </div>
+              <div class="cert-accredited-tag">ACCREDITED PEER MASTERCLASS CERTIFICATE</div>
+            </div>
+
+            <div class="cert-body">
+              <div class="cert-proclamation">This official certificate is proudly awarded to</div>
+              <div class="cert-student-name" id="cert-display-student-name">Leo Vance</div>
+              
+              <div class="cert-proclamation" style="margin-top:14px;">
+                for successfully completing the 100% anti-skip verified masterclass in
+              </div>
+              <div class="cert-course-title" id="cert-display-course-title">Docker &amp; Kubernetes Deployment Architecture</div>
+
+              <div class="cert-meta-grid">
+                <div class="cert-meta-item">
+                  <span class="cert-meta-label">Category</span>
+                  <span class="cert-meta-val" id="cert-display-category">TECHNOLOGY</span>
+                </div>
+                <div class="cert-meta-item">
+                  <span class="cert-meta-label">Completion Date</span>
+                  <span class="cert-meta-val" id="cert-display-date">September 10, 2026</span>
+                </div>
+                <div class="cert-meta-item">
+                  <span class="cert-meta-label">Integrity Status</span>
+                  <span class="cert-meta-val" style="color:#008833;">100% ANTI-SKIP AUDITED</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cert-footer">
+              <div class="cert-signature-block">
+                <div class="cert-signature-line" id="cert-display-instructor">Camille Dubois</div>
+                <div class="cert-signature-title">Verified Instructor / Creator</div>
+              </div>
+
+              <!-- Gold Seal Stamp -->
+              <div class="cert-gold-seal">
+                <div class="seal-inner">
+                  <span style="font-size:1.2rem;">★</span>
+                  <span style="font-size:0.6rem; font-weight:900; line-height:1.1;">LEDGER<br/>VERIFIED</span>
+                </div>
+              </div>
+
+              <div class="cert-signature-block" style="text-align:right;">
+                <div class="cert-id-badge" id="cert-display-id">CERT-SB-89421-2026</div>
+                <div class="cert-hash-sub" id="cert-display-hash">0x8f4c...77a1</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Action Buttons -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; flex-wrap:wrap; gap:12px;">
+        <div style="font-size:0.78rem; color:#6b7280;">
+          🔒 Cryptographically timestamped &amp; recorded on Skill Badlu P2P Ledger.
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="neo-btn neo-btn-white" onclick="document.getElementById('modal-course-certificate').classList.remove('active')">
+            Close
+          </button>
+          <button type="button" class="neo-btn neo-btn-primary" onclick="window.printCertificate()">
+            🖨️ Print / Download PDF
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Submit New Educational Video Course (Creator Upload) -->
+  <div class="modal-overlay" id="modal-submit-course">
+    <div class="modal-box-neo" style="max-width:680px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:3px solid #000; padding-bottom:10px;">
+        <div>
+          <h3 style="font-size:1.35rem; margin:0;">Submit Masterclass Video</h3>
+          <p style="font-size:0.8rem; color:#4b5563; margin:3px 0 0 0;">Upload your educational video tutorial. Requires Admin Approval before publishing.</p>
+        </div>
+        <button class="neo-btn neo-btn-white neo-btn-sm" onclick="document.getElementById('modal-submit-course').classList.remove('active')">✕</button>
+      </div>
+
+      <form id="form-submit-course">
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Course / Video Title</label>
+          <input type="text" id="input-course-title" class="neo-input" placeholder="e.g. Next.js 15 Server Actions Deep Dive" required />
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div>
+            <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Category</label>
+            <select id="select-course-category" class="neo-select">
+              <option value="tech">💻 Technology &amp; Engineering</option>
+              <option value="lang">🗣️ Languages &amp; Linguistics</option>
+              <option value="art">🎨 Arts &amp; Creative Design</option>
+              <option value="biz">📈 Business &amp; Growth</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Unlock Credit Price</label>
+            <input type="number" id="input-course-price" class="neo-input" placeholder="e.g. 35" min="5" max="200" value="30" required />
+            <div style="font-size:0.72rem; color:#6b7280; margin-top:2px;">Learners pay this to unlock your video</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div>
+            <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Estimated Duration</label>
+            <input type="text" id="input-course-duration" class="neo-input" placeholder="e.g. 15 mins" value="15 mins" required />
+          </div>
+
+          <div>
+            <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Video Source URL / Stream</label>
+            <input type="url" id="input-course-videourl" class="neo-input" placeholder="https://...mp4" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" required />
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <label style="font-weight:800; font-size:0.82rem; text-transform:uppercase;">Description &amp; Key Objectives</label>
+          <textarea id="input-course-desc" class="neo-input" rows="3" placeholder="Explain what learners will accomplish in this video tutorial..." required style="resize:vertical;"></textarea>
+        </div>
+
+        <div style="background:#fffde6; border:2px solid #000; padding:12px; margin-bottom:20px; font-size:0.8rem; line-height:1.45;">
+          <strong>🛡️ Platform Quality Gate:</strong> All submitted videos enter the <strong>Admin Moderation Queue</strong>. Our curators review video clarity, audio fidelity, and anti-skip chapter configuration before public release.
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px;">
+          <button type="button" class="neo-btn neo-btn-white" onclick="document.getElementById('modal-submit-course').classList.remove('active')">
+            Cancel
+          </button>
+          <button type="submit" class="neo-btn neo-btn-primary">
+            Submit for Admin Review →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
@@ -1058,6 +1408,7 @@
   <script src="js/matchmaker.js"></script>
   <script src="js/sessions.js"></script>
   <script src="js/payouts.js"></script>
+  <script src="js/education.js"></script>
   <script src="js/app.js"></script>
 
 </body>

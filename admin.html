@@ -283,6 +283,11 @@
             <span class="badge-live-green" id="admin-disputes-badge" style="background:#ffffff; color:#000;">0</span>
           </button>
 
+          <button class="admin-nav-tab" data-tab="tab-admin-courses" id="nav-btn-courses" role="tab">
+            <span>EDUCATION QUEUE</span>
+            <span class="badge-sessions-red" id="admin-courses-badge" style="display:inline-block;">1</span>
+          </button>
+
           <button class="admin-nav-tab" data-tab="tab-admin-ledger" id="nav-btn-audit" role="tab">
             <span>LEDGER AUDIT</span>
           </button>
@@ -348,6 +353,15 @@
 
           <div class="admin-stat-card">
             <div class="admin-stat-label">
+              <span>Pending Courses</span>
+              <span>🎓</span>
+            </div>
+            <div class="admin-stat-value" id="kpi-pending-courses" style="color:#ff9900;">1 COURSE</div>
+            <div class="admin-stat-subtext">Awaiting video quality approval</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">
               <span>Solvency Reconciliation</span>
               <span>⚖️</span>
             </div>
@@ -371,10 +385,10 @@
             </div>
 
             <p style="font-size:0.92rem; color:#444444; line-height:1.5; margin-bottom:20px;">
-              As the platform curator and auditor, you maintain ecosystem trust. Review onboarding applicants, mediate peer dispute sessions, and reconcile the double-entry credit ledger against the platform treasury.
+              As the platform curator and auditor, you maintain ecosystem trust. Review onboarding applicants, moderate educational video courses, mediate peer dispute sessions, and reconcile the double-entry credit ledger against the platform treasury.
             </p>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
               <!-- Quick KYC Tray -->
               <div style="background:#faf9f5; border:2.5px solid #000; padding:16px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
@@ -384,6 +398,17 @@
                   <a href="#" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:800; color:#000;">VIEW ALL →</a>
                 </div>
                 <div id="overview-pending-container"></div>
+              </div>
+
+              <!-- Quick Education Courses Tray -->
+              <div style="background:#faf9f5; border:2.5px solid #000; padding:16px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase;">
+                    Pending Video Courses
+                  </span>
+                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:800; color:#000;">VIEW ALL →</a>
+                </div>
+                <div id="overview-courses-container"></div>
               </div>
 
               <!-- Quick Dispute Tray -->
@@ -423,7 +448,29 @@
         </div>
 
         <!-- -------------------------------------------------------------
-             PANE 3: DISPUTE ARBITRATION DESK
+             PANE 3: EDUCATION & VIDEO COURSES MODERATION QUEUE
+             ------------------------------------------------------------- -->
+        <div class="admin-section-pane" id="tab-admin-courses">
+          <div class="admin-panel-card">
+            <div class="admin-panel-header">
+              <div class="admin-panel-title">
+                <span>🎓 Video Masterclass Moderation Queue</span>
+              </div>
+              <span class="badge-kyc-pill badge-kyc-pending" id="pane-courses-count" style="background:#ffe600; color:#000;">1 PENDING</span>
+            </div>
+
+            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
+              Peer-submitted video courses must be reviewed for audio/video clarity and anti-skip chapter configuration. Approving publishes the tutorial to the public Academy catalog where learners spend credits to unlock it.
+            </p>
+
+            <div id="admin-courses-list-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+             PANE 4: DISPUTE ARBITRATION DESK
              ------------------------------------------------------------- -->
         <div class="admin-section-pane" id="tab-admin-disputes">
           <div class="admin-panel-card">
@@ -447,7 +494,7 @@
         </div>
 
         <!-- -------------------------------------------------------------
-             PANE 4: DOUBLE-ENTRY MATHEMATICAL AUDIT
+             PANE 5: DOUBLE-ENTRY MATHEMATICAL AUDIT
              ------------------------------------------------------------- -->
         <div class="admin-section-pane" id="tab-admin-ledger">
           <div class="admin-panel-card">
@@ -598,6 +645,7 @@
     // 3. Render Views
     function renderAllAdminViews() {
       const pendingUsers = admin.getPendingUsers();
+      const pendingCourses = admin.getPendingCourses();
       const disputedSessions = admin.getDisputedSessions();
       const txs = store.transactions;
 
@@ -611,6 +659,11 @@
       document.getElementById("kpi-active-users").textContent = `${store.users.length} USERS`;
       document.getElementById("kpi-pending-reviews").textContent = `${pendingUsers.length} USER${pendingUsers.length === 1 ? '' : 'S'}`;
       
+      const elKpiCourses = document.getElementById("kpi-pending-courses");
+      if (elKpiCourses) {
+        elKpiCourses.textContent = `${pendingCourses.length} COURSE${pendingCourses.length === 1 ? '' : 'S'}`;
+      }
+
       // Badges
       const kycBadge = document.getElementById("admin-kyc-badge");
       if (kycBadge) {
@@ -618,9 +671,20 @@
         kycBadge.style.display = pendingUsers.length > 0 ? "inline-block" : "none";
       }
 
+      const coursesBadge = document.getElementById("admin-courses-badge");
+      if (coursesBadge) {
+        coursesBadge.textContent = pendingCourses.length;
+        coursesBadge.style.display = pendingCourses.length > 0 ? "inline-block" : "none";
+      }
+
       const paneKycCount = document.getElementById("pane-kyc-count");
       if (paneKycCount) {
         paneKycCount.textContent = `${pendingUsers.length} PENDING`;
+      }
+
+      const paneCoursesCount = document.getElementById("pane-courses-count");
+      if (paneCoursesCount) {
+        paneCoursesCount.textContent = `${pendingCourses.length} PENDING`;
       }
 
       const disputesBadge = document.getElementById("admin-disputes-badge");
@@ -631,6 +695,9 @@
       // Render KYC list
       renderKycList(pendingUsers);
 
+      // Render Courses list
+      renderCoursesList(pendingCourses);
+
       // Render Disputes list
       renderDisputesList(disputedSessions);
 
@@ -638,7 +705,7 @@
       renderLedgerTable(txs);
 
       // Render Overview Trays
-      renderOverviewTrays(pendingUsers, disputedSessions);
+      renderOverviewTrays(pendingUsers, disputedSessions, pendingCourses);
     }
 
     function renderKycList(pendingUsers) {
@@ -683,6 +750,59 @@
       `).join("");
     }
 
+    function renderCoursesList(pendingCourses) {
+      const container = document.getElementById("admin-courses-list-container");
+      if (!container) return;
+
+      if (pendingCourses.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
+            <div style="font-size:2rem; margin-bottom:8px;">🎓</div>
+            <div style="font-weight:800; font-size:1rem;">All Video Courses Reviewed &amp; Published</div>
+            <div style="font-size:0.8rem; margin-top:4px;">No peer video courses currently waiting in the moderation queue.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingCourses.map(course => {
+        const creator = store.getUser(course.creator_id) || { name: course.creator_id, avatar: "CR" };
+        const catUpper = (course.category || 'tech').toUpperCase();
+
+        return `
+          <div class="admin-review-row" style="border-left: 6px solid #ffe600; padding: 20px;">
+            <div style="flex:1; min-width:280px;">
+              <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <span class="skill-category-tag cat-${course.category || 'tech'}">${catUpper}</span>
+                <span class="mono" style="font-size:0.75rem; font-weight:800; background:#ffe600; padding:2px 6px; border:1.5px solid #000;">
+                  PRICE: ${course.credit_cost} CR
+                </span>
+                <span style="font-size:0.75rem; color:#666; font-weight:700;">⏱ ${course.duration || '15 mins'}</span>
+              </div>
+              <div style="font-family:var(--font-heading); font-weight:900; font-size:1.15rem; color:#000;">
+                ${course.title}
+              </div>
+              <div style="font-size:0.84rem; color:#444; margin:6px 0; line-height:1.4;">
+                ${course.description}
+              </div>
+              <div style="font-size:0.78rem; color:#666; display:flex; align-items:center; gap:8px;">
+                <span>Instructor: <strong>${creator.name}</strong></span> &bull; 
+                <a href="${course.video_url}" target="_blank" style="color:#000; font-weight:800; text-decoration:underline;">▶ Preview Video Stream</a>
+              </div>
+            </div>
+            <div class="admin-actions-group">
+              <button class="btn-admin-action btn-admin-approve" onclick="approveCourse('${course.id}')">
+                ✓ Approve &amp; Publish Course
+              </button>
+              <button class="btn-admin-action btn-admin-reject" onclick="rejectCourse('${course.id}')">
+                ✕ Reject Submission
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     function renderDisputesList(disputedSessions) {
       const container = document.getElementById("admin-disputes-list-container");
       if (!container) return;
@@ -723,8 +843,9 @@
       `).join("");
     }
 
-    function renderOverviewTrays(pendingUsers, disputedSessions) {
+    function renderOverviewTrays(pendingUsers, disputedSessions, pendingCourses = []) {
       const pContainer = document.getElementById("overview-pending-container");
+      const cContainer = document.getElementById("overview-courses-container");
       const dContainer = document.getElementById("overview-disputes-container");
 
       if (pContainer) {
@@ -735,6 +856,19 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
               <span><strong>${u.name}</strong> (${u.email})</span>
               <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">Approve</button>
+            </div>
+          `).join("");
+        }
+      }
+
+      if (cContainer) {
+        if (pendingCourses.length === 0) {
+          cContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending course reviews.</div>`;
+        } else {
+          cContainer.innerHTML = pendingCourses.slice(0, 2).map(c => `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
+              <span><strong>${c.title}</strong> (${c.credit_cost} CR)</span>
+              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveCourse('${c.id}')">Approve</button>
             </div>
           `).join("");
         }
@@ -792,6 +926,27 @@
         showToast(`User application rejected and &#8377;499 refunded.`, "info");
       } catch (e) {
         showToast(e.message, "error");
+      }
+    }
+
+    function approveCourse(courseId) {
+      try {
+        const course = admin.approveCourse(courseId);
+        showToast(`✓ Course "${course.title}" APPROVED and published to Academy!`, "success");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    function rejectCourse(courseId) {
+      const reason = prompt("Enter course rejection feedback for the creator:", "Video resolution or audio quality did not meet platform standards.");
+      if (reason) {
+        try {
+          admin.rejectCourse(courseId, reason);
+          showToast("Course rejected and removed from review queue.", "info");
+        } catch (e) {
+          showToast(e.message, "error");
+        }
       }
     }
 

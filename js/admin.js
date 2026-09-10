@@ -71,6 +71,32 @@ class AdminManager {
       return { session };
     }
   }
+
+  getPendingCourses() {
+    return this.store.getPendingCourses();
+  }
+
+  approveCourse(courseId) {
+    const course = this.store.getCourse(courseId);
+    if (!course) throw new Error("Course not found.");
+
+    course.status = "APPROVED";
+    course.approved_at = new Date();
+
+    this.store.notify("COURSE_APPROVED", { course });
+    return course;
+  }
+
+  rejectCourse(courseId, reason) {
+    const course = this.store.getCourse(courseId);
+    if (!course) throw new Error("Course not found.");
+
+    course.status = "REJECTED";
+    course.rejection_reason = reason || "Course content does not meet platform quality or verification standards.";
+
+    this.store.notify("COURSE_REJECTED", { course });
+    return course;
+  }
 }
 
 window.admin = new AdminManager(window.store, window.ledger);

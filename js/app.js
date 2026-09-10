@@ -17,6 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const elIntegrityBadge = document.getElementById("header-integrity-badge");
   const elToastContainer = document.getElementById("toast-container");
 
+  // Global Toast Helper reference for sub-modules
+  window.appToast = showToast;
+
+  // Education Tab State
+  let currentEduCategory = "all";
+  let currentEduSearch = "";
+  let currentEduSubTab = "catalog"; // 'catalog', 'enrolled', 'creator'
+  let pendingUnlockCourseId = null;
+
   // Initial State Setup
   function init() {
     bindNavigation();
@@ -25,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindModals();
     bindMatchmakerSliders();
     bindPayoutControls();
+    bindEducationControls();
 
     // Sync Authentication and initial render
     syncAuthState();
@@ -36,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderMatchmaker();
       renderSessions();
       renderPayoutSection();
+      renderEducationSection();
     }
 
     // Subscribe to all store updates
@@ -50,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderMatchmaker();
         renderSessions();
         renderPayoutSection();
+        renderEducationSection();
       }
     });
   }
@@ -617,6 +629,365 @@ document.addEventListener("DOMContentLoaded", () => {
     if (elAvailable) elAvailable.textContent = `${availableBalance} CR`;
     if (elFiatEquivalent) elFiatEquivalent.textContent = `₹${availableBalance * 10} INR`;
   }
+
+  // =========================================================
+  // 6. EDUCATION & VIDEO ACADEMY CONTROLLER
+  // =========================================================
+  function bindEducationControls() {
+    // Search input
+    const searchInput = document.getElementById("edu-search-input");
+    searchInput?.addEventListener("input", (e) => {
+      currentEduSearch = e.target.value.toLowerCase().trim();
+      renderEducationSection();
+    });
+
+    // Category pills
+    const catPills = document.querySelectorAll("#edu-category-pills .edu-cat-btn");
+    catPills.forEach(btn => {
+      btn.addEventListener("click", () => {
+        catPills.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentEduCategory = btn.getAttribute("data-cat") || "all";
+        renderEducationSection();
+      });
+    });
+
+    // Sub-nav tabs
+    const subTabs = [
+      { id: "edu-tab-btn-catalog", tab: "catalog" },
+      { id: "edu-tab-btn-enrolled", tab: "enrolled" },
+      { id: "edu-tab-btn-creator", tab: "creator" }
+    ];
+
+    subTabs.forEach(({ id, tab }) => {
+      const btn = document.getElementById(id);
+      btn?.addEventListener("click", () => {
+        subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
+        btn.classList.add("active");
+        currentEduSubTab = tab;
+        renderEducationSection();
+      });
+    });
+
+    // Quick jump to my enrolled courses
+    document.getElementById("btn-view-my-learnings")?.addEventListener("click", () => {
+      subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
+      document.getElementById("edu-tab-btn-enrolled")?.classList.add("active");
+      currentEduSubTab = "enrolled";
+      renderEducationSection();
+    });
+
+    // Open Submit Course Modal
+    document.getElementById("btn-open-submit-course")?.addEventListener("click", () => {
+      const modal = document.getElementById("modal-submit-course");
+      if (modal) modal.classList.add("active");
+    });
+
+    // Submit Course Form
+    document.getElementById("form-submit-course")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      try {
+        const title = document.getElementById("input-course-title").value;
+        const category = document.getElementById("select-course-category").value;
+        const creditCost = parseInt(document.getElementById("input-course-price").value, 10);
+        const duration = document.getElementById("input-course-duration").value;
+        const videoUrl = document.getElementById("input-course-videourl").value;
+        const description = document.getElementById("input-course-desc").value;
+
+        const newCourse = store.submitCourse({
+          title,
+          category,
+          creditCost,
+          duration,
+          durationSeconds: 45,
+          videoUrl,
+          description
+        });
+
+        document.getElementById("modal-submit-course").classList.remove("active");
+        e.target.reset();
+
+        showToast(`✓ Masterclass "${newCourse.title}" submitted to Admin Moderation Queue!`, "success");
+
+        // Switch to creator uploads tab
+        subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
+        document.getElementById("edu-tab-btn-creator")?.classList.add("active");
+        currentEduSubTab = "creator";
+        renderEducationSection();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    });
+
+    // Confirm Unlock / Purchase Modal
+    document.getElementById("btn-confirm-unlock-course")?.addEventListener("click", () => {
+      if (!pendingUnlockCourseId) return;
+      try {
+        const result = education.unlockCourse(pendingUnlockCourseId);
+        document.getElementById("modal-unlock-course").classList.remove("active");
+        showToast("✓ Course unlocked successfully! Opening video player...", "success");
+        window.openCoursePlayer(pendingUnlockCourseId);
+        pendingUnlockCourseId = null;
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    });
+
+    // Close Player Modal Handlers
+    const closePlayer = () => {
+      const videoEl = document.getElementById("academy-video-element");
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+      document.getElementById("modal-video-player")?.classList.remove("active");
+    };
+
+    document.getElementById("btn-close-video-player")?.addEventListener("click", closePlayer);
+    document.getElementById("btn-player-dismiss")?.addEventListener("click", closePlayer);
+
+    // Claim Certificate Button in Player
+    document.getElementById("btn-claim-certificate")?.addEventListener("click", () => {
+      if (!education.activeCourse) return;
+      try {
+        window.viewCourseCertificate(education.activeCourse.id);
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    });
+  }
+
+  function renderEducationSection() {
+    const currentUser = store.getCurrentUser();
+    const container = document.getElementById("education-grid-container");
+    if (!currentUser || !container) return;
+
+    const allCourses = store.getCourses();
+    const approvedCourses = store.getApprovedCourses();
+    const userEnrollments = store.getUserEnrollments(currentUser.id);
+    const userUploads = allCourses.filter(c => c.creator_id === currentUser.id);
+
+    // Update Counter Badges
+    const countAppEl = document.getElementById("edu-count-approved");
+    const countEnrEl = document.getElementById("edu-count-enrolled");
+    const countUpEl = document.getElementById("edu-count-uploads");
+
+    if (countAppEl) countAppEl.textContent = approvedCourses.length;
+    if (countEnrEl) countEnrEl.textContent = userEnrollments.length;
+    if (countUpEl) countUpEl.textContent = userUploads.length;
+
+    // Filter by Active SubTab
+    let displayList = [];
+    if (currentEduSubTab === "catalog") {
+      displayList = approvedCourses;
+    } else if (currentEduSubTab === "enrolled") {
+      const enrolledCourseIds = new Set(userEnrollments.map(e => e.course_id));
+      displayList = allCourses.filter(c => enrolledCourseIds.has(c.id));
+    } else if (currentEduSubTab === "creator") {
+      displayList = userUploads;
+    }
+
+    // Filter by Category
+    if (currentEduCategory !== "all") {
+      displayList = displayList.filter(c => c.category === currentEduCategory);
+    }
+
+    // Filter by Search Query
+    if (currentEduSearch) {
+      displayList = displayList.filter(c =>
+        c.title.toLowerCase().includes(currentEduSearch) ||
+        c.description.toLowerCase().includes(currentEduSearch) ||
+        (c.category && c.category.toLowerCase().includes(currentEduSearch))
+      );
+    }
+
+    // Handle Empty State
+    if (displayList.length === 0) {
+      let emptyMsg = "No masterclasses found matching your filter.";
+      if (currentEduSubTab === "enrolled") {
+        emptyMsg = "You have not enrolled in any video masterclasses yet. Explore the Public Library and unlock your first course!";
+      } else if (currentEduSubTab === "creator") {
+        emptyMsg = "You haven't submitted any video courses yet. Click '+ Submit New Video Course' to publish your masterclass!";
+      }
+
+      container.innerHTML = `
+        <div class="glass-card" style="grid-column: 1 / -1; text-align:center; padding:56px 24px; background:#fff;">
+          <div style="font-size:2.4rem; margin-bottom:12px;">🎓</div>
+          <h3 style="font-size:1.3rem; font-weight:900; text-transform:uppercase;">No Courses Available</h3>
+          <p style="color:#555; max-width:480px; margin:8px auto 20px; line-height:1.5;">${emptyMsg}</p>
+          ${currentEduSubTab === "catalog" ? `
+            <button class="neo-btn neo-btn-yellow" onclick="document.getElementById('edu-search-input').value=''; currentEduSearch=''; currentEduCategory='all'; document.querySelectorAll('#edu-category-pills .edu-cat-btn').forEach(b=>b.classList.toggle('active', b.getAttribute('data-cat')==='all')); renderEducationSection();">
+              Reset Filters
+            </button>
+          ` : `
+            <button class="neo-btn neo-btn-primary" onclick="document.getElementById('edu-tab-btn-catalog').click()">
+              Explore Public Course Library →
+            </button>
+          `}
+        </div>
+      `;
+      return;
+    }
+
+    // Render Cards Grid
+    container.innerHTML = displayList.map(course => {
+      const creator = store.getUser(course.creator_id) || { name: "Peer Instructor", avatar: "IN" };
+      const enrollment = store.getUserEnrollment(currentUser.id, course.id);
+      const isEnrolled = !!enrollment;
+      const isCompleted = enrollment?.completed || false;
+      const catUpper = (course.category || 'tech').toUpperCase();
+      const catClass = `cat-${course.category || 'tech'}`;
+
+      // Card Header Thumbnail / Banner
+      return `
+        <div class="edu-course-card ${isCompleted ? 'course-completed' : ''}">
+          <div class="edu-card-banner">
+            <div class="edu-banner-badge-row">
+              <span class="skill-category-tag ${catClass}">${catUpper}</span>
+              <span class="edu-duration-badge">⏱ ${course.duration || '15 mins'}</span>
+            </div>
+            <div class="edu-price-tag ${course.credit_cost === 0 ? 'price-free' : ''}">
+              ${course.credit_cost > 0 ? `${course.credit_cost} CR` : 'FREE'}
+            </div>
+          </div>
+
+          <div class="edu-card-body">
+            <h3 class="edu-course-title">${course.title}</h3>
+            <p class="edu-course-desc">${course.description}</p>
+
+            <div class="edu-creator-row">
+              <div class="edu-creator-avatar">${creator.avatar || 'PI'}</div>
+              <div>
+                <div class="edu-creator-name">${creator.name.split(" (")[0]}</div>
+                <div class="edu-course-rating">★ ${course.rating ? course.rating.toFixed(2) : '5.00'} &bull; ${course.enrolled_count || 0} enrolled</div>
+              </div>
+            </div>
+
+            ${course.status === "PENDING_REVIEW" ? `
+              <div class="edu-status-pill pill-pending">
+                <span>⏳</span> Awaiting Admin Moderation Review
+              </div>
+            ` : course.status === "REJECTED" ? `
+              <div class="edu-status-pill pill-rejected">
+                <span>✕</span> Rejected: ${course.rejection_reason || 'Quality standard'}
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="edu-card-footer">
+            ${isCompleted ? `
+              <button class="neo-btn neo-btn-primary" style="width:100%;" onclick="window.viewCourseCertificate('${course.id}')">
+                🎓 View Certificate (100% Completed)
+              </button>
+            ` : isEnrolled ? `
+              <button class="neo-btn neo-btn-primary" style="width:100%;" onclick="window.openCoursePlayer('${course.id}')">
+                ▶ Watch Video Player
+              </button>
+            ` : course.status === "APPROVED" ? `
+              <button class="neo-btn neo-btn-yellow" style="width:100%;" onclick="window.promptUnlockCourse('${course.id}')">
+                🔓 Unlock Video (${course.credit_cost} CR)
+              </button>
+            ` : `
+              <button class="neo-btn neo-btn-white" style="width:100%; cursor:not-allowed;" disabled>
+                🔒 In Review Queue
+              </button>
+            `}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // --- GLOBAL EDUCATION ACTION HANDLERS ---
+  window.promptUnlockCourse = function(courseId) {
+    const currentUser = store.getCurrentUser();
+    const course = store.getCourse(courseId);
+    if (!currentUser || !course) return;
+
+    pendingUnlockCourseId = courseId;
+    const userBalance = ledger.getBalance(currentUser.id);
+
+    const elTitle = document.getElementById("modal-unlock-course-title");
+    const elAuthor = document.getElementById("modal-unlock-course-author");
+    const elDuration = document.getElementById("modal-unlock-course-duration");
+    const elBal = document.getElementById("modal-unlock-user-bal");
+    const elCost = document.getElementById("modal-unlock-cost");
+
+    const creator = store.getUser(course.creator_id) || { name: "Peer Instructor" };
+
+    if (elTitle) elTitle.textContent = course.title;
+    if (elAuthor) elAuthor.textContent = creator.name.split(" (")[0];
+    if (elDuration) elDuration.textContent = course.duration;
+    if (elBal) elBal.textContent = `${userBalance} CR`;
+    if (elCost) elCost.textContent = `${course.credit_cost} CR`;
+
+    document.getElementById("modal-unlock-course")?.classList.add("active");
+  };
+
+  window.openCoursePlayer = function(courseId) {
+    const currentUser = store.getCurrentUser();
+    const course = store.getCourse(courseId);
+    if (!currentUser || !course) return;
+
+    const enrollment = store.getUserEnrollment(currentUser.id, courseId);
+    if (!enrollment) {
+      window.promptUnlockCourse(courseId);
+      return;
+    }
+
+    const creator = store.getUser(course.creator_id) || { name: "Peer Instructor" };
+
+    const elTitle = document.getElementById("player-video-title");
+    const elCat = document.getElementById("player-category-tag");
+    const elAuthor = document.getElementById("player-author-name");
+    const videoEl = document.getElementById("academy-video-element");
+
+    if (elTitle) elTitle.textContent = course.title;
+    if (elCat) {
+      elCat.textContent = (course.category || 'tech').toUpperCase();
+      elCat.className = `skill-category-tag cat-${course.category || 'tech'}`;
+    }
+    if (elAuthor) elAuthor.textContent = creator.name.split(" (")[0];
+
+    if (videoEl) {
+      videoEl.src = course.video_url;
+      videoEl.load();
+      education.initAntiSkipTracker(videoEl, course, enrollment);
+    }
+
+    document.getElementById("modal-video-player")?.classList.add("active");
+  };
+
+  window.viewCourseCertificate = function(courseId) {
+    const currentUser = store.getCurrentUser();
+    const course = store.getCourse(courseId);
+    if (!currentUser || !course) return;
+
+    const cert = education.claimCertificate(courseId);
+    if (!cert) return;
+
+    const elStudent = document.getElementById("cert-display-student-name");
+    const elTitle = document.getElementById("cert-display-course-title");
+    const elCat = document.getElementById("cert-display-category");
+    const elDate = document.getElementById("cert-display-date");
+    const elInst = document.getElementById("cert-display-instructor");
+    const elId = document.getElementById("cert-display-id");
+    const elHash = document.getElementById("cert-display-hash");
+
+    if (elStudent) elStudent.textContent = cert.user_name;
+    if (elTitle) elTitle.textContent = cert.course_title;
+    if (elCat) elCat.textContent = (cert.category || 'tech').toUpperCase();
+    if (elDate) elDate.textContent = new Date(cert.issued_at).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+    if (elInst) elInst.textContent = cert.creator_name;
+    if (elId) elId.textContent = cert.id;
+    if (elHash) elHash.textContent = cert.verification_hash;
+
+    document.getElementById("modal-course-certificate")?.classList.add("active");
+  };
+
+  window.printCertificate = function() {
+    window.print();
+  };
 
 
 
