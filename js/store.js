@@ -26,6 +26,8 @@ const INITIAL_USERS = [
     avatar: "AD",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    creator_status: "APPROVED",
+    can_upload_videos: true,
     avg_rating: 5.00,
     last_active: new Date(),
     skills_have: [
@@ -42,6 +44,8 @@ const INITIAL_USERS = [
     avatar: "LV",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    creator_status: "APPROVED",
+    can_upload_videos: true,
     avg_rating: 4.95,
     last_active: new Date(Date.now() - 1000 * 60 * 30), // 30 mins ago
     skills_have: [
@@ -61,6 +65,8 @@ const INITIAL_USERS = [
     avatar: "CD",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    creator_status: "APPROVED",
+    can_upload_videos: true,
     avg_rating: 4.90,
     last_active: new Date(Date.now() - 1000 * 60 * 120), // 2 hours ago
     skills_have: [
@@ -80,6 +86,8 @@ const INITIAL_USERS = [
     avatar: "AS",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    creator_status: "APPROVED",
+    can_upload_videos: true,
     avg_rating: 4.80,
     last_active: new Date(Date.now() - 1000 * 60 * 60 * 18), // 18 hrs ago
     skills_have: [
@@ -98,6 +106,8 @@ const INITIAL_USERS = [
     avatar: "KT",
     verified_status: "VERIFIED",
     kyc_status: "UNSUBMITTED",
+    creator_status: "NOT_REQUESTED",
+    can_upload_videos: false,
     avg_rating: 4.70,
     last_active: new Date(Date.now() - 1000 * 60 * 60 * 48), // 2 days ago
     skills_have: [
@@ -115,6 +125,8 @@ const INITIAL_USERS = [
     avatar: "ZC",
     verified_status: "PENDING_REVIEW", // In admin review queue
     kyc_status: "PENDING",
+    creator_status: "PENDING_APPROVAL",
+    can_upload_videos: false,
     avg_rating: 5.00,
     last_active: new Date(Date.now() - 1000 * 60 * 15),
     skills_have: [

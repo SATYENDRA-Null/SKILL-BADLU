@@ -137,4 +137,16 @@ const isLiveInCatalog = approvedAfter.some(c => c.id === newCourse.id);
 console.log("Is newly approved course live in catalog:", isLiveInCatalog);
 console.assert(isLiveInCatalog === true, "Course must appear in public catalog");
 
-console.log("\n>>> ALL 5/5 VERIFICATION TESTS PASSED SUCCESSFULLY! <<<");
+// Admin tests granting & revoking creator video upload permissions
+console.log("\n=== 6. TESTING EDUCATOR VIDEO UPLOAD PERMISSION MANAGEMENT ===");
+const userD = store.getUser("user_d");
+console.log("Kaito Tanaka upload permission before:", userD.can_upload_videos);
+admin.grantCreatorPermission("user_d");
+console.log("Kaito Tanaka upload permission after admin grant:", userD.can_upload_videos);
+console.assert(userD.can_upload_videos === true, "User D should have video upload permission granted");
+
+admin.revokeCreatorPermission("user_d");
+console.log("Kaito Tanaka upload permission after admin revoke:", userD.can_upload_videos);
+console.assert(userD.can_upload_videos === false, "User D upload permission should be revoked");
+
+console.log("\n>>> ALL 6/6 VERIFICATION TESTS PASSED SUCCESSFULLY! <<<");

@@ -258,7 +258,7 @@
       <!-- =========================================================
            1. TOP BLACK BAR (ADMIN CONSOLE ONLY):
            Logo 'SB SKILL BADLU' + Yellow 'ADMIN PORTAL' Tag
-           Admin Navigation ONLY: ADMIN DESK | USER KYC QUEUE | DISPUTES | LEDGER AUDIT
+           Admin Navigation: ADMIN DESK | VIDEO UPLOAD APPROVALS | USER KYC QUEUE | DISPUTES | LEDGER AUDIT
            ========================================================= -->
       <header class="top-black-bar">
         <a href="admin.html" class="brand-group" id="brand-logo-link" style="text-decoration:none;">
@@ -267,10 +267,15 @@
           <span class="admin-brand-tag">ADMIN PORTAL</span>
         </a>
 
-        <!-- ONLY ADMIN TABS (Swapper tabs like Marketplace, Matchmaker, Sessions are completely absent) -->
+        <!-- ONLY ADMIN TABS -->
         <nav class="nav-tabs-row" id="admin-platform-nav" role="tablist" aria-label="Admin Navigation">
           <button class="admin-nav-tab active" data-tab="tab-admin-overview" id="nav-btn-overview" role="tab">
             <span>ADMIN DESK</span>
+          </button>
+
+          <button class="admin-nav-tab" data-tab="tab-admin-courses" id="nav-btn-courses" role="tab">
+            <span>📹 VIDEO UPLOAD APPROVALS</span>
+            <span class="badge-sessions-red" id="admin-courses-badge" style="display:inline-block;">1</span>
           </button>
 
           <button class="admin-nav-tab" data-tab="tab-admin-kyc" id="nav-btn-kyc" role="tab">
@@ -281,11 +286,6 @@
           <button class="admin-nav-tab" data-tab="tab-admin-disputes" id="nav-btn-disputes" role="tab">
             <span>DISPUTE ARBITRATION</span>
             <span class="badge-live-green" id="admin-disputes-badge" style="background:#ffffff; color:#000;">0</span>
-          </button>
-
-          <button class="admin-nav-tab" data-tab="tab-admin-courses" id="nav-btn-courses" role="tab">
-            <span>EDUCATION QUEUE</span>
-            <span class="badge-sessions-red" id="admin-courses-badge" style="display:inline-block;">1</span>
           </button>
 
           <button class="admin-nav-tab" data-tab="tab-admin-ledger" id="nav-btn-audit" role="tab">
@@ -338,26 +338,26 @@
               <span>Verified Swapper Accounts</span>
               <span>👥</span>
             </div>
-            <div class="admin-stat-value" id="kpi-active-users">5 USERS</div>
+            <div class="admin-stat-value" id="kpi-active-users">6 USERS</div>
             <div class="admin-stat-subtext">Screened &amp; KYC Approved Members</div>
           </div>
 
-          <div class="admin-stat-card">
+          <div class="admin-stat-card" style="border: 3.5px solid #000; background: #fffde6;">
             <div class="admin-stat-label">
-              <span>Pending Review Queue</span>
-              <span>⏳</span>
+              <span style="color:#000; font-weight:900;">Video Upload Approvals</span>
+              <span>📹</span>
             </div>
-            <div class="admin-stat-value" id="kpi-pending-reviews" style="color:#ff2d55;">1 USER</div>
-            <div class="admin-stat-subtext">Awaiting admin identity curation</div>
+            <div class="admin-stat-value" id="kpi-pending-courses" style="color:#ff2d55;">1 PENDING</div>
+            <div class="admin-stat-subtext" style="color:#000; font-weight:700;">Awaiting admin video approval</div>
           </div>
 
           <div class="admin-stat-card">
             <div class="admin-stat-label">
-              <span>Pending Courses</span>
-              <span>🎓</span>
+              <span>Pending KYC Queue</span>
+              <span>⏳</span>
             </div>
-            <div class="admin-stat-value" id="kpi-pending-courses" style="color:#ff9900;">1 COURSE</div>
-            <div class="admin-stat-subtext">Awaiting video quality approval</div>
+            <div class="admin-stat-value" id="kpi-pending-reviews" style="color:#ff9900;">1 USER</div>
+            <div class="admin-stat-subtext">Awaiting admin identity curation</div>
           </div>
 
           <div class="admin-stat-card">
@@ -385,39 +385,39 @@
             </div>
 
             <p style="font-size:0.92rem; color:#444444; line-height:1.5; margin-bottom:20px;">
-              As the platform curator and auditor, you maintain ecosystem trust. Review onboarding applicants, moderate educational video courses, mediate peer dispute sessions, and reconcile the double-entry credit ledger against the platform treasury.
+              As the platform curator and auditor, you maintain ecosystem trust. Review onboarding applicants, approve educational video uploads, mediate peer dispute sessions, and reconcile the double-entry credit ledger against the platform treasury.
             </p>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
-              <!-- Quick KYC Tray -->
-              <div style="background:#faf9f5; border:2.5px solid #000; padding:16px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase;">
-                    Pending KYC Applications
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+              <!-- Quick Video Courses Tray -->
+              <div style="background:#fffde6; border:3px solid #000; padding:18px; box-shadow:4px 4px 0px #000;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
+                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
+                    📹 Pending Video Upload Approvals
                   </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:800; color:#000;">VIEW ALL →</a>
-                </div>
-                <div id="overview-pending-container"></div>
-              </div>
-
-              <!-- Quick Education Courses Tray -->
-              <div style="background:#faf9f5; border:2.5px solid #000; padding:16px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase;">
-                    Pending Video Courses
-                  </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:800; color:#000;">VIEW ALL →</a>
+                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW QUEUE →</a>
                 </div>
                 <div id="overview-courses-container"></div>
               </div>
 
-              <!-- Quick Dispute Tray -->
-              <div style="background:#faf9f5; border:2.5px solid #000; padding:16px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase;">
-                    Open Session Disputes
+              <!-- Quick KYC Tray -->
+              <div style="background:#faf9f5; border:2.5px solid #000; padding:18px; box-shadow:3px 3px 0px #000;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
+                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
+                    📋 Pending KYC Applications
                   </span>
-                  <a href="#" onclick="switchAdminTab('tab-admin-disputes')" style="font-size:0.75rem; font-weight:800; color:#000;">VIEW ALL →</a>
+                  <a href="#" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
+                </div>
+                <div id="overview-pending-container"></div>
+              </div>
+
+              <!-- Quick Dispute Tray -->
+              <div style="background:#faf9f5; border:2.5px solid #000; padding:18px; box-shadow:3px 3px 0px #000;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
+                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
+                    ⚖️ Open Session Disputes
+                  </span>
+                  <a href="#" onclick="switchAdminTab('tab-admin-disputes')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
                 </div>
                 <div id="overview-disputes-container"></div>
               </div>
@@ -426,7 +426,46 @@
         </div>
 
         <!-- -------------------------------------------------------------
-             PANE 2: USER KYC & IDENTITY REVIEW QUEUE
+             PANE 2: VIDEO UPLOAD APPROVALS & MODERATION QUEUE
+             ------------------------------------------------------------- -->
+        <div class="admin-section-pane" id="tab-admin-courses">
+          <div class="admin-panel-card">
+            <div class="admin-panel-header">
+              <div class="admin-panel-title">
+                <span>📹 Video Upload Approvals &amp; Educator Moderation</span>
+              </div>
+              <span class="badge-kyc-pill badge-kyc-pending" id="pane-courses-count" style="background:#ffe600; color:#000; font-size:0.8rem; padding:4px 10px;">1 PENDING APPROVAL</span>
+            </div>
+
+            <p style="font-size:0.88rem; color:#444444; margin-bottom:18px; line-height:1.5;">
+              Users submit educational video masterclasses to earn credits. <strong>Only when you grant Admin Approval</strong> does the video get published to the public Academy library where learners can unlock it. Review audio/video clarity and verify anti-skip stream integrity below.
+            </p>
+
+            <!-- Video Moderation Subtabs -->
+            <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:3px solid #000; padding-bottom:12px; flex-wrap:wrap;">
+              <button class="btn-admin-action btn-admin-approve" id="subtab-btn-pending-videos" onclick="switchVideoSubTab('pending')">
+                Pending Approvals (<span id="subtab-count-pending">1</span>)
+              </button>
+              <button class="btn-admin-action btn-admin-neutral" id="subtab-btn-published-videos" onclick="switchVideoSubTab('published')">
+                All Published Masterclasses (<span id="subtab-count-published">4</span>)
+              </button>
+              <button class="btn-admin-action btn-admin-neutral" id="subtab-btn-creator-perms" onclick="switchVideoSubTab('creators')">
+                Educator Upload Permissions (<span id="subtab-count-creators">6</span>)
+              </button>
+            </div>
+
+            <div id="admin-courses-list-container">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <div id="admin-educators-list-container" style="display:none; margin-top:16px;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+             PANE 3: USER KYC & IDENTITY REVIEW QUEUE
              ------------------------------------------------------------- -->
         <div class="admin-section-pane" id="tab-admin-kyc">
           <div class="admin-panel-card">
@@ -442,28 +481,6 @@
             </p>
 
             <div id="admin-kyc-list-container">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-        </div>
-
-        <!-- -------------------------------------------------------------
-             PANE 3: EDUCATION & VIDEO COURSES MODERATION QUEUE
-             ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-courses">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>🎓 Video Masterclass Moderation Queue</span>
-              </div>
-              <span class="badge-kyc-pill badge-kyc-pending" id="pane-courses-count" style="background:#ffe600; color:#000;">1 PENDING</span>
-            </div>
-
-            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
-              Peer-submitted video courses must be reviewed for audio/video clarity and anti-skip chapter configuration. Approving publishes the tutorial to the public Academy catalog where learners spend credits to unlock it.
-            </p>
-
-            <div id="admin-courses-list-container">
               <!-- Rendered dynamically -->
             </div>
           </div>
@@ -642,10 +659,43 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    // Current Video Moderation SubTab ('pending', 'published', 'creators')
+    let currentVideoSubTab = 'pending';
+
+    function switchVideoSubTab(tabKey) {
+      currentVideoSubTab = tabKey;
+      const btnPending = document.getElementById("subtab-btn-pending-videos");
+      const btnPublished = document.getElementById("subtab-btn-published-videos");
+      const btnCreators = document.getElementById("subtab-btn-creator-perms");
+      const coursesContainer = document.getElementById("admin-courses-list-container");
+      const educatorsContainer = document.getElementById("admin-educators-list-container");
+
+      if (btnPending) {
+        btnPending.className = tabKey === 'pending' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
+      }
+      if (btnPublished) {
+        btnPublished.className = tabKey === 'published' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
+      }
+      if (btnCreators) {
+        btnCreators.className = tabKey === 'creators' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
+      }
+
+      if (tabKey === 'creators') {
+        if (coursesContainer) coursesContainer.style.display = 'none';
+        if (educatorsContainer) educatorsContainer.style.display = 'block';
+        renderEducatorsTable();
+      } else {
+        if (coursesContainer) coursesContainer.style.display = 'block';
+        if (educatorsContainer) educatorsContainer.style.display = 'none';
+        renderCoursesList();
+      }
+    }
+
     // 3. Render Views
     function renderAllAdminViews() {
       const pendingUsers = admin.getPendingUsers();
       const pendingCourses = admin.getPendingCourses();
+      const approvedCourses = store.getApprovedCourses();
       const disputedSessions = admin.getDisputedSessions();
       const txs = store.transactions;
 
@@ -655,13 +705,18 @@
         totalCirculating += ledger.getBalance(u.id);
       });
 
-      document.getElementById("kpi-circulating-credits").textContent = `${totalCirculating} CR`;
-      document.getElementById("kpi-active-users").textContent = `${store.users.length} USERS`;
-      document.getElementById("kpi-pending-reviews").textContent = `${pendingUsers.length} USER${pendingUsers.length === 1 ? '' : 'S'}`;
+      const elCirculating = document.getElementById("kpi-circulating-credits");
+      if (elCirculating) elCirculating.textContent = `${totalCirculating} CR`;
+
+      const elUsers = document.getElementById("kpi-active-users");
+      if (elUsers) elUsers.textContent = `${store.users.length} USERS`;
+
+      const elPendingKyc = document.getElementById("kpi-pending-reviews");
+      if (elPendingKyc) elPendingKyc.textContent = `${pendingUsers.length} USER${pendingUsers.length === 1 ? '' : 'S'}`;
       
       const elKpiCourses = document.getElementById("kpi-pending-courses");
       if (elKpiCourses) {
-        elKpiCourses.textContent = `${pendingCourses.length} COURSE${pendingCourses.length === 1 ? '' : 'S'}`;
+        elKpiCourses.textContent = `${pendingCourses.length} PENDING`;
       }
 
       // Badges
@@ -684,8 +739,17 @@
 
       const paneCoursesCount = document.getElementById("pane-courses-count");
       if (paneCoursesCount) {
-        paneCoursesCount.textContent = `${pendingCourses.length} PENDING`;
+        paneCoursesCount.textContent = `${pendingCourses.length} PENDING APPROVAL`;
       }
+
+      // Subtab counts
+      const elSubPending = document.getElementById("subtab-count-pending");
+      const elSubPub = document.getElementById("subtab-count-published");
+      const elSubCreat = document.getElementById("subtab-count-creators");
+
+      if (elSubPending) elSubPending.textContent = pendingCourses.length;
+      if (elSubPub) elSubPub.textContent = approvedCourses.length;
+      if (elSubCreat) elSubCreat.textContent = store.users.length;
 
       const disputesBadge = document.getElementById("admin-disputes-badge");
       if (disputesBadge) {
@@ -696,7 +760,11 @@
       renderKycList(pendingUsers);
 
       // Render Courses list
-      renderCoursesList(pendingCourses);
+      if (currentVideoSubTab === 'creators') {
+        renderEducatorsTable();
+      } else {
+        renderCoursesList();
+      }
 
       // Render Disputes list
       renderDisputesList(disputedSessions);
@@ -750,57 +818,157 @@
       `).join("");
     }
 
-    function renderCoursesList(pendingCourses) {
+    function renderCoursesList() {
       const container = document.getElementById("admin-courses-list-container");
       if (!container) return;
 
-      if (pendingCourses.length === 0) {
+      const coursesToShow = currentVideoSubTab === 'published' 
+        ? store.getApprovedCourses() 
+        : admin.getPendingCourses();
+
+      if (coursesToShow.length === 0) {
+        const emptyMsg = currentVideoSubTab === 'published' 
+          ? "No courses currently published in the catalog."
+          : "No peer video courses currently waiting in the upload approval queue.";
+        
         container.innerHTML = `
           <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-            <div style="font-size:2rem; margin-bottom:8px;">🎓</div>
-            <div style="font-weight:800; font-size:1rem;">All Video Courses Reviewed &amp; Published</div>
-            <div style="font-size:0.8rem; margin-top:4px;">No peer video courses currently waiting in the moderation queue.</div>
+            <div style="font-size:2rem; margin-bottom:8px;">📹</div>
+            <div style="font-weight:800; font-size:1rem;">${emptyMsg}</div>
+            <div style="font-size:0.8rem; margin-top:4px;">When users submit masterclasses, they will appear here for quality review.</div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = pendingCourses.map(course => {
-        const creator = store.getUser(course.creator_id) || { name: course.creator_id, avatar: "CR" };
+      container.innerHTML = coursesToShow.map(course => {
+        const creator = store.getUser(course.creator_id) || { name: course.creator_id, avatar: "CR", email: "creator@peer.io", kyc_status: "VERIFIED" };
         const catUpper = (course.category || 'tech').toUpperCase();
+        const isPending = course.status === "PENDING_REVIEW";
 
         return `
-          <div class="admin-review-row" style="border-left: 6px solid #ffe600; padding: 20px;">
-            <div style="flex:1; min-width:280px;">
-              <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px;">
-                <span class="skill-category-tag cat-${course.category || 'tech'}">${catUpper}</span>
-                <span class="mono" style="font-size:0.75rem; font-weight:800; background:#ffe600; padding:2px 6px; border:1.5px solid #000;">
-                  PRICE: ${course.credit_cost} CR
-                </span>
-                <span style="font-size:0.75rem; color:#666; font-weight:700;">⏱ ${course.duration || '15 mins'}</span>
+          <div class="admin-review-row" style="border-left: 8px solid ${isPending ? '#ff2d55' : '#00ff66'}; padding: 22px; flex-direction:column; align-items:stretch;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+              <div style="flex:1; min-width:280px;">
+                <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+                  <span class="skill-category-tag cat-${course.category || 'tech'}">${catUpper}</span>
+                  <span class="mono" style="font-size:0.75rem; font-weight:800; background:#ffe600; padding:2px 8px; border:1.5px solid #000;">
+                    PRICE: ${course.credit_cost} CR
+                  </span>
+                  <span style="font-size:0.75rem; color:#444; font-weight:800; background:#f4f4f0; padding:2px 6px; border:1px solid #000;">
+                    ⏱ ${course.duration || '15 mins'}
+                  </span>
+                  <span style="font-size:0.72rem; font-weight:900; padding:2px 6px; border:1.5px solid #000; background:${isPending ? '#ffe600' : '#00ff66'};">
+                    ${isPending ? '⏳ PENDING ADMIN APPROVAL' : '✓ PUBLISHED LIVE'}
+                  </span>
+                </div>
+
+                <div style="font-family:var(--font-heading); font-weight:900; font-size:1.2rem; color:#000; margin:4px 0;">
+                  ${course.title}
+                </div>
+
+                <div style="font-size:0.86rem; color:#444; margin:6px 0 12px 0; line-height:1.5;">
+                  ${course.description}
+                </div>
+
+                <div style="background:#ffffff; border:2px solid #000; padding:10px 14px; display:inline-flex; align-items:center; gap:12px; margin-bottom:14px;">
+                  <div style="width:32px; height:32px; background:#ffe600; border:2px solid #000; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:0.85rem;">
+                    ${creator.avatar || 'CR'}
+                  </div>
+                  <div style="font-size:0.8rem;">
+                    <div><strong>Instructor:</strong> ${creator.name} (${creator.email || 'peer@skillbadlu.com'})</div>
+                    <div style="color:#666; font-size:0.74rem;">KYC: <strong>${creator.kyc_status || 'VERIFIED'}</strong> &bull; Upload Status: <strong style="color:#00aa44;">${creator.creator_status || 'APPROVED'}</strong></div>
+                  </div>
+                </div>
               </div>
-              <div style="font-family:var(--font-heading); font-weight:900; font-size:1.15rem; color:#000;">
-                ${course.title}
-              </div>
-              <div style="font-size:0.84rem; color:#444; margin:6px 0; line-height:1.4;">
-                ${course.description}
-              </div>
-              <div style="font-size:0.78rem; color:#666; display:flex; align-items:center; gap:8px;">
-                <span>Instructor: <strong>${creator.name}</strong></span> &bull; 
-                <a href="${course.video_url}" target="_blank" style="color:#000; font-weight:800; text-decoration:underline;">▶ Preview Video Stream</a>
+
+              <!-- Action Buttons -->
+              <div class="admin-actions-group" style="align-self:flex-start;">
+                ${isPending ? `
+                  <button class="btn-admin-action btn-admin-approve" style="font-size:0.88rem; padding:10px 18px;" onclick="approveCourse('${course.id}')">
+                    ✓ Approve Video &amp; Publish Live
+                  </button>
+                  <button class="btn-admin-action btn-admin-reject" style="font-size:0.88rem; padding:10px 18px;" onclick="rejectCourse('${course.id}')">
+                    ✕ Reject Video
+                  </button>
+                ` : `
+                  <button class="btn-admin-action btn-admin-reject" style="font-size:0.78rem; padding:6px 12px;" onclick="rejectCourse('${course.id}')">
+                    Unpublish / Revoke
+                  </button>
+                `}
               </div>
             </div>
-            <div class="admin-actions-group">
-              <button class="btn-admin-action btn-admin-approve" onclick="approveCourse('${course.id}')">
-                ✓ Approve &amp; Publish Course
-              </button>
-              <button class="btn-admin-action btn-admin-reject" onclick="rejectCourse('${course.id}')">
-                ✕ Reject Submission
-              </button>
+
+            <!-- Embedded Interactive Video Preview Player -->
+            <div style="margin-top:10px; background:#000000; border:3px solid #000; padding:10px; box-shadow:3px 3px 0px #000;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; color:#fff; font-size:0.75rem; font-weight:800; text-transform:uppercase;">
+                <span>▶ Video Stream Quality &amp; Audio Inspection</span>
+                <span class="mono" style="color:#00ff66;">ANTI-SKIP TRACKING COMPATIBLE</span>
+              </div>
+              <video controls playsinline preload="metadata" style="width:100%; max-height:260px; background:#111; outline:none;">
+                <source src="${course.video_url}" type="video/mp4" />
+                Your browser does not support HTML5 video streaming.
+              </video>
             </div>
+
           </div>
         `;
       }).join("");
+    }
+
+    function renderEducatorsTable() {
+      const container = document.getElementById("admin-educators-list-container");
+      if (!container) return;
+
+      const users = store.users;
+
+      container.innerHTML = `
+        <div style="overflow-x:auto;">
+          <table class="admin-ledger-table">
+            <thead>
+              <tr>
+                <th>Swapper Member</th>
+                <th>Email</th>
+                <th>KYC Verification</th>
+                <th>Video Upload Permission</th>
+                <th>Courses Submitted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${users.map(u => {
+                const userCourses = store.courses.filter(c => c.creator_id === u.id);
+                const canUpload = u.can_upload_videos || u.creator_status === 'APPROVED';
+                return `
+                  <tr>
+                    <td><strong>${u.name}</strong></td>
+                    <td style="font-family:var(--font-mono);">${u.email}</td>
+                    <td><span class="badge-kyc-pill ${u.kyc_status === 'VERIFIED' ? 'badge-kyc-verified' : 'badge-kyc-pending'}">${u.kyc_status}</span></td>
+                    <td>
+                      <span style="font-weight:900; padding:2px 6px; border:1.5px solid #000; background:${canUpload ? '#00ff66' : '#ffe600'}; font-size:0.72rem;">
+                        ${canUpload ? '✓ UPLOAD APPROVED' : '⏳ PENDING APPROVAL'}
+                      </span>
+                    </td>
+                    <td style="font-weight:900;">${userCourses.length} Course${userCourses.length === 1 ? '' : 's'}</td>
+                    <td>
+                      ${canUpload ? `
+                        <button class="btn-admin-action btn-admin-reject" style="padding:4px 8px; font-size:0.72rem;" onclick="revokeCreatorAccess('${u.id}')">
+                          Revoke Access
+                        </button>
+                      ` : `
+                        <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="grantCreatorAccess('${u.id}')">
+                          ✓ Grant Video Upload
+                        </button>
+                      `}
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
     function renderDisputesList(disputedSessions) {
@@ -848,6 +1016,32 @@
       const cContainer = document.getElementById("overview-courses-container");
       const dContainer = document.getElementById("overview-disputes-container");
 
+      if (cContainer) {
+        if (pendingCourses.length === 0) {
+          cContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending video upload reviews.</div>`;
+        } else {
+          cContainer.innerHTML = pendingCourses.slice(0, 2).map(c => {
+            const creator = store.getUser(c.creator_id) || { name: c.creator_id };
+            return `
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.85rem; background:#ffffff; border:2px solid #000; padding:8px 12px;">
+                <div>
+                  <div style="font-weight:900;">${c.title}</div>
+                  <div style="font-size:0.75rem; color:#666;">by <strong>${creator.name}</strong> &bull; ${c.credit_cost} CR</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-admin-action btn-admin-approve" style="padding:5px 10px; font-size:0.75rem;" onclick="approveCourse('${c.id}')">
+                    ✓ Approve
+                  </button>
+                  <a href="#" onclick="switchAdminTab('tab-admin-courses')" class="btn-admin-action btn-admin-neutral" style="padding:5px 10px; font-size:0.75rem; text-decoration:none;">
+                    Preview
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join("");
+        }
+      }
+
       if (pContainer) {
         if (pendingUsers.length === 0) {
           pContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending user applications.</div>`;
@@ -856,19 +1050,6 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
               <span><strong>${u.name}</strong> (${u.email})</span>
               <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">Approve</button>
-            </div>
-          `).join("");
-        }
-      }
-
-      if (cContainer) {
-        if (pendingCourses.length === 0) {
-          cContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending course reviews.</div>`;
-        } else {
-          cContainer.innerHTML = pendingCourses.slice(0, 2).map(c => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
-              <span><strong>${c.title}</strong> (${c.credit_cost} CR)</span>
-              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveCourse('${c.id}')">Approve</button>
             </div>
           `).join("");
         }
@@ -932,7 +1113,7 @@
     function approveCourse(courseId) {
       try {
         const course = admin.approveCourse(courseId);
-        showToast(`✓ Course "${course.title}" APPROVED and published to Academy!`, "success");
+        showToast(`✓ Video "${course.title}" APPROVED and published to Academy!`, "success");
       } catch (e) {
         showToast(e.message, "error");
       }
@@ -943,10 +1124,28 @@
       if (reason) {
         try {
           admin.rejectCourse(courseId, reason);
-          showToast("Course rejected and removed from review queue.", "info");
+          showToast("Video rejected and removed from review queue.", "info");
         } catch (e) {
           showToast(e.message, "error");
         }
+      }
+    }
+
+    function grantCreatorAccess(userId) {
+      try {
+        const user = admin.grantCreatorPermission(userId);
+        showToast(`✓ Video Upload Permission GRANTED to ${user.name}!`, "success");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    function revokeCreatorAccess(userId) {
+      try {
+        const user = admin.revokeCreatorPermission(userId);
+        showToast(`Video Upload Permission revoked for ${user.name}.`, "info");
+      } catch (e) {
+        showToast(e.message, "error");
       }
     }
 

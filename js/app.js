@@ -865,12 +865,29 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             ${course.status === "PENDING_REVIEW" ? `
-              <div class="edu-status-pill pill-pending">
-                <span>⏳</span> Awaiting Admin Moderation Review
+              <div style="background:#fffde6; border:2.5px solid #000; padding:10px 12px; margin-top:8px; box-shadow:2px 2px 0px #000;">
+                <div style="display:flex; align-items:center; gap:6px; font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#b45309;">
+                  <span>⏳</span> STATUS: PENDING ADMIN APPROVAL
+                </div>
+                <div style="font-size:0.74rem; color:#444; margin-top:3px; line-height:1.4;">
+                  This video course is awaiting screening in the Admin Portal. Learners can only unlock it once the Administrator grants approval.
+                </div>
+              </div>
+            ` : course.status === "APPROVED" && course.creator_id === currentUser.id ? `
+              <div style="background:#ecfdf5; border:2.5px solid #000; padding:8px 12px; margin-top:8px; box-shadow:2px 2px 0px #000;">
+                <div style="display:flex; align-items:center; gap:6px; font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#065f46;">
+                  <span>✓</span> ADMIN APPROVED &amp; LIVE ON ACADEMY
+                </div>
+                <div style="font-size:0.72rem; color:#374151; margin-top:2px;">
+                  Active in public library &bull; Earning ${course.credit_cost} CR per enrolled learner
+                </div>
               </div>
             ` : course.status === "REJECTED" ? `
-              <div class="edu-status-pill pill-rejected">
-                <span>✕</span> Rejected: ${course.rejection_reason || 'Quality standard'}
+              <div style="background:#fff0f3; border:2.5px solid #ff2d55; padding:8px 12px; margin-top:8px;">
+                <div style="font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#ff2d55;">
+                  <span>✕</span> ADMIN REJECTED
+                </div>
+                <div style="font-size:0.74rem; color:#444; margin-top:2px;">${course.rejection_reason || 'Quality standard not met.'}</div>
               </div>
             ` : ''}
           </div>
@@ -888,9 +905,13 @@ document.addEventListener("DOMContentLoaded", () => {
               <button class="neo-btn neo-btn-yellow" style="width:100%;" onclick="window.promptUnlockCourse('${course.id}')">
                 🔓 Unlock Video (${course.credit_cost} CR)
               </button>
+            ` : course.creator_id === currentUser.id ? `
+              <a href="admin.html" target="_blank" class="neo-btn neo-btn-yellow" style="width:100%; text-align:center; text-decoration:none; display:block; padding:10px 0;">
+                ⚡ Open Admin Console to Approve →
+              </a>
             ` : `
               <button class="neo-btn neo-btn-white" style="width:100%; cursor:not-allowed;" disabled>
-                🔒 In Review Queue
+                🔒 In Admin Review Queue
               </button>
             `}
           </div>

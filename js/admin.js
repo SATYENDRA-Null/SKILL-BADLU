@@ -76,6 +76,10 @@ class AdminManager {
     return this.store.getPendingCourses();
   }
 
+  getAllCourses() {
+    return this.store.getCourses();
+  }
+
   approveCourse(courseId) {
     const course = this.store.getCourse(courseId);
     if (!course) throw new Error("Course not found.");
@@ -83,7 +87,14 @@ class AdminManager {
     course.status = "APPROVED";
     course.approved_at = new Date();
 
-    this.store.notify("COURSE_APPROVED", { course });
+    // Also ensure creator is authorized as an approved educator
+    const creator = this.store.getUser(course.creator_id);
+    if (creator) {
+      creator.creator_status = "APPROVED";
+      creator.can_upload_videos = true;
+    }
+
+    this.store.notify("COURSE_APPROVED", { course, creator });
     return course;
   }
 
@@ -96,6 +107,28 @@ class AdminManager {
 
     this.store.notify("COURSE_REJECTED", { course });
     return course;
+  }
+
+  grantCreatorPermission(userId) {
+    const user = this.store.getUser(userId);
+    if (!user) throw new Error("User not found.");
+
+    user.creator_status = "APPROVED";
+    user.can_upload_videos = true;
+
+    this.store.notify("CREATOR_PERMISSION_GRANTED", { user });
+    return user;
+  }
+
+  revokeCreatorPermission(userId) {
+    const user = this.store.getUser(userId);
+    if (!user) throw new Error("User not found.");
+
+    user.creator_status = "REVOKED";
+    user.can_upload_videos = false;
+
+    this.store.notify("CREATOR_PERMISSION_REVOKED", { user });
+    return user;
   }
 }
 
