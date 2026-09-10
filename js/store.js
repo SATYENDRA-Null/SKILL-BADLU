@@ -3,8 +3,6 @@
  * References: docs/architecture/system-design.md
  */
 
-const PLATFORM_CASHOUT_UID = "00000000-0000-0000-0000-000000000001";
-
 const INITIAL_SKILLS = [
   { id: "sk_python", name: "Python & FastAPI", category: "tech", description: "Backend development, async APIs, and data engineering." },
   { id: "sk_french", name: "Conversational French", category: "lang", description: "Everyday dialogues, pronunciation, and Parisian culture." },

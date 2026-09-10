@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const elNavTabs = document.querySelectorAll(".nav-tab-btn, .nav-tab-white");
   const elSections = document.querySelectorAll(".app-section");
   const elBalanceAmount = document.getElementById("header-balance-amount");
-  const elIntegrityBadge = document.getElementById("header-integrity-badge");
   const elToastContainer = document.getElementById("toast-container");
 
   // Global Toast Helper reference for sub-modules
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial State Setup
   function init() {
     bindNavigation();
-    bindHeaderActions();
     bindAuthSystem();
     bindModals();
     bindMatchmakerSliders();
@@ -38,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sync Authentication and initial render
     syncAuthState();
-    renderHeroMetrics();
     renderEducationSection();
 
     if (store.isAuthenticated()) {
@@ -54,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
     store.subscribe((event, data) => {
       console.log(`[Store Event]: ${event}`, data);
       syncAuthState();
-      renderHeroMetrics();
 
       if (store.isAuthenticated()) {
         updateHeader();
@@ -183,33 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sessionBadge) {
       sessionBadge.textContent = pendingConfCount;
       sessionBadge.style.display = pendingConfCount > 0 ? "inline-block" : "none";
-    }
-  }
-
-  function bindHeaderActions() {
-    elIntegrityBadge?.addEventListener("click", () => {
-      openReconciliationModal();
-    });
-
-    document.getElementById("btn-run-audit-ledger")?.addEventListener("click", () => {
-      openReconciliationModal();
-    });
-  }
-
-  // Hero Metrics
-  function renderHeroMetrics() {
-    const elActiveSwappers = document.getElementById("stat-active-swappers");
-    const elSettledSessions = document.getElementById("stat-settled-sessions");
-    const elCirculatingCredits = document.getElementById("stat-circulating-credits");
-
-    if (elActiveSwappers) elActiveSwappers.textContent = store.users.length;
-    if (elSettledSessions) {
-      elSettledSessions.textContent = store.sessions.filter(s => s.status === "SETTLED").length;
-    }
-    if (elCirculatingCredits) {
-      let totalVolume = 0;
-      store.transactions.forEach(tx => totalVolume += tx.amount);
-      elCirculatingCredits.textContent = `${totalVolume} CR`;
     }
   }
 
