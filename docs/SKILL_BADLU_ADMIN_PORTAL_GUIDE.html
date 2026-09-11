@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Skill Badlu — Admin Portal Complete Guide & System Manual</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap");
+
+      @page {
+        size: A4;
+        margin: 14mm 12mm 14mm 12mm;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Space Grotesk",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: #f7f5ed;
+        color: #111111;
+        font-size: 11pt;
+        line-height: 1.45;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page {
+        background: #ffffff;
+        border: 3.5px solid #000000;
+        box-shadow: 6px 6px 0px #000000;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        page-break-after: always;
+      }
+
+      .page:last-child {
+        page-break-after: avoid;
+      }
+
+      /* Header Neo-Brutalist */
+      .doc-header {
+        background: #000000;
+        color: #ffffff;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 3px solid #000000;
+        margin-bottom: 20px;
+      }
+
+      .doc-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-box {
+        background: #ffe600;
+        color: #000000;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 900;
+        font-size: 14pt;
+        padding: 4px 8px;
+        border: 2px solid #000000;
+      }
+
+      .brand-title {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 900;
+        font-size: 15pt;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-tag {
+        background: #ffe600;
+        color: #000000;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 900;
+        font-size: 8pt;
+        padding: 3px 8px;
+        border: 1.5px solid #000000;
+      }
+
+      .doc-meta {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8pt;
+        color: #00ff66;
+        font-weight: 700;
+        text-align: right;
+      }
+
+      /* Section Titles */
+      h1.main-title {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 20pt;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        color: #000000;
+      }
+
+      p.main-subtitle {
+        font-size: 10pt;
+        color: #4b5563;
+        margin-bottom: 18px;
+        font-weight: 600;
+      }
+
+      .section-box {
+        background: #ffffff;
+        border: 3px solid #000000;
+        box-shadow: 4px 4px 0px #000000;
+        padding: 16px 18px;
+        margin-bottom: 18px;
+      }
+
+      .section-header-neo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #ffe600;
+        border: 2.5px solid #000000;
+        padding: 8px 12px;
+        margin: -16px -18px 14px -18px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 900;
+        font-size: 11pt;
+        text-transform: uppercase;
+      }
+
+      .section-header-neo.green {
+        background: #00ff66;
+      }
+
+      .section-header-neo.black {
+        background: #000000;
+        color: #ffffff;
+      }
+
+      .section-header-neo.red {
+        background: #ff2d55;
+        color: #ffffff;
+      }
+
+      .badge-pill {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 7.5pt;
+        font-weight: 800;
+        background: #ffffff;
+        color: #000000;
+        padding: 2px 6px;
+        border: 1.5px solid #000000;
+      }
+
+      /* Grid & Cards */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .kpi-card {
+        background: #faf9f5;
+        border: 2.5px solid #000000;
+        box-shadow: 3px 3px 0px #000000;
+        padding: 10px 12px;
+      }
+
+      .kpi-title {
+        font-size: 7.5pt;
+        font-weight: 900;
+        text-transform: uppercase;
+        color: #555;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .kpi-value {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 14pt;
+        font-weight: 900;
+        color: #000000;
+      }
+
+      .kpi-sub {
+        font-size: 7.5pt;
+        color: #666;
+        margin-top: 2px;
+        font-weight: 700;
+      }
+
+      .feature-card {
+        background: #faf9f5;
+        border: 2px solid #000000;
+        box-shadow: 3px 3px 0px #000000;
+        padding: 12px;
+      }
+
+      .feature-card-title {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 900;
+        font-size: 10pt;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .feature-card-desc {
+        font-size: 8.8pt;
+        color: #374151;
+        line-height: 1.4;
+      }
+
+      /* Mock Navbar */
+      .mock-navbar {
+        background: #000000;
+        border: 3px solid #000000;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .mock-tab {
+        background: #ffffff;
+        color: #000000;
+        border: 2px solid #ffffff;
+        padding: 4px 10px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 900;
+        font-size: 8pt;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .mock-tab.active {
+        background: #ffe600;
+        border-color: #000000;
+      }
+
+      .mock-status-bar {
+        background: #111111;
+        color: #ffffff;
+        border: 2px solid #000000;
+        padding: 8px 12px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5pt;
+        margin-bottom: 16px;
+      }
+
+      .table-neo {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+        font-size: 8.8pt;
+      }
+
+      .table-neo th {
+        background: #000000;
+        color: #ffffff;
+        padding: 6px 10px;
+        text-align: left;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        border: 1.5px solid #000000;
+        font-size: 8pt;
+      }
+
+      .table-neo td {
+        padding: 6px 10px;
+        border: 1.5px solid #000000;
+        background: #ffffff;
+      }
+
+      .table-neo tr:nth-child(even) td {
+        background: #faf9f5;
+      }
+
+      .tag-green {
+        background: #00ff66;
+        color: #000;
+        padding: 1px 6px;
+        font-weight: 800;
+        border: 1px solid #000;
+        font-size: 7.5pt;
+      }
+
+      .tag-yellow {
+        background: #ffe600;
+        color: #000;
+        padding: 1px 6px;
+        font-weight: 800;
+        border: 1px solid #000;
+        font-size: 7.5pt;
+      }
+
+      .tag-red {
+        background: #ff2d55;
+        color: #fff;
+        padding: 1px 6px;
+        font-weight: 800;
+        border: 1px solid #000;
+        font-size: 7.5pt;
+      }
+
+      .highlight-box {
+        background: #fffde6;
+        border: 2px dashed #000000;
+        padding: 10px 14px;
+        margin-top: 10px;
+        font-size: 8.8pt;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- =========================================================================
+       PAGE 1: ADMIN HEADER, KPIS & ADMIN DESK OVERVIEW
+       ========================================================================= -->
+    <div class="page">
+      <div class="doc-header">
+        <div class="doc-brand">
+          <span class="brand-box">SB</span>
+          <span class="brand-title">SKILL BADLU</span>
+          <span class="brand-tag">ADMIN PORTAL MANUAL</span>
+        </div>
+        <div class="doc-meta">
+          CONSOLE VERSION: v5.0.0<br />
+          SECURITY LEVEL: SOVEREIGN CURATOR
+        </div>
+      </div>
+
+      <h1 class="main-title">Admin Portal Guide & System Manual</h1>
+      <p class="main-subtitle">
+        Skill Badlu के Admin Console के सभी 6 मॉड्यूल्स, KYC वेरिफिकेशन, ₹99
+        रेवेन्यू लेजर, वीडियो मॉडरेशन, डिस्प्यूट आर्बिट्रेशन और लेजर ऑडिट का
+        सम्पूर्ण विवरण।
+      </p>
+
+      <!-- 1. Top Header & Admin Navigation Bar -->
+      <div class="section-box">
+        <div class="section-header-neo black">
+          <span>1. Admin Header & Sovereign Navigation Bar</span>
+          <span class="badge-pill" style="color: #000">ADMIN CONTROL</span>
+        </div>
+
+        <div class="mock-navbar">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span
+              style="
+                background: #ffe600;
+                color: #000;
+                font-weight: 900;
+                padding: 2px 6px;
+                font-size: 8pt;
+                border: 1px solid #000;
+              "
+              >SB</span
+            >
+            <span style="color: #fff; font-weight: 900; font-size: 9pt"
+              >SKILL BADLU</span
+            >
+            <span
+              style="
+                background: #ffe600;
+                color: #000;
+                font-weight: 900;
+                font-size: 7pt;
+                padding: 1px 5px;
+              "
+              >ADMIN PORTAL</span
+            >
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <span class="mock-tab active">ADMIN DESK</span>
+            <span class="mock-tab"
+              >📹 VIDEO APPROVALS <span class="tag-red">1</span></span
+            >
+            <span class="mock-tab"
+              >USER KYC QUEUE <span class="tag-red">1</span></span
+            >
+            <span class="mock-tab"
+              >💳 ONBOARDING PAYMENTS (₹99)
+              <span class="tag-green">4</span></span
+            >
+            <span class="mock-tab"
+              >DISPUTE ARBITRATION
+              <span class="badge-pill" style="font-size: 7pt">0</span></span
+            >
+            <span class="mock-tab">LEDGER AUDIT</span>
+          </div>
+        </div>
+
+        <div class="mock-status-bar">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div
+              style="
+                background: #ffe600;
+                color: #000;
+                padding: 2px 6px;
+                font-weight: 900;
+                border: 1px solid #000;
+              "
+            >
+              AD
+            </div>
+            <span style="color: #fff; font-weight: 800"
+              >SYSTEM ADMINISTRATOR</span
+            >
+            <span class="tag-yellow">ADMIN</span>
+            <span
+              style="
+                background: #fff;
+                color: #000;
+                padding: 2px 8px;
+                font-weight: 900;
+                font-size: 7.5pt;
+                border: 1px solid #000;
+              "
+              >SIGN OUT</span
+            >
+          </div>
+        </div>
+
+        <!-- 4 Core Executive KPI Cards -->
+        <div class="grid-4">
+          <div class="kpi-card" style="background: #e6ffed">
+            <div class="kpi-title">
+              <span>₹99 Onboarding Revenue</span> <span>💳</span>
+            </div>
+            <div class="kpi-value" style="color: #00aa44">₹396.00</div>
+            <div class="kpi-sub">4 Paid • 1 Pending Payment</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-title">
+              <span>Circulating Supply</span> <span>🪙</span>
+            </div>
+            <div class="kpi-value">300 CR</div>
+            <div class="kpi-sub">Sum of active swapper wallets</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-title">
+              <span>Pending KYC Queue</span> <span>⏳</span>
+            </div>
+            <div class="kpi-value" style="color: #ff9900">1 USER</div>
+            <div class="kpi-sub">Awaiting admin identity review</div>
+          </div>
+
+          <div class="kpi-card" style="background: #fffde6">
+            <div class="kpi-title">
+              <span>Video Approvals</span> <span>📹</span>
+            </div>
+            <div class="kpi-value" style="color: #ff2d55">1 PENDING</div>
+            <div class="kpi-sub">Awaiting masterclass review</div>
+          </div>
+        </div>
+
+        <table class="table-neo">
+          <thead>
+            <tr>
+              <th style="width: 25%">Tab / Module</th>
+              <th style="width: 20%">Badge Status</th>
+              <th>कार्य और प्रशासनिक अधिकार (Admin Responsibility)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. ADMIN DESK</strong></td>
+              <td><span class="tag-yellow">EXECUTIVE</span></td>
+              <td>
+                मुख्य ओवरव्यू डैशबोर्ड। सभी पेंडिंग टास्क ट्रे (KYC, वीडियो,
+                डिस्प्यूट) और 1-क्लिक सिस्टम ऑडिट।
+              </td>
+            </tr>
+            <tr>
+              <td><strong>2. VIDEO APPROVALS</strong></td>
+              <td><span class="tag-red">1 PENDING</span></td>
+              <td>
+                क्रिएटर्स द्वारा सबमिट किए गए वीडियो ट्यूटोरियल्स की मॉडरेशन और
+                अप्रूवल/रिजेक्शन।
+              </td>
+            </tr>
+            <tr>
+              <td><strong>3. USER KYC QUEUE</strong></td>
+              <td><span class="tag-red">1 PENDING</span></td>
+              <td>
+                नए रजिस्टर्ड आवेदकों का प्री-लॉगिन आइडेंटिटी वेरिफिकेशन गेट।
+              </td>
+            </tr>
+            <tr>
+              <td><strong>4. ONBOARDING PAYMENTS</strong></td>
+              <td><span class="tag-green">4 SETTLED</span></td>
+              <td>
+                वेरिफाइड यूजर्स द्वारा चुकाई गई ₹99 फीस का रियल-टाइम लेजर और CSV
+                एक्सपोर्ट।
+              </td>
+            </tr>
+            <tr>
+              <td><strong>5. DISPUTES</strong></td>
+              <td><span class="badge-pill">0 ACTIVE</span></td>
+              <td>
+                लर्नर व टीचर के बीच असफल सेशंस की मध्यस्थता और एस्क्रो फंड्स का
+                सेटलमेंट।
+              </td>
+            </tr>
+            <tr>
+              <td><strong>6. LEDGER AUDIT</strong></td>
+              <td><span class="tag-green">VERIFIED</span></td>
+              <td>
+                डबल-एंट्री लेजर का सॉलवेंसी प्रूफ और गणितीय सुलह रिपोर्ट
+                (Discrepancy Δ = 0 CR)।
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+       PAGE 2: KYC QUEUE & ₹99 ONBOARDING REVENUE LEDGER
+       ========================================================================= -->
+    <div class="page">
+      <div class="doc-header">
+        <div class="doc-brand">
+          <span class="brand-box">SB</span>
+          <span class="brand-title">SKILL BADLU</span>
+          <span class="brand-tag">KYC & REVENUE</span>
+        </div>
+        <div class="doc-meta">SECURITY GATE 1 & REVENUE GATE 2</div>
+      </div>
+
+      <!-- 2. USER KYC QUEUE -->
+      <div class="section-box">
+        <div class="section-header-neo green">
+          <span>2. USER KYC QUEUE — Pre-Login Identity Verification Gate</span>
+          <span class="badge-pill">GATEWAY 1</span>
+        </div>
+
+        <p style="font-size: 9pt; margin-bottom: 12px; color: #374151">
+          प्लेटफॉर्म की सुरक्षा के लिए कोई भी नया यूजर तब तक लॉगिन नहीं कर सकता
+          जब तक एडमिन उसके डाक्यूमेंट्स और स्किल्स को अप्रूव न कर दे।
+        </p>
+
+        <div class="grid-2">
+          <div class="feature-card">
+            <div class="feature-card-title">
+              <span class="tag-yellow">REVIEW</span> Pending KYC Submissions
+            </div>
+            <div class="feature-card-desc">
+              • <strong>Applicant Info:</strong> पूरा नाम, ईमेल एड्रेस, सिखाने
+              वाली स्किल्स।<br />
+              • <strong>Admin Action:</strong>
+              <code>✓ Approve Applicant</code> या
+              <code>✕ Reject Application</code>।<br />
+              • <strong>Approval Effect:</strong> यूजर का स्टेटस
+              <code>VERIFIED</code> होता है और वह लॉगिन पर ₹99 पेमेंट गेटवे पर
+              आगे बढ़ता है।
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-title">
+              <span class="tag-green">VERIFIED</span> Verified Members Directory
+            </div>
+            <div class="feature-card-desc">
+              • सभी सक्रिय व स्वीकृत स्वैपर्स की सूची।<br />
+              • वेरिफिकेशन टाइमस्टैम्प और ऑनबोर्डिंग फीस स्टेटस (<code
+                >PAID</code
+              >
+              / <code>PENDING_PAYMENT</code>)।<br />
+              • किसी भी यूजर के अकाउंट को जरूरत पड़ने पर सस्पेंड करने की क्षमता।
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ONBOARDING PAYMENTS (₹99) -->
+      <div class="section-box">
+        <div class="section-header-neo">
+          <span>3. ONBOARDING PAYMENTS (₹99) — Platform Screening Revenue</span>
+          <span class="badge-pill">GATEWAY 2</span>
+        </div>
+
+        <p style="font-size: 9pt; margin-bottom: 12px; color: #374151">
+          एडमिन वेरिफिकेशन के बाद हर यूजर को लॉगिन के समय ₹99 की वन-टाइम
+          ऑनबोर्डिंग फीस चुकानी होती है, जिससे उसे 50 Welcome Credits मिलते हैं।
+        </p>
+
+        <div
+          class="feature-card"
+          style="background: #000; color: #fff; margin-bottom: 12px"
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div>
+              <div
+                style="
+                  font-size: 7.5pt;
+                  color: #aaa;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                "
+              >
+                Total Onboarding Revenue
+              </div>
+              <div
+                style="
+                  font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;
+                  font-size: 16pt;
+                  font-weight: 900;
+                  color: #00ff66;
+                "
+              >
+                ₹396.00 INR
+              </div>
+            </div>
+            <div style="font-size: 8pt; text-align: right">
+              <div>
+                <strong>Paid Members:</strong>
+                <span style="color: #00ff66">4 Users (₹396)</span>
+              </div>
+              <div>
+                <strong>Awaiting Payment:</strong>
+                <span style="color: #ffe600">1 User (₹99)</span>
+              </div>
+              <div>
+                <strong>GST Breakdown:</strong> Base ₹83.90 + 18% GST ₹15.10
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <table class="table-neo">
+          <thead>
+            <tr>
+              <th>Tx Ref ID</th>
+              <th>Member</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>PAY_99_LV8921</code></td>
+              <td>Leo Vance</td>
+              <td>₹99.00</td>
+              <td>UPI (Google Pay)</td>
+              <td><span class="tag-green">SETTLED</span></td>
+            </tr>
+            <tr>
+              <td><code>PAY_99_PP3410</code></td>
+              <td>Priya Patel</td>
+              <td>₹99.00</td>
+              <td>UPI (PhonePe)</td>
+              <td><span class="tag-green">SETTLED</span></td>
+            </tr>
+            <tr>
+              <td><code>PAY_99_CD9912</code></td>
+              <td>Camille Dubois</td>
+              <td>₹99.00</td>
+              <td>Credit Card</td>
+              <td><span class="tag-green">SETTLED</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box">
+          <strong>📥 Export Payments CSV:</strong> एडमिन 1-क्लिक में पूरी पेमेंट
+          हिस्ट्री को CSV फॉर्मेट में डाउनलोड कर सकता है, जिसमें GST इनवॉइस SAC
+          Code <code>998431</code> और सेटलमेंट टाइमस्टैम्प शामिल होते हैं।
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+       PAGE 3: VIDEO MODERATION, DISPUTE ARBITRATION & SOLVENCY AUDIT
+       ========================================================================= -->
+    <div class="page">
+      <div class="doc-header">
+        <div class="doc-brand">
+          <span class="brand-box">SB</span>
+          <span class="brand-title">SKILL BADLU</span>
+          <span class="brand-tag">MODERATION & AUDIT</span>
+        </div>
+        <div class="doc-meta">CONTENT INTEGRITY & CRYPTO RECONCILIATION</div>
+      </div>
+
+      <!-- 4. VIDEO UPLOAD APPROVALS -->
+      <div class="section-box">
+        <div class="section-header-neo red">
+          <span
+            >4. VIDEO UPLOAD APPROVALS — Educator Masterclass Moderation</span
+          >
+          <span class="badge-pill" style="color: #000">CONTENT GATE</span>
+        </div>
+
+        <div class="grid-2">
+          <div class="feature-card">
+            <div class="feature-card-title">
+              📹 Video Review & Player Inspection
+            </div>
+            <div class="feature-card-desc">
+              • <strong>Submission Metadata:</strong> कोर्स का शीर्षक, कैटेगरी,
+              क्रेडिट प्राइस (उदा. 30 CR), अवधि (15 mins), और वीडियो स्ट्रीम
+              URL।<br />
+              • <strong>Video Screening:</strong> एडमिन अंतर्निहित प्लेयर में
+              वीडियो चलाकर ऑडियो-वीडियो क्लैरिटी की जांच करता है।<br />
+              • <strong>Publish Action:</strong>
+              <code>✓ Approve & Publish</code> दबाने पर कोर्स तुरंत पब्लिक
+              लाइब्रेरी में लाइव हो जाता है।
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-title">
+              ⚙️ Educator Rights & Permissions
+            </div>
+            <div class="feature-card-desc">
+              • <strong>Upload Toggle:</strong> एडमिन किसी भी मेंबर के लिए
+              वीडियो अपलोड परमिशन (<code>can_upload_videos</code>) ऑन या ऑफ कर
+              सकता है।<br />
+              • <strong>Revoke / Unpublish:</strong> किसी भी आपत्तिजनक या पुरानी
+              वीडियो को 1-क्लिक में पब्लिक लाइब्रेरी से हटाया जा सकता है।
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. DISPUTE ARBITRATION & 6. LEDGER AUDIT -->
+      <div class="grid-2">
+        <!-- 5. Dispute Arbitration -->
+        <div class="section-box" style="margin-bottom: 0">
+          <div class="section-header-neo black">
+            <span>5. DISPUTE ARBITRATION</span>
+            <span class="badge-pill" style="color: #000">ESCROW DESK</span>
+          </div>
+          <p style="font-size: 8.5pt; color: #333; margin-bottom: 10px">
+            जब कोई स्वैप सेशन विवादित (Disputed) होता है, तो 50 CR प्लेटफॉर्म
+            एस्क्रो में लॉक हो जाते हैं। एडमिन के पास 3 फैसले लेने का अधिकार
+            होता है:
+          </p>
+          <div
+            style="
+              font-size: 8.2pt;
+              line-height: 1.45;
+              background: #faf9f5;
+              border: 1.5px solid #000;
+              padding: 8px;
+            "
+          >
+            • <strong>Refund Learner:</strong> 100% क्रेडिट्स लर्नर को वापस।<br />
+            • <strong>Pay Teacher:</strong> 100% क्रेडिट्स टीचर को ट्रांसफर।<br />
+            • <strong>Split 50/50:</strong> दोनों को 25-25 CR विभाजित।
+          </div>
+        </div>
+
+        <!-- 6. Ledger Audit -->
+        <div class="section-box" style="margin-bottom: 0">
+          <div class="section-header-neo green">
+            <span>6. LEDGER AUDIT</span>
+            <span class="badge-pill">PROOF OF SOLVENCY</span>
+          </div>
+          <p style="font-size: 8.5pt; color: #333; margin-bottom: 10px">
+            डबल-एंट्री लेजर का गणितीय ऑडिट जो साबित करता है कि कोई फर्जी क्रेडिट
+            नहीं बनाया गया है:
+          </p>
+          <div
+            style="
+              font-size: 8.2pt;
+              line-height: 1.45;
+              background: #faf9f5;
+              border: 1.5px solid #000;
+              padding: 8px;
+            "
+          >
+            • <strong>Total Minted:</strong> 300 CR (Welcome + Mining)<br />
+            • <strong>Total Cashed Out:</strong> 0 CR<br />
+            • <strong>Circulating Wallets:</strong> 300 CR<br />
+            • <strong>Discrepancy (Δ):</strong>
+            <strong style="color: #00aa44">0 CR (100% SOLVENT)</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Workflow Summary Box -->
+      <div
+        class="highlight-box"
+        style="background: #f0fdf4; border-color: #00aa44; margin-top: 14px"
+      >
+        <strong>🎯 Complete Admin Lifecycle Protocol:</strong><br />
+        <strong>1. Verify KYC:</strong> आवेदक की पहचान जांचकर स्वीकृत करें
+        $\rightarrow$ यूजर को ₹99 भुगतान की अनुमति मिलती है।<br />
+        <strong>2. Track Revenue:</strong> ₹99 के सभी लेन-देन और जीएसटी विवरण
+        <strong>Onboarding Payments</strong> में ट्रैक करें।<br />
+        <strong>3. Moderate Academy:</strong> नए वीडियो ट्यूटोरियल्स का परीक्षण
+        कर उन्हें लाइब्रेरी में प्रकाशित करें।<br />
+        <strong>4. Sovereign Audit:</strong> लेजर सॉलवेंसी रिपोर्ट चलाकर
+        सुनिश्चित करें कि गणितीय संतुलन $\Delta = 0\text{ CR}$ बना रहे।
+      </div>
+    </div>
+  </body>
+</html>
