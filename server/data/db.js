@@ -3,15 +3,15 @@
  * Handles Users, Transactions, Onboarding Payments (₹99), Sessions, and Ledger.
  */
 
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcryptjs');
+const fs = require("fs");
+const path = require("path");
+const bcrypt = require("bcryptjs");
 
-const DB_FILE = path.join(__dirname, 'db.json');
+const DB_FILE = path.join(__dirname, "db.json");
 
 // Default initial seed data with pre-hashed demo passwords
 function getInitialSeedData() {
-  const defaultPasswordHash = bcrypt.hashSync('password123', 8);
+  const defaultPasswordHash = bcrypt.hashSync("password123", 8);
 
   return {
     users: [
@@ -46,11 +46,26 @@ function getInitialSeedData() {
         avatar: "👨‍💻",
         headline: "Senior React & Node.js Architect",
         skillsHave: [
-          { skill_id: "sk_react", name: "React & Next.js", category: "tech", level: 5 },
-          { skill_id: "sk_node", name: "Node.js & Express", category: "tech", level: 4 }
+          {
+            skill_id: "sk_react",
+            name: "React & Next.js",
+            category: "tech",
+            level: 5
+          },
+          {
+            skill_id: "sk_node",
+            name: "Node.js & Express",
+            category: "tech",
+            level: 4
+          }
         ],
         skillsWant: [
-          { skill_id: "sk_figma", name: "Figma UI/UX Design", category: "design", target_level: 4 }
+          {
+            skill_id: "sk_figma",
+            name: "Figma UI/UX Design",
+            category: "design",
+            target_level: 4
+          }
         ],
         credits: 50,
         rating: 4.9,
@@ -75,11 +90,26 @@ function getInitialSeedData() {
         avatar: "🎨",
         headline: "Product Designer & Design Systems Lead",
         skillsHave: [
-          { skill_id: "sk_figma", name: "Figma UI/UX Design", category: "design", level: 5 },
-          { skill_id: "sk_brand", name: "Brand Identity Design", category: "design", level: 4 }
+          {
+            skill_id: "sk_figma",
+            name: "Figma UI/UX Design",
+            category: "design",
+            level: 5
+          },
+          {
+            skill_id: "sk_brand",
+            name: "Brand Identity Design",
+            category: "design",
+            level: 4
+          }
         ],
         skillsWant: [
-          { skill_id: "sk_react", name: "React & Next.js", category: "tech", target_level: 3 }
+          {
+            skill_id: "sk_react",
+            name: "React & Next.js",
+            category: "tech",
+            target_level: 3
+          }
         ],
         credits: 40,
         rating: 4.95,
@@ -104,11 +134,26 @@ function getInitialSeedData() {
         avatar: "🚀",
         headline: "Growth Marketer & SEO Specialist",
         skillsHave: [
-          { skill_id: "sk_seo", name: "Technical SEO & SEM", category: "marketing", level: 5 },
-          { skill_id: "sk_growth", name: "Funnel Optimization", category: "marketing", level: 4 }
+          {
+            skill_id: "sk_seo",
+            name: "Technical SEO & SEM",
+            category: "marketing",
+            level: 5
+          },
+          {
+            skill_id: "sk_growth",
+            name: "Funnel Optimization",
+            category: "marketing",
+            level: 4
+          }
         ],
         skillsWant: [
-          { skill_id: "sk_python", name: "Python Data Analysis", category: "tech", target_level: 4 }
+          {
+            skill_id: "sk_python",
+            name: "Python Data Analysis",
+            category: "tech",
+            target_level: 4
+          }
         ],
         credits: 60,
         rating: 4.8,
@@ -133,10 +178,20 @@ function getInitialSeedData() {
         avatar: "👩‍💼",
         headline: "Python Data Science Enthusiast",
         skillsHave: [
-          { skill_id: "sk_python", name: "Python & Pandas", category: "tech", level: 4 }
+          {
+            skill_id: "sk_python",
+            name: "Python & Pandas",
+            category: "tech",
+            level: 4
+          }
         ],
         skillsWant: [
-          { skill_id: "sk_growth", name: "Performance Marketing", category: "marketing", target_level: 3 }
+          {
+            skill_id: "sk_growth",
+            name: "Performance Marketing",
+            category: "marketing",
+            target_level: 3
+          }
         ],
         credits: 0,
         rating: 0,
@@ -158,10 +213,20 @@ function getInitialSeedData() {
         avatar: "👨‍🏫",
         headline: "Full-Stack Devops & Docker Specialist",
         skillsHave: [
-          { skill_id: "sk_docker", name: "Docker & Kubernetes", category: "tech", level: 5 }
+          {
+            skill_id: "sk_docker",
+            name: "Docker & Kubernetes",
+            category: "tech",
+            level: 5
+          }
         ],
         skillsWant: [
-          { skill_id: "sk_react", name: "Next.js 15", category: "tech", target_level: 4 }
+          {
+            skill_id: "sk_react",
+            name: "Next.js 15",
+            category: "tech",
+            target_level: 4
+          }
         ],
         credits: 0,
         rating: 0,
@@ -183,10 +248,10 @@ function getInitialSeedData() {
         user_id: "user_a",
         user_name: "Rahul Sharma",
         user_email: "rahul.sharma@example.com",
-        amount: 99.00,
+        amount: 99.0,
         currency: "INR",
-        base_amount: 83.90,
-        gst_amount: 15.10,
+        base_amount: 83.9,
+        gst_amount: 15.1,
         gst_rate: "18%",
         hsn_code: "998431",
         method: "UPI (Instant)",
@@ -202,10 +267,10 @@ function getInitialSeedData() {
         user_id: "user_b",
         user_name: "Priya Patel",
         user_email: "priya.patel@example.com",
-        amount: 99.00,
+        amount: 99.0,
         currency: "INR",
-        base_amount: 83.90,
-        gst_amount: 15.10,
+        base_amount: 83.9,
+        gst_amount: 15.1,
         gst_rate: "18%",
         hsn_code: "998431",
         method: "Credit/Debit Card",
@@ -221,10 +286,10 @@ function getInitialSeedData() {
         user_id: "user_c",
         user_name: "Amit Kumar",
         user_email: "amit.kumar@example.com",
-        amount: 99.00,
+        amount: 99.0,
         currency: "INR",
-        base_amount: 83.90,
-        gst_amount: 15.10,
+        base_amount: 83.9,
+        gst_amount: 15.1,
         gst_rate: "18%",
         hsn_code: "998431",
         method: "UPI (GooglePay)",
@@ -242,7 +307,8 @@ function getInitialSeedData() {
         from_id: "SYSTEM_MINT",
         to_id: "user_a",
         amount: 50,
-        description: "Welcome bonus grant upon ₹99 onboarding payment verification",
+        description:
+          "Welcome bonus grant upon ₹99 onboarding payment verification",
         timestamp: "2026-02-10T11:05:00.000Z"
       },
       {
@@ -251,7 +317,8 @@ function getInitialSeedData() {
         from_id: "SYSTEM_MINT",
         to_id: "user_b",
         amount: 50,
-        description: "Welcome bonus grant upon ₹99 onboarding payment verification",
+        description:
+          "Welcome bonus grant upon ₹99 onboarding payment verification",
         timestamp: "2026-02-12T14:50:00.000Z"
       },
       {
@@ -260,7 +327,8 @@ function getInitialSeedData() {
         from_id: "SYSTEM_MINT",
         to_id: "user_c",
         amount: 50,
-        description: "Welcome bonus grant upon ₹99 onboarding payment verification",
+        description:
+          "Welcome bonus grant upon ₹99 onboarding payment verification",
         timestamp: "2026-02-15T09:35:00.000Z"
       }
     ],
@@ -282,7 +350,7 @@ class Database {
       }
 
       if (fs.existsSync(DB_FILE)) {
-        const raw = fs.readFileSync(DB_FILE, 'utf-8');
+        const raw = fs.readFileSync(DB_FILE, "utf-8");
         this.data = JSON.parse(raw);
         // Ensure all required top-level arrays exist
         if (!this.data.users) this.data.users = [];
@@ -294,14 +362,17 @@ class Database {
         this.save();
       }
     } catch (err) {
-      console.error("[DB Init Error] Falling back to default seed data:", err.message);
+      console.error(
+        "[DB Init Error] Falling back to default seed data:",
+        err.message
+      );
       this.data = getInitialSeedData();
     }
   }
 
   save() {
     try {
-      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), "utf-8");
       return true;
     } catch (err) {
       console.error("[DB Save Error]:", err.message);
@@ -322,12 +393,16 @@ class Database {
 
   findUserById(id) {
     if (!id) return null;
-    return this.data.users.find(u => u.id === id) || null;
+    return this.data.users.find((u) => u.id === id) || null;
   }
 
   findUserByEmail(email) {
     if (!email) return null;
-    return this.data.users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    return (
+      this.data.users.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase()
+      ) || null
+    );
   }
 
   createUser(userData) {
@@ -359,7 +434,7 @@ class Database {
   }
 
   updateUser(id, updates) {
-    const index = this.data.users.findIndex(u => u.id === id);
+    const index = this.data.users.findIndex((u) => u.id === id);
     if (index === -1) return null;
 
     this.data.users[index] = {
@@ -375,12 +450,14 @@ class Database {
   // --- Payment Orders ---
   createOrder(orderData) {
     const order = {
-      id: orderData.id || `ORDER_SB_99_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      id:
+        orderData.id ||
+        `ORDER_SB_99_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       user_id: orderData.userId,
-      amount: orderData.amount || 99.00,
+      amount: orderData.amount || 99.0,
       currency: "INR",
-      base_amount: 83.90,
-      gst_amount: 15.10,
+      base_amount: 83.9,
+      gst_amount: 15.1,
       purpose: orderData.purpose || "ONBOARDING_FEE",
       status: "CREATED",
       created_at: new Date().toISOString(),
@@ -393,11 +470,11 @@ class Database {
   }
 
   findOrderById(orderId) {
-    return this.data.payment_orders.find(o => o.id === orderId) || null;
+    return this.data.payment_orders.find((o) => o.id === orderId) || null;
   }
 
   updateOrder(orderId, updates) {
-    const index = this.data.payment_orders.findIndex(o => o.id === orderId);
+    const index = this.data.payment_orders.findIndex((o) => o.id === orderId);
     if (index === -1) return null;
 
     this.data.payment_orders[index] = {
@@ -413,22 +490,26 @@ class Database {
   createPayment(paymentData) {
     const count = this.data.onboarding_payments.length + 1;
     const year = new Date().getFullYear();
-    const invoiceNumber = `INV-SB-${year}-${String(count).padStart(4, '0')}`;
+    const invoiceNumber = `INV-SB-${year}-${String(count).padStart(4, "0")}`;
 
     const payment = {
-      id: paymentData.id || `PAY_99_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      id:
+        paymentData.id ||
+        `PAY_99_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       order_id: paymentData.orderId || null,
       user_id: paymentData.userId,
       user_name: paymentData.userName,
       user_email: paymentData.userEmail,
-      amount: 99.00,
+      amount: 99.0,
       currency: "INR",
-      base_amount: 83.90,
-      gst_amount: 15.10,
+      base_amount: 83.9,
+      gst_amount: 15.1,
       gst_rate: "18%",
       hsn_code: "998431",
       method: paymentData.method || "UPI (Instant)",
-      gateway_ref: paymentData.gatewayRef || `TXN_${Date.now()}_${Math.floor(100000 + Math.random() * 900000)}`,
+      gateway_ref:
+        paymentData.gatewayRef ||
+        `TXN_${Date.now()}_${Math.floor(100000 + Math.random() * 900000)}`,
       status: "COMPLETED",
       credits_granted: 50,
       invoice_number: invoiceNumber,
@@ -445,13 +526,17 @@ class Database {
   }
 
   findPaymentById(paymentId) {
-    return this.data.onboarding_payments.find(p => p.id === paymentId) || null;
+    return (
+      this.data.onboarding_payments.find((p) => p.id === paymentId) || null
+    );
   }
 
   // --- Ledger ---
   addLedgerEntry(entry) {
     const ledgerEntry = {
-      id: entry.id || `tx_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      id:
+        entry.id ||
+        `tx_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       type: entry.type || "TRANSFER",
       from_id: entry.from_id || entry.fromId,
       to_id: entry.to_id || entry.toId,
@@ -473,12 +558,24 @@ class Database {
   getRevenueMetrics() {
     const payments = this.data.onboarding_payments;
     const totalRevenue = payments.reduce((acc, p) => acc + (p.amount || 99), 0);
-    const totalGst = payments.reduce((acc, p) => acc + (p.gst_amount || 15.10), 0);
-    const totalBase = payments.reduce((acc, p) => acc + (p.base_amount || 83.90), 0);
+    const totalGst = payments.reduce(
+      (acc, p) => acc + (p.gst_amount || 15.1),
+      0
+    );
+    const totalBase = payments.reduce(
+      (acc, p) => acc + (p.base_amount || 83.9),
+      0
+    );
 
     const paidUsersCount = payments.length;
-    const pendingPaymentUsers = this.data.users.filter(u => u.verification_status === "APPROVED" && u.fee_status === "PENDING_PAYMENT").length;
-    const pendingKycUsers = this.data.users.filter(u => u.verification_status === "PENDING").length;
+    const pendingPaymentUsers = this.data.users.filter(
+      (u) =>
+        u.verification_status === "APPROVED" &&
+        u.fee_status === "PENDING_PAYMENT"
+    ).length;
+    const pendingKycUsers = this.data.users.filter(
+      (u) => u.verification_status === "PENDING"
+    ).length;
 
     const methodBreakdown = payments.reduce((acc, p) => {
       const m = p.method || "Other";

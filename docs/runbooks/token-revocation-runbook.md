@@ -4,7 +4,7 @@
 **Target Audience:** On-Call Engineers, Security Incident Responders, Backend Engineers  
 **Severity Scope:** P1 / P2 Security Incidents (Compromised Accounts, Leaked JWTs, Offboarding)  
 **Related Architecture Decision:** [ADR 0001: Firebase Auth + FastAPI + PostgreSQL](../adr/0001-firebase-auth-fastapi-postgresql.md)  
-**Last Updated:** 2026-09-06  
+**Last Updated:** 2026-09-06
 
 ---
 
@@ -13,6 +13,7 @@
 In our architecture, the client stores a 1-hour Firebase ID token (JWT) and uses it as a bearer token for FastAPI API requests. Under normal operation, the backend verifies tokens statelessly using public cryptographic keys.
 
 However, in scenarios where:
+
 - A user's device or credentials are compromised,
 - An ID token has been leaked (e.g., via XSS, log exfiltration, or commit leak),
 - An employee or privileged user is terminated or suspended,
@@ -21,6 +22,7 @@ However, in scenarios where:
 engineers must execute an immediate **token revocation** to prevent further unauthorized API access before the natural 1-hour JWT expiration window closes.
 
 This runbook outlines:
+
 1. The technical mechanism of Firebase token revocation.
 2. Step-by-step incident response procedures.
 3. Administrative CLI and API execution options.
@@ -32,24 +34,31 @@ This runbook outlines:
 ## 2. Technical Mechanism & Architecture
 
 ### 2.1 The Two Token Classes
+
 Firebase Authentication uses two distinct tokens:
+
 1. **ID Token (JWT):** Short-lived (1 hour). Stored on the client, passed to FastAPI in `Authorization: Bearer <token>`. Contains user claims and the issuance timestamp (`auth_time` / `iat`).
 2. **Refresh Token:** Long-lived. Managed securely by the Firebase client SDK. Exchanged silently by the client for new ID tokens without prompting the user.
 
 ### 2.2 How `revokeRefreshTokens` Works
+
 When `admin.auth().revoke_refresh_tokens(uid)` is invoked:
+
 1. Firebase updates the user's metadata record with a `validSince` / `tokensValidAfterTime` timestamp (in UTC seconds).
 2. The user's long-lived refresh token is invalidated across all devices immediately.
 3. The Firebase client SDK can **no longer exchange the refresh token** for new ID tokens.
 
 ### 2.3 Critical Backend Implication: `check_revoked=True`
+
 > [!WARNING]
 > **Stateless verification does NOT detect revocation by default.**  
 > Standard `auth.verify_id_token(token)` only verifies cryptographic signatures and expiry dates locally using Google's cached public certificates.  
 > To actively reject an ID token before its 1-hour lifespan expires, FastAPI must call:
+>
 > ```python
 > auth.verify_id_token(token, check_revoked=True)
 > ```
+>
 > When `check_revoked=True` is supplied, the Firebase Admin SDK validates whether the token's issuance timestamp (`iat`) is earlier than the user's `tokensValidAfterTime`. If it was issued prior to the revocation event, the SDK raises `firebase_admin.auth.RevokedIdTokenError`.
 
 ```
@@ -76,6 +85,7 @@ When `admin.auth().revoke_refresh_tokens(uid)` is invoked:
 ## 3. Incident Response Procedures (Step-by-Step)
 
 ### Phase 1: Identification & Triage (Time: 0 - 5 Minutes)
+
 1. **Identify the Target Account:**
    - Obtain the user's email address or Firebase `uid`.
    - If only an IP address or log trace is available, query PostgreSQL or access logs to correlate with `users.firebase_uid`.
@@ -92,6 +102,7 @@ When `admin.auth().revoke_refresh_tokens(uid)` is invoked:
 Choose one of the following execution methods based on your access level:
 
 #### Method A: Administrative CLI Script (Recommended)
+
 Run the provided workspace administrative script [`scripts/revoke_user_tokens.py`](../../scripts/revoke_user_tokens.py):
 
 ```bash
@@ -106,6 +117,7 @@ python scripts/revoke_user_tokens.py --email "target-user@example.com" --disable
 ```
 
 Expected output:
+
 ```text
 [INFO] Looking up user by email: target-user@example.com
 [SUCCESS] Located user: uid=abc123xyz456, email=target-user@example.com
@@ -115,7 +127,9 @@ Expected output:
 ```
 
 #### Method B: Firebase Web Console
+
 If CLI access is unavailable:
+
 1. Log in to the [Firebase Console](https://console.firebase.google.com/).
 2. Select the project environment (`production` or `staging`).
 3. Navigate to **Authentication** > **Users**.
@@ -125,7 +139,9 @@ If CLI access is unavailable:
    - If immediate lockout is required, click **Disable account**.
 
 #### Method C: Direct Python Interactive Shell / One-Liner
+
 If on a production container or bastion host:
+
 ```bash
 python -c '
 import firebase_admin
@@ -145,11 +161,12 @@ print(f"Revoked tokens for {user.uid}. Valid after: {auth.get_user(user.uid).tok
 Firebase revocation stops future token issuance and bearer token validation in FastAPI. However, active state in PostgreSQL must also be addressed:
 
 1. **Disable User in PostgreSQL:**
+
    ```sql
    -- Connect to production PostgreSQL database
-   UPDATE users 
+   UPDATE users
    SET is_active = FALSE,
-       updated_at = NOW() 
+       updated_at = NOW()
    WHERE firebase_uid = 'FIREBASE_UID_HERE';
    ```
 
@@ -186,7 +203,9 @@ Firebase revocation stops future token issuance and bearer token validation in F
 To guarantee that revoked tokens are rejected immediately, FastAPI endpoints must integrate `check_revoked=True` into authentication dependencies.
 
 ### 4.1 Recommended Dual-Tier Verification Strategy
+
 Checking revocation with Firebase on every trivial read request introduces an outbound network call (or cache lookup). We recommend a two-tiered model:
+
 - **Tier 1 (High Security / Mutation Endpoints):** `check_revoked=True` is enforced on state-changing operations (`POST`, `PUT`, `DELETE`, `/billing`, `/admin`, `/auth/change-password`).
 - **Tier 2 (General Read Endpoints):** Fast stateless verification (`check_revoked=False`) or checking a local revocation cache in Redis/PostgreSQL.
 
@@ -257,25 +276,25 @@ async def get_current_verified_user(
 After running the revocation, verify the following:
 
 - [ ] **Verification 1: Old ID Token Rejection**  
-  Attempt an API request using the old token. The backend must return:
+      Attempt an API request using the old token. The backend must return:
   ```http
   HTTP/1.1 401 Unauthorized
   WWW-Authenticate: Bearer error="token_revoked"
   {"detail": "Authentication token has been revoked. Please re-authenticate."}
   ```
 - [ ] **Verification 2: Refresh Token Failure**  
-  Verify the client cannot obtain a new token using the existing refresh token.
+      Verify the client cannot obtain a new token using the existing refresh token.
 - [ ] **Verification 3: Database Status Confirmed**  
-  Verify `users.is_active` reflects the desired quarantine status in PostgreSQL.
+      Verify `users.is_active` reflects the desired quarantine status in PostgreSQL.
 - [ ] **Verification 4: Audit Trail Logged**  
-  Log incident details, timestamp of revocation, ticket number, and engineer name in the security incident log.
+      Log incident details, timestamp of revocation, ticket number, and engineer name in the security incident log.
 
 ---
 
 ## 6. Escalation Matrix
 
-| Role | Contact | Escalation Condition |
-| :--- | :--- | :--- |
-| **Primary On-Call** | PagerDuty / Slack `#oncall-backend` | Initial account compromise or single-user token leak |
-| **Security Lead** | `@security-lead` / `#security-incidents` | Mass credential stuffing, confirmed DB leak, or Admin account compromise |
-| **Data Protection Officer (DPO)** | `privacy@company.com` | Confirmed PII or sensitive customer data exfiltration |
+| Role                              | Contact                                  | Escalation Condition                                                     |
+| :-------------------------------- | :--------------------------------------- | :----------------------------------------------------------------------- |
+| **Primary On-Call**               | PagerDuty / Slack `#oncall-backend`      | Initial account compromise or single-user token leak                     |
+| **Security Lead**                 | `@security-lead` / `#security-incidents` | Mass credential stuffing, confirmed DB leak, or Admin account compromise |
+| **Data Protection Officer (DPO)** | `privacy@company.com`                    | Confirmed PII or sensitive customer data exfiltration                    |

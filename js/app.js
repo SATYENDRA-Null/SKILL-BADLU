@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Navigation Controller
   function bindNavigation() {
-    elNavTabs.forEach(tabBtn => {
+    elNavTabs.forEach((tabBtn) => {
       tabBtn.addEventListener("click", () => {
         const targetId = tabBtn.getAttribute("data-tab");
         switchTab(targetId);
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Handle any in-page tab jumps
-    document.querySelectorAll("[data-jump-tab]").forEach(el => {
+    document.querySelectorAll("[data-jump-tab]").forEach((el) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
         const targetId = el.getAttribute("data-jump-tab");
@@ -148,11 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function switchTab(targetId) {
-    elNavTabs.forEach(btn => {
+    elNavTabs.forEach((btn) => {
       btn.classList.toggle("active", btn.getAttribute("data-tab") === targetId);
     });
 
-    elSections.forEach(section => {
+    elSections.forEach((section) => {
       section.classList.toggle("active", section.id === targetId);
     });
 
@@ -174,11 +174,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
 
     // Update sessions badge count (pending confirmation)
-    const pendingConfCount = store.sessions.filter(s => s.status === "PENDING_CONFIRMATION" || s.status === "SCHEDULED").length;
+    const pendingConfCount = store.sessions.filter(
+      (s) => s.status === "PENDING_CONFIRMATION" || s.status === "SCHEDULED"
+    ).length;
     const sessionBadge = document.getElementById("sessions-tab-badge");
     if (sessionBadge) {
       sessionBadge.textContent = pendingConfCount;
-      sessionBadge.style.display = pendingConfCount > 0 ? "inline-block" : "none";
+      sessionBadge.style.display =
+        pendingConfCount > 0 ? "inline-block" : "none";
     }
   }
 
@@ -192,25 +195,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const haveCountEl = document.getElementById("skills-have-count");
     const wantCountEl = document.getElementById("skills-want-count");
 
-    if (haveCountEl) haveCountEl.textContent = `${currentUser.skills_have.length} Skills`;
-    if (wantCountEl) wantCountEl.textContent = `${currentUser.skills_want.length} Skills`;
+    if (haveCountEl)
+      haveCountEl.textContent = `${currentUser.skills_have.length} Skills`;
+    if (wantCountEl)
+      wantCountEl.textContent = `${currentUser.skills_want.length} Skills`;
 
     const renderSkillCards = (skills, type) => {
-      return skills.map(skill => {
-        const catClass = `cat-${skill.category || 'tech'}`;
-        const levelNames = ["Beginner", "Intermediate", "Advanced", "Expert"];
-        const levelDots = [1, 2, 3, 4].map(l => 
-          `<span class="level-dot ${l <= skill.level ? 'active' : ''}"></span>`
-        ).join("");
+      return skills
+        .map((skill) => {
+          const catClass = `cat-${skill.category || "tech"}`;
+          const levelNames = ["Beginner", "Intermediate", "Advanced", "Expert"];
+          const levelDots = [1, 2, 3, 4]
+            .map(
+              (l) =>
+                `<span class="level-dot ${l <= skill.level ? "active" : ""}"></span>`
+            )
+            .join("");
 
-        return `
+          return `
           <div class="skill-pill-card">
             <div class="skill-main-info">
-              <span class="skill-category-tag ${catClass}">${skill.category || 'TECH'}</span>
+              <span class="skill-category-tag ${catClass}">${skill.category || "TECH"}</span>
               <div>
                 <div class="skill-name">${skill.name}</div>
                 <div class="level-indicator">
-                  <span>Level ${skill.level} (${levelNames[skill.level - 1] || 'Standard'})</span>
+                  <span>Level ${skill.level} (${levelNames[skill.level - 1] || "Standard"})</span>
                   <div class="level-dots">${levelDots}</div>
                 </div>
               </div>
@@ -220,20 +229,27 @@ document.addEventListener("DOMContentLoaded", () => {
             </button>
           </div>
         `;
-      }).join("");
+        })
+        .join("");
     };
 
-    if (haveListEl) haveListEl.innerHTML = renderSkillCards(currentUser.skills_have, "have");
-    if (wantListEl) wantListEl.innerHTML = renderSkillCards(currentUser.skills_want, "want");
+    if (haveListEl)
+      haveListEl.innerHTML = renderSkillCards(currentUser.skills_have, "have");
+    if (wantListEl)
+      wantListEl.innerHTML = renderSkillCards(currentUser.skills_want, "want");
   }
 
-  window.removeUserSkill = function(type, skillId) {
+  window.removeUserSkill = function (type, skillId) {
     const currentUser = store.getCurrentUser();
     if (!currentUser) return;
     if (type === "have") {
-      currentUser.skills_have = currentUser.skills_have.filter(s => s.skill_id !== skillId);
+      currentUser.skills_have = currentUser.skills_have.filter(
+        (s) => s.skill_id !== skillId
+      );
     } else {
-      currentUser.skills_want = currentUser.skills_want.filter(s => s.skill_id !== skillId);
+      currentUser.skills_want = currentUser.skills_want.filter(
+        (s) => s.skill_id !== skillId
+      );
     }
     store.notify("USER_SKILLS_UPDATED");
     showToast("Skill declaration updated.", "info");
@@ -262,16 +278,25 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    document.getElementById("btn-reset-weights")?.addEventListener("click", () => {
-      const defaultWeights = { w1: 0.30, w2: 0.15, w3: 0.35, w4: 0.10, w5: 0.10 };
-      matchmaker.setWeights(defaultWeights);
-      sliders.forEach(({ id, key, valId }) => {
-        document.getElementById(id).value = defaultWeights[key];
-        document.getElementById(valId).textContent = defaultWeights[key].toFixed(2);
+    document
+      .getElementById("btn-reset-weights")
+      ?.addEventListener("click", () => {
+        const defaultWeights = {
+          w1: 0.3,
+          w2: 0.15,
+          w3: 0.35,
+          w4: 0.1,
+          w5: 0.1
+        };
+        matchmaker.setWeights(defaultWeights);
+        sliders.forEach(({ id, key, valId }) => {
+          document.getElementById(id).value = defaultWeights[key];
+          document.getElementById(valId).textContent =
+            defaultWeights[key].toFixed(2);
+        });
+        renderMatchmaker();
+        showToast("Matchmaking weights reset to default.", "info");
       });
-      renderMatchmaker();
-      showToast("Matchmaking weights reset to default.", "info");
-    });
   }
 
   function renderMatchmaker() {
@@ -294,13 +319,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    container.innerHTML = matches.map(match => {
-      const cand = match.candidate;
-      const b = match.breakdown;
-      const teacheList = match.matchingSkills.candTeaches.map(s => `<strong>${s.name}</strong>`).join(", ");
-      const learnList = match.matchingSkills.userTeaches.map(s => `<strong>${s.name}</strong>`).join(", ");
+    container.innerHTML = matches
+      .map((match) => {
+        const cand = match.candidate;
+        const b = match.breakdown;
+        const teacheList = match.matchingSkills.candTeaches
+          .map((s) => `<strong>${s.name}</strong>`)
+          .join(", ");
+        const learnList = match.matchingSkills.userTeaches
+          .map((s) => `<strong>${s.name}</strong>`)
+          .join(", ");
 
-      return `
+        return `
         <div class="match-card">
           <div class="match-card-top">
             <div class="candidate-profile">
@@ -322,12 +352,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="swap-skills-preview">
             <div class="swap-side">
               <div class="swap-side-title">They Teach You</div>
-              <div class="swap-skill-pill">${teacheList || 'General Mentorship'}</div>
+              <div class="swap-skill-pill">${teacheList || "General Mentorship"}</div>
             </div>
             <div class="swap-arrow">⇄</div>
             <div class="swap-side">
               <div class="swap-side-title">You Teach Them</div>
-              <div class="swap-skill-pill">${learnList || 'Open for Proposal'}</div>
+              <div class="swap-skill-pill">${learnList || "Open for Proposal"}</div>
             </div>
           </div>
 
@@ -343,7 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <div class="breakdown-stat">
               <span class="breakdown-label">Mutual Swap</span>
-              <span class="breakdown-val">${b.isMutualSwap ? '✓ YES (Bonus)' : '✕ Direct'}</span>
+              <span class="breakdown-val">${b.isMutualSwap ? "✓ YES (Bonus)" : "✕ Direct"}</span>
             </div>
             <div class="breakdown-stat">
               <span class="breakdown-label">Rating Factor</span>
@@ -356,32 +386,40 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-            ${b.isMutualSwap ? `
+            ${
+              b.isMutualSwap
+                ? `
               <span class="mutual-swap-tag">
                 <span>⚡</span> True 2-Way Reciprocal Swap
               </span>
-            ` : `
+            `
+                : `
               <span style="font-size:0.8rem; color:var(--text-muted);">
                 Single-direction skill transfer
               </span>
-            `}
-            <button class="btn btn-primary btn-sm neo-btn neo-btn-primary" onclick="window.initiateSessionSwap('${cand.id}', '${match.matchingSkills.candTeaches[0]?.skill_id || ''}')">
+            `
+            }
+            <button class="btn btn-primary btn-sm neo-btn neo-btn-primary" onclick="window.initiateSessionSwap('${cand.id}', '${match.matchingSkills.candTeaches[0]?.skill_id || ""}')">
               Schedule Swap Session (50 CR)
             </button>
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
   }
 
-  window.initiateSessionSwap = function(teacherId, skillId) {
+  window.initiateSessionSwap = function (teacherId, skillId) {
     try {
       const newSession = sessions.requestSession({
         teacherId,
         skillId: skillId || "sk_french",
         creditAmount: 50
       });
-      showToast(`Swap session requested with ${store.getUser(teacherId).name}!`, "success");
+      showToast(
+        `Swap session requested with ${store.getUser(teacherId).name}!`,
+        "success"
+      );
       switchTab("tab-sessions");
     } catch (err) {
       showToast(err.message, "error");
@@ -405,12 +443,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    container.innerHTML = store.sessions.map(s => {
-      const learner = store.getUser(s.learner_id) || { name: s.learner_id };
-      const teacher = store.getUser(s.teacher_id) || { name: s.teacher_id };
-      const statusClass = `status-${s.status.toLowerCase()}`;
+    container.innerHTML = store.sessions
+      .map((s) => {
+        const learner = store.getUser(s.learner_id) || { name: s.learner_id };
+        const teacher = store.getUser(s.teacher_id) || { name: s.teacher_id };
+        const statusClass = `status-${s.status.toLowerCase()}`;
 
-      return `
+        return `
         <div class="session-card">
           <div class="session-header-row">
             <div class="session-title-block">
@@ -421,20 +460,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
               </div>
             </div>
-            <span class="session-status-badge ${statusClass}">${s.status.replace('_', ' ')}</span>
+            <span class="session-status-badge ${statusClass}">${s.status.replace("_", " ")}</span>
           </div>
 
           <!-- Two-Way Confirmation Stepper -->
           <div class="confirmation-stepper">
             <div class="confirm-box">
               <div class="confirm-user-info">
-                <span class="confirm-status-icon ${s.confirmed_by_a ? 'confirm-done' : 'confirm-waiting'}">
-                  ${s.confirmed_by_a ? '✓' : '1'}
+                <span class="confirm-status-icon ${s.confirmed_by_a ? "confirm-done" : "confirm-waiting"}">
+                  ${s.confirmed_by_a ? "✓" : "1"}
                 </span>
                 <div>
                   <div style="font-weight:600; font-size:0.9rem;">${learner.name}</div>
                   <div style="font-size:0.75rem; color:var(--text-muted);">
-                    Learner: ${s.confirmed_by_a ? '<span style="color:#34d399;">Confirmed</span>' : 'Awaiting Confirmation'}
+                    Learner: ${s.confirmed_by_a ? '<span style="color:#34d399;">Confirmed</span>' : "Awaiting Confirmation"}
                   </div>
                 </div>
               </div>
@@ -444,13 +483,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="confirm-box">
               <div class="confirm-user-info">
-                <span class="confirm-status-icon ${s.confirmed_by_b ? 'confirm-done' : 'confirm-waiting'}">
-                  ${s.confirmed_by_b ? '✓' : '2'}
+                <span class="confirm-status-icon ${s.confirmed_by_b ? "confirm-done" : "confirm-waiting"}">
+                  ${s.confirmed_by_b ? "✓" : "2"}
                 </span>
                 <div>
                   <div style="font-weight:600; font-size:0.9rem;">${teacher.name}</div>
                   <div style="font-size:0.75rem; color:var(--text-muted);">
-                    Teacher: ${s.confirmed_by_b ? '<span style="color:#34d399;">Confirmed</span>' : 'Awaiting Confirmation'}
+                    Teacher: ${s.confirmed_by_b ? '<span style="color:#34d399;">Confirmed</span>' : "Awaiting Confirmation"}
                   </div>
                 </div>
               </div>
@@ -463,53 +502,84 @@ document.addEventListener("DOMContentLoaded", () => {
               Session ID: <code style="color:#a5b4fc;">${s.id}</code>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              ${s.status === "REQUESTED" ? `
+              ${
+                s.status === "REQUESTED"
+                  ? `
                 <button class="btn btn-secondary btn-sm" onclick="window.advanceSessionState('${s.id}', 'accept')">
                   Accept & Schedule
                 </button>
-              ` : ''}
+              `
+                  : ""
+              }
 
-              ${s.status === "SCHEDULED" ? `
+              ${
+                s.status === "SCHEDULED"
+                  ? `
                 <button class="btn btn-primary btn-sm" onclick="window.advanceSessionState('${s.id}', 'start')">
                   Start Video Call
                 </button>
-              ` : ''}
+              `
+                  : ""
+              }
 
-              ${s.status === "IN_PROGRESS" ? `
+              ${
+                s.status === "IN_PROGRESS"
+                  ? `
                 <button class="btn btn-primary btn-sm" onclick="window.advanceSessionState('${s.id}', 'conclude')">
                   Conclude Session
                 </button>
-              ` : ''}
+              `
+                  : ""
+              }
 
-              ${(s.status === "PENDING_CONFIRMATION" || s.status === "SCHEDULED" || s.status === "IN_PROGRESS") ? `
-                ${!s.confirmed_by_a ? `
+              ${
+                s.status === "PENDING_CONFIRMATION" ||
+                s.status === "SCHEDULED" ||
+                s.status === "IN_PROGRESS"
+                  ? `
+                ${
+                  !s.confirmed_by_a
+                    ? `
                   <button class="btn btn-emerald btn-sm" onclick="window.confirmSessionRole('${s.id}', 'learner')">
                     Confirm as Learner (A)
                   </button>
-                ` : ''}
-                ${!s.confirmed_by_b ? `
+                `
+                    : ""
+                }
+                ${
+                  !s.confirmed_by_b
+                    ? `
                   <button class="btn btn-emerald btn-sm" onclick="window.confirmSessionRole('${s.id}', 'teacher')">
                     Confirm as Teacher (B)
                   </button>
-                ` : ''}
+                `
+                    : ""
+                }
                 <button class="btn btn-rose btn-sm" onclick="window.flagSessionDispute('${s.id}')">
                   Flag Dispute
                 </button>
-              ` : ''}
+              `
+                  : ""
+              }
 
-              ${s.status === "SETTLED" ? `
+              ${
+                s.status === "SETTLED"
+                  ? `
                 <div style="display:flex; align-items:center; gap:8px; color:#34d399; font-size:0.9rem; font-weight:600;">
                   <span>✓</span> Settled in Ledger (${s.agreed_credit_amount} CR Transferred)
                 </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
   }
 
-  window.advanceSessionState = function(sessionId, action) {
+  window.advanceSessionState = function (sessionId, action) {
     try {
       if (action === "accept") sessions.acceptSession(sessionId);
       if (action === "start") sessions.startSession(sessionId);
@@ -520,28 +590,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.confirmSessionRole = function(sessionId, role) {
+  window.confirmSessionRole = function (sessionId, role) {
     try {
       const result = sessions.confirmSession(sessionId, role);
       if (result.settled) {
-        showToast(`Both parties confirmed! ${result.settlement.transaction.amount} Credits settled to ledger atomically!`, "success");
+        showToast(
+          `Both parties confirmed! ${result.settlement.transaction.amount} Credits settled to ledger atomically!`,
+          "success"
+        );
       } else {
-        showToast(`Confirmed as ${role}. Waiting on peer confirmation for atomic ledger release.`, "info");
+        showToast(
+          `Confirmed as ${role}. Waiting on peer confirmation for atomic ledger release.`,
+          "info"
+        );
       }
     } catch (err) {
       showToast(err.message, "error");
     }
   };
 
-  window.flagSessionDispute = function(sessionId) {
-    const reason = prompt("Describe the dispute reason (e.g. peer did not attend, poor audio):", "Peer did not attend scheduled session.");
+  window.flagSessionDispute = function (sessionId) {
+    const reason = prompt(
+      "Describe the dispute reason (e.g. peer did not attend, poor audio):",
+      "Peer did not attend scheduled session."
+    );
     if (reason) {
       sessions.disputeSession(sessionId, reason);
-      showToast("Session moved to DISPUTED state. Excluded from ledger settlement pending admin review.", "error");
+      showToast(
+        "Session moved to DISPUTED state. Excluded from ledger settlement pending admin review.",
+        "error"
+      );
     }
   };
-
-
 
   // 5. Payout Gateway View
   function bindPayoutControls() {
@@ -550,7 +630,7 @@ document.addEventListener("DOMContentLoaded", () => {
       failureToggle.addEventListener("change", (e) => {
         payouts.setSimulateFailure(e.target.checked);
         showToast(
-          e.target.checked 
+          e.target.checked
             ? "Gateway Failure Simulation ENABLED. Next payout will demonstrate compensating reversal."
             : "Gateway Failure Simulation DISABLED. Normal transfers active.",
           e.target.checked ? "error" : "info"
@@ -558,34 +638,36 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    document.getElementById("btn-submit-payout")?.addEventListener("click", async () => {
-      const currentUser = store.getCurrentUser();
-      const amountInput = document.getElementById("input-payout-amount");
-      const btn = document.getElementById("btn-submit-payout");
-      const amount = parseInt(amountInput.value, 10);
+    document
+      .getElementById("btn-submit-payout")
+      ?.addEventListener("click", async () => {
+        const currentUser = store.getCurrentUser();
+        const amountInput = document.getElementById("input-payout-amount");
+        const btn = document.getElementById("btn-submit-payout");
+        const amount = parseInt(amountInput.value, 10);
 
-      if (!amount || amount <= 0) {
-        showToast("Please enter a valid payout credit amount.", "error");
-        return;
-      }
+        if (!amount || amount <= 0) {
+          showToast("Please enter a valid payout credit amount.", "error");
+          return;
+        }
 
-      btn.disabled = true;
-      btn.textContent = "Connecting to Payment Gateway...";
+        btn.disabled = true;
+        btn.textContent = "Connecting to Payment Gateway...";
 
-      try {
-        const res = await payouts.requestPayout({
-          userId: currentUser.id,
-          amount
-        });
-        showToast(res.message, "success");
-        amountInput.value = "";
-      } catch (err) {
-        showToast(err.message, "error");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Withdraw Funds via Razorpay";
-      }
-    });
+        try {
+          const res = await payouts.requestPayout({
+            userId: currentUser.id,
+            amount
+          });
+          showToast(res.message, "success");
+          amountInput.value = "";
+        } catch (err) {
+          showToast(err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Withdraw Funds via Razorpay";
+        }
+      });
   }
 
   function renderPayoutSection() {
@@ -597,7 +679,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const elFiatEquivalent = document.getElementById("payout-fiat-equivalent");
 
     if (elAvailable) elAvailable.textContent = `${availableBalance} CR`;
-    if (elFiatEquivalent) elFiatEquivalent.textContent = `₹${availableBalance * 10} INR`;
+    if (elFiatEquivalent)
+      elFiatEquivalent.textContent = `₹${availableBalance * 10} INR`;
   }
 
   // =========================================================
@@ -612,10 +695,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Category pills
-    const catPills = document.querySelectorAll("#edu-category-pills .edu-cat-btn");
-    catPills.forEach(btn => {
+    const catPills = document.querySelectorAll(
+      "#edu-category-pills .edu-cat-btn"
+    );
+    catPills.forEach((btn) => {
       btn.addEventListener("click", () => {
-        catPills.forEach(b => b.classList.remove("active"));
+        catPills.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         currentEduCategory = btn.getAttribute("data-cat") || "all";
         renderEducationSection();
@@ -632,7 +717,9 @@ document.addEventListener("DOMContentLoaded", () => {
     subTabs.forEach(({ id, tab }) => {
       const btn = document.getElementById(id);
       btn?.addEventListener("click", () => {
-        subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
+        subTabs.forEach((s) =>
+          document.getElementById(s.id)?.classList.remove("active")
+        );
         btn.classList.add("active");
         currentEduSubTab = tab;
         renderEducationSection();
@@ -640,68 +727,104 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Quick jump to my enrolled courses
-    document.getElementById("btn-view-my-learnings")?.addEventListener("click", () => {
-      subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
-      document.getElementById("edu-tab-btn-enrolled")?.classList.add("active");
-      currentEduSubTab = "enrolled";
-      renderEducationSection();
-    });
+    document
+      .getElementById("btn-view-my-learnings")
+      ?.addEventListener("click", () => {
+        subTabs.forEach((s) =>
+          document.getElementById(s.id)?.classList.remove("active")
+        );
+        document
+          .getElementById("edu-tab-btn-enrolled")
+          ?.classList.add("active");
+        currentEduSubTab = "enrolled";
+        renderEducationSection();
+      });
 
     // Open Submit Course Modal
-    document.getElementById("btn-open-submit-course")?.addEventListener("click", () => {
-      const modal = document.getElementById("modal-submit-course");
-      if (modal) modal.classList.add("active");
-    });
+    document
+      .getElementById("btn-open-submit-course")
+      ?.addEventListener("click", () => {
+        const modal = document.getElementById("modal-submit-course");
+        if (modal) modal.classList.add("active");
+      });
 
     // Submit Course Form
-    document.getElementById("form-submit-course")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      try {
-        const title = document.getElementById("input-course-title").value;
-        const category = document.getElementById("select-course-category").value;
-        const creditCost = parseInt(document.getElementById("input-course-price").value, 10);
-        const duration = document.getElementById("input-course-duration").value;
-        const videoUrl = document.getElementById("input-course-videourl").value;
-        const description = document.getElementById("input-course-desc").value;
+    document
+      .getElementById("form-submit-course")
+      ?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        try {
+          const title = document.getElementById("input-course-title").value;
+          const category = document.getElementById(
+            "select-course-category"
+          ).value;
+          const creditCost = parseInt(
+            document.getElementById("input-course-price").value,
+            10
+          );
+          const duration = document.getElementById(
+            "input-course-duration"
+          ).value;
+          const videoUrl = document.getElementById(
+            "input-course-videourl"
+          ).value;
+          const description =
+            document.getElementById("input-course-desc").value;
 
-        const newCourse = store.submitCourse({
-          title,
-          category,
-          creditCost,
-          duration,
-          durationSeconds: 45,
-          videoUrl,
-          description
-        });
+          const newCourse = store.submitCourse({
+            title,
+            category,
+            creditCost,
+            duration,
+            durationSeconds: 45,
+            videoUrl,
+            description
+          });
 
-        document.getElementById("modal-submit-course").classList.remove("active");
-        e.target.reset();
+          document
+            .getElementById("modal-submit-course")
+            .classList.remove("active");
+          e.target.reset();
 
-        showToast(`✓ Masterclass "${newCourse.title}" submitted to Admin Moderation Queue!`, "success");
+          showToast(
+            `✓ Masterclass "${newCourse.title}" submitted to Admin Moderation Queue!`,
+            "success"
+          );
 
-        // Switch to creator uploads tab
-        subTabs.forEach(s => document.getElementById(s.id)?.classList.remove("active"));
-        document.getElementById("edu-tab-btn-creator")?.classList.add("active");
-        currentEduSubTab = "creator";
-        renderEducationSection();
-      } catch (err) {
-        showToast(err.message, "error");
-      }
-    });
+          // Switch to creator uploads tab
+          subTabs.forEach((s) =>
+            document.getElementById(s.id)?.classList.remove("active")
+          );
+          document
+            .getElementById("edu-tab-btn-creator")
+            ?.classList.add("active");
+          currentEduSubTab = "creator";
+          renderEducationSection();
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      });
 
     // Confirm Unlock / Purchase Modal
-    document.getElementById("btn-confirm-unlock-course")?.addEventListener("click", () => {
-      if (!pendingUnlockCourseId) return;
-      try {
-        const result = education.unlockCourse(pendingUnlockCourseId);
-        document.getElementById("modal-unlock-course").classList.remove("active");
-        showToast("✓ Course unlocked successfully! Opening video player...", "success");
-        window.openCoursePlayer(pendingUnlockCourseId);
-        pendingUnlockCourseId = null;
-      } catch (err) {
-        showToast(err.message, "error");
-      }
-    });
+    document
+      .getElementById("btn-confirm-unlock-course")
+      ?.addEventListener("click", () => {
+        if (!pendingUnlockCourseId) return;
+        try {
+          const result = education.unlockCourse(pendingUnlockCourseId);
+          document
+            .getElementById("modal-unlock-course")
+            .classList.remove("active");
+          showToast(
+            "✓ Course unlocked successfully! Opening video player...",
+            "success"
+          );
+          window.openCoursePlayer(pendingUnlockCourseId);
+          pendingUnlockCourseId = null;
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      });
 
     // Close Player Modal Handlers
     const closePlayer = () => {
@@ -713,29 +836,40 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("modal-video-player")?.classList.remove("active");
     };
 
-    document.getElementById("btn-close-video-player")?.addEventListener("click", closePlayer);
-    document.getElementById("btn-player-dismiss")?.addEventListener("click", closePlayer);
+    document
+      .getElementById("btn-close-video-player")
+      ?.addEventListener("click", closePlayer);
+    document
+      .getElementById("btn-player-dismiss")
+      ?.addEventListener("click", closePlayer);
 
     // Claim Certificate Button in Player
-    document.getElementById("btn-claim-certificate")?.addEventListener("click", () => {
-      if (!education.activeCourse) return;
-      try {
-        window.viewCourseCertificate(education.activeCourse.id);
-      } catch (err) {
-        showToast(err.message, "error");
-      }
-    });
+    document
+      .getElementById("btn-claim-certificate")
+      ?.addEventListener("click", () => {
+        if (!education.activeCourse) return;
+        try {
+          window.viewCourseCertificate(education.activeCourse.id);
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      });
   }
 
   function renderEducationSection() {
-    const currentUser = store.getCurrentUser() || store.getUser("user_a") || store.users[1];
+    const currentUser =
+      store.getCurrentUser() || store.getUser("user_a") || store.users[1];
     const container = document.getElementById("education-grid-container");
     if (!container) return;
 
     const allCourses = store.getCourses();
     const approvedCourses = store.getApprovedCourses();
-    const userEnrollments = currentUser ? store.getUserEnrollments(currentUser.id) : [];
-    const userUploads = currentUser ? allCourses.filter(c => c.creator_id === currentUser.id) : [];
+    const userEnrollments = currentUser
+      ? store.getUserEnrollments(currentUser.id)
+      : [];
+    const userUploads = currentUser
+      ? allCourses.filter((c) => c.creator_id === currentUser.id)
+      : [];
 
     // Update Counter Badges
     const countAppEl = document.getElementById("edu-count-approved");
@@ -751,23 +885,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentEduSubTab === "catalog") {
       displayList = approvedCourses;
     } else if (currentEduSubTab === "enrolled") {
-      const enrolledCourseIds = new Set(userEnrollments.map(e => e.course_id));
-      displayList = allCourses.filter(c => enrolledCourseIds.has(c.id));
+      const enrolledCourseIds = new Set(
+        userEnrollments.map((e) => e.course_id)
+      );
+      displayList = allCourses.filter((c) => enrolledCourseIds.has(c.id));
     } else if (currentEduSubTab === "creator") {
       displayList = userUploads;
     }
 
     // Filter by Category
     if (currentEduCategory !== "all") {
-      displayList = displayList.filter(c => c.category === currentEduCategory);
+      displayList = displayList.filter(
+        (c) => c.category === currentEduCategory
+      );
     }
 
     // Filter by Search Query
     if (currentEduSearch) {
-      displayList = displayList.filter(c =>
-        c.title.toLowerCase().includes(currentEduSearch) ||
-        c.description.toLowerCase().includes(currentEduSearch) ||
-        (c.category && c.category.toLowerCase().includes(currentEduSearch))
+      displayList = displayList.filter(
+        (c) =>
+          c.title.toLowerCase().includes(currentEduSearch) ||
+          c.description.toLowerCase().includes(currentEduSearch) ||
+          (c.category && c.category.toLowerCase().includes(currentEduSearch))
       );
     }
 
@@ -775,9 +914,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (displayList.length === 0) {
       let emptyMsg = "No masterclasses found matching your filter.";
       if (currentEduSubTab === "enrolled") {
-        emptyMsg = "You have not enrolled in any video masterclasses yet. Explore the Public Library and unlock your first course!";
+        emptyMsg =
+          "You have not enrolled in any video masterclasses yet. Explore the Public Library and unlock your first course!";
       } else if (currentEduSubTab === "creator") {
-        emptyMsg = "You haven't submitted any video courses yet. Click '+ Submit New Video Course' to publish your masterclass!";
+        emptyMsg =
+          "You haven't submitted any video courses yet. Click '+ Submit New Video Course' to publish your masterclass!";
       }
 
       container.innerHTML = `
@@ -785,39 +926,47 @@ document.addEventListener("DOMContentLoaded", () => {
           <div style="font-size:2.4rem; margin-bottom:12px;">🎓</div>
           <h3 style="font-size:1.3rem; font-weight:900; text-transform:uppercase;">No Courses Available</h3>
           <p style="color:#555; max-width:480px; margin:8px auto 20px; line-height:1.5;">${emptyMsg}</p>
-          ${currentEduSubTab === "catalog" ? `
+          ${
+            currentEduSubTab === "catalog"
+              ? `
             <button class="neo-btn neo-btn-yellow" onclick="document.getElementById('edu-search-input').value=''; currentEduSearch=''; currentEduCategory='all'; document.querySelectorAll('#edu-category-pills .edu-cat-btn').forEach(b=>b.classList.toggle('active', b.getAttribute('data-cat')==='all')); renderEducationSection();">
               Reset Filters
             </button>
-          ` : `
+          `
+              : `
             <button class="neo-btn neo-btn-primary" onclick="document.getElementById('edu-tab-btn-catalog').click()">
               Explore Public Course Library →
             </button>
-          `}
+          `
+          }
         </div>
       `;
       return;
     }
 
     // Render Cards Grid
-    container.innerHTML = displayList.map(course => {
-      const creator = store.getUser(course.creator_id) || { name: "Peer Instructor", avatar: "IN" };
-      const enrollment = store.getUserEnrollment(currentUser.id, course.id);
-      const isEnrolled = !!enrollment;
-      const isCompleted = enrollment?.completed || false;
-      const catUpper = (course.category || 'tech').toUpperCase();
-      const catClass = `cat-${course.category || 'tech'}`;
+    container.innerHTML = displayList
+      .map((course) => {
+        const creator = store.getUser(course.creator_id) || {
+          name: "Peer Instructor",
+          avatar: "IN"
+        };
+        const enrollment = store.getUserEnrollment(currentUser.id, course.id);
+        const isEnrolled = !!enrollment;
+        const isCompleted = enrollment?.completed || false;
+        const catUpper = (course.category || "tech").toUpperCase();
+        const catClass = `cat-${course.category || "tech"}`;
 
-      // Card Header Thumbnail / Banner
-      return `
-        <div class="edu-course-card ${isCompleted ? 'course-completed' : ''}">
+        // Card Header Thumbnail / Banner
+        return `
+        <div class="edu-course-card ${isCompleted ? "course-completed" : ""}">
           <div class="edu-card-banner">
             <div class="edu-banner-badge-row">
               <span class="skill-category-tag ${catClass}">${catUpper}</span>
-              <span class="edu-duration-badge">⏱ ${course.duration || '15 mins'}</span>
+              <span class="edu-duration-badge">⏱ ${course.duration || "15 mins"}</span>
             </div>
-            <div class="edu-price-tag ${course.credit_cost === 0 ? 'price-free' : ''}">
-              ${course.credit_cost > 0 ? `${course.credit_cost} CR` : 'FREE'}
+            <div class="edu-price-tag ${course.credit_cost === 0 ? "price-free" : ""}">
+              ${course.credit_cost > 0 ? `${course.credit_cost} CR` : "FREE"}
             </div>
           </div>
 
@@ -826,14 +975,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <p class="edu-course-desc">${course.description}</p>
 
             <div class="edu-creator-row">
-              <div class="edu-creator-avatar">${creator.avatar || 'PI'}</div>
+              <div class="edu-creator-avatar">${creator.avatar || "PI"}</div>
               <div>
                 <div class="edu-creator-name">${creator.name.split(" (")[0]}</div>
-                <div class="edu-course-rating">★ ${course.rating ? course.rating.toFixed(2) : '5.00'} &bull; ${course.enrolled_count || 0} enrolled</div>
+                <div class="edu-course-rating">★ ${course.rating ? course.rating.toFixed(2) : "5.00"} &bull; ${course.enrolled_count || 0} enrolled</div>
               </div>
             </div>
 
-            ${course.status === "PENDING_REVIEW" ? `
+            ${
+              course.status === "PENDING_REVIEW"
+                ? `
               <div style="background:#fffde6; border:2.5px solid #000; padding:10px 12px; margin-top:8px; box-shadow:2px 2px 0px #000;">
                 <div style="display:flex; align-items:center; gap:6px; font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#b45309;">
                   <span>⏳</span> STATUS: PENDING ADMIN APPROVAL
@@ -842,7 +993,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   This video course is awaiting screening in the Admin Portal. Learners can only unlock it once the Administrator grants approval.
                 </div>
               </div>
-            ` : course.status === "APPROVED" && course.creator_id === currentUser.id ? `
+            `
+                : course.status === "APPROVED" &&
+                    course.creator_id === currentUser.id
+                  ? `
               <div style="background:#ecfdf5; border:2.5px solid #000; padding:8px 12px; margin-top:8px; box-shadow:2px 2px 0px #000;">
                 <div style="display:flex; align-items:center; gap:6px; font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#065f46;">
                   <span>✓</span> ADMIN APPROVED &amp; LIVE ON ACADEMY
@@ -851,46 +1005,61 @@ document.addEventListener("DOMContentLoaded", () => {
                   Active in public library &bull; Earning ${course.credit_cost} CR per enrolled learner
                 </div>
               </div>
-            ` : course.status === "REJECTED" ? `
+            `
+                  : course.status === "REJECTED"
+                    ? `
               <div style="background:#fff0f3; border:2.5px solid #ff2d55; padding:8px 12px; margin-top:8px;">
                 <div style="font-weight:900; font-size:0.78rem; text-transform:uppercase; color:#ff2d55;">
                   <span>✕</span> ADMIN REJECTED
                 </div>
-                <div style="font-size:0.74rem; color:#444; margin-top:2px;">${course.rejection_reason || 'Quality standard not met.'}</div>
+                <div style="font-size:0.74rem; color:#444; margin-top:2px;">${course.rejection_reason || "Quality standard not met."}</div>
               </div>
-            ` : ''}
+            `
+                    : ""
+            }
           </div>
 
           <div class="edu-card-footer">
-            ${isCompleted ? `
+            ${
+              isCompleted
+                ? `
               <button class="neo-btn neo-btn-primary" style="width:100%;" onclick="window.viewCourseCertificate('${course.id}')">
                 🎓 View Certificate (100% Completed)
               </button>
-            ` : isEnrolled ? `
+            `
+                : isEnrolled
+                  ? `
               <button class="neo-btn neo-btn-primary" style="width:100%;" onclick="window.openCoursePlayer('${course.id}')">
                 ▶ Watch Video Player
               </button>
-            ` : course.status === "APPROVED" ? `
+            `
+                  : course.status === "APPROVED"
+                    ? `
               <button class="neo-btn neo-btn-yellow" style="width:100%;" onclick="window.promptUnlockCourse('${course.id}')">
                 🔓 Unlock Video (${course.credit_cost} CR)
               </button>
-            ` : course.creator_id === currentUser.id ? `
+            `
+                    : course.creator_id === currentUser.id
+                      ? `
               <a href="admin.html" target="_blank" class="neo-btn neo-btn-yellow" style="width:100%; text-align:center; text-decoration:none; display:block; padding:10px 0;">
                 ⚡ Open Admin Console to Approve →
               </a>
-            ` : `
+            `
+                      : `
               <button class="neo-btn neo-btn-white" style="width:100%; cursor:not-allowed;" disabled>
                 🔒 In Admin Review Queue
               </button>
-            `}
+            `
+            }
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
   }
 
   // --- GLOBAL EDUCATION ACTION HANDLERS ---
-  window.promptUnlockCourse = function(courseId) {
+  window.promptUnlockCourse = function (courseId) {
     const currentUser = store.getCurrentUser();
     const course = store.getCourse(courseId);
     if (!currentUser || !course) return;
@@ -904,7 +1073,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const elBal = document.getElementById("modal-unlock-user-bal");
     const elCost = document.getElementById("modal-unlock-cost");
 
-    const creator = store.getUser(course.creator_id) || { name: "Peer Instructor" };
+    const creator = store.getUser(course.creator_id) || {
+      name: "Peer Instructor"
+    };
 
     if (elTitle) elTitle.textContent = course.title;
     if (elAuthor) elAuthor.textContent = creator.name.split(" (")[0];
@@ -915,7 +1086,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("modal-unlock-course")?.classList.add("active");
   };
 
-  window.openCoursePlayer = function(courseId) {
+  window.openCoursePlayer = function (courseId) {
     const currentUser = store.getCurrentUser();
     const course = store.getCourse(courseId);
     if (!currentUser || !course) return;
@@ -926,7 +1097,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const creator = store.getUser(course.creator_id) || { name: "Peer Instructor" };
+    const creator = store.getUser(course.creator_id) || {
+      name: "Peer Instructor"
+    };
 
     const elTitle = document.getElementById("player-video-title");
     const elCat = document.getElementById("player-category-tag");
@@ -935,8 +1108,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (elTitle) elTitle.textContent = course.title;
     if (elCat) {
-      elCat.textContent = (course.category || 'tech').toUpperCase();
-      elCat.className = `skill-category-tag cat-${course.category || 'tech'}`;
+      elCat.textContent = (course.category || "tech").toUpperCase();
+      elCat.className = `skill-category-tag cat-${course.category || "tech"}`;
     }
     if (elAuthor) elAuthor.textContent = creator.name.split(" (")[0];
 
@@ -949,7 +1122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("modal-video-player")?.classList.add("active");
   };
 
-  window.viewCourseCertificate = function(courseId) {
+  window.viewCourseCertificate = function (courseId) {
     const currentUser = store.getCurrentUser();
     const course = store.getCourse(courseId);
     if (!currentUser || !course) return;
@@ -967,20 +1140,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (elStudent) elStudent.textContent = cert.user_name;
     if (elTitle) elTitle.textContent = cert.course_title;
-    if (elCat) elCat.textContent = (cert.category || 'tech').toUpperCase();
-    if (elDate) elDate.textContent = new Date(cert.issued_at).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+    if (elCat) elCat.textContent = (cert.category || "tech").toUpperCase();
+    if (elDate)
+      elDate.textContent = new Date(cert.issued_at).toLocaleDateString(
+        "en-US",
+        { year: "numeric", month: "long", day: "numeric" }
+      );
     if (elInst) elInst.textContent = cert.creator_name;
     if (elId) elId.textContent = cert.id;
     if (elHash) elHash.textContent = cert.verification_hash;
 
-    document.getElementById("modal-course-certificate")?.classList.add("active");
+    document
+      .getElementById("modal-course-certificate")
+      ?.classList.add("active");
   };
 
-  window.printCertificate = function() {
+  window.printCertificate = function () {
     window.print();
   };
-
-
 
   // Modals Controller
   function bindModals() {
@@ -989,40 +1166,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalAddSkill = document.getElementById("modal-add-skill");
     const btnCloseSkill = document.getElementById("modal-skill-close");
 
-    btnAddSkill?.addEventListener("click", () => modalAddSkill.classList.add("active"));
-    btnCloseSkill?.addEventListener("click", () => modalAddSkill.classList.remove("active"));
+    btnAddSkill?.addEventListener("click", () =>
+      modalAddSkill.classList.add("active")
+    );
+    btnCloseSkill?.addEventListener("click", () =>
+      modalAddSkill.classList.remove("active")
+    );
 
-    document.getElementById("form-add-skill")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const currentUser = store.getCurrentUser();
-      const name = document.getElementById("input-skill-name").value;
-      const type = document.getElementById("select-skill-type").value;
-      const category = document.getElementById("select-skill-cat").value;
-      const level = parseInt(document.getElementById("select-skill-level").value, 10);
+    document
+      .getElementById("form-add-skill")
+      ?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const currentUser = store.getCurrentUser();
+        const name = document.getElementById("input-skill-name").value;
+        const type = document.getElementById("select-skill-type").value;
+        const category = document.getElementById("select-skill-cat").value;
+        const level = parseInt(
+          document.getElementById("select-skill-level").value,
+          10
+        );
 
-      const newSkill = {
-        skill_id: "sk_" + Math.random().toString(36).substring(2, 8),
-        name,
-        category,
-        level
-      };
+        const newSkill = {
+          skill_id: "sk_" + Math.random().toString(36).substring(2, 8),
+          name,
+          category,
+          level
+        };
 
-      if (type === "HAVE") {
-        currentUser.skills_have.push(newSkill);
-      } else {
-        currentUser.skills_want.push(newSkill);
-      }
+        if (type === "HAVE") {
+          currentUser.skills_have.push(newSkill);
+        } else {
+          currentUser.skills_want.push(newSkill);
+        }
 
-      store.notify("USER_SKILLS_UPDATED");
-      modalAddSkill.classList.remove("active");
-      e.target.reset();
-      showToast(`Skill added to ${type === 'HAVE' ? 'Skills I Have' : 'Skills I Want'}!`, "success");
-    });
+        store.notify("USER_SKILLS_UPDATED");
+        modalAddSkill.classList.remove("active");
+        e.target.reset();
+        showToast(
+          `Skill added to ${type === "HAVE" ? "Skills I Have" : "Skills I Want"}!`,
+          "success"
+        );
+      });
 
     // Reconciliation Modal
     const modalRecon = document.getElementById("modal-reconciliation");
     const btnCloseRecon = document.getElementById("modal-recon-close");
-    btnCloseRecon?.addEventListener("click", () => modalRecon.classList.remove("active"));
+    btnCloseRecon?.addEventListener("click", () =>
+      modalRecon.classList.remove("active")
+    );
   }
 
   // Authentication Controller & Navigation Bindings
@@ -1030,7 +1221,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const signOutBtn = document.getElementById("header-btn-signout");
 
     // Any legacy .btn-open-auth elements cleanly navigate to login.html
-    document.querySelectorAll(".btn-open-auth").forEach(btn => {
+    document.querySelectorAll(".btn-open-auth").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         if (btn.tagName.toLowerCase() !== "a") {
           e.preventDefault();
@@ -1046,39 +1237,58 @@ document.addEventListener("DOMContentLoaded", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    document.getElementById("nav-guest-home")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+    document
+      .getElementById("nav-guest-home")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
 
-    document.getElementById("nav-guest-features")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.getElementById("features-section")?.scrollIntoView({ behavior: "smooth" });
-    });
+    document
+      .getElementById("nav-guest-features")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        document
+          .getElementById("features-section")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
 
-    document.getElementById("nav-guest-howitworks")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.getElementById("how-it-works-section")?.scrollIntoView({ behavior: "smooth" });
-    });
+    document
+      .getElementById("nav-guest-howitworks")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        document
+          .getElementById("how-it-works-section")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
   }
 
-  window.quickDemoLogin = function(userId) {
+  window.quickDemoLogin = function (userId) {
     try {
       const user = store.login(userId);
       if (user.role === "admin") {
-        showToast(`Welcome back, ${user.name}! Accessing Admin Console...`, "success");
+        showToast(
+          `Welcome back, ${user.name}! Accessing Admin Console...`,
+          "success"
+        );
         setTimeout(() => {
           window.location.href = "admin.html";
         }, 200);
         return;
       }
 
-      showToast(`Welcome back, ${user.name}! Accessing live dashboard.`, "success");
+      showToast(
+        `Welcome back, ${user.name}! Accessing live dashboard.`,
+        "success"
+      );
       switchTab("tab-marketplace");
       setTimeout(() => {
-        const container = document.getElementById("platform-dashboard-container");
+        const container = document.getElementById(
+          "platform-dashboard-container"
+        );
         if (container) {
-          const y = container.getBoundingClientRect().top + window.pageYOffset - 20;
+          const y =
+            container.getBoundingClientRect().top + window.pageYOffset - 20;
           window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
         }
       }, 200);
@@ -1087,7 +1297,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.viewPublicAudit = function() {
+  window.viewPublicAudit = function () {
     openReconciliationModal();
   };
 
@@ -1098,7 +1308,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const elBadge = document.getElementById("recon-status-badge");
     if (elBadge) {
-      elBadge.textContent = report.isVerified ? "100% RECONCILED (OK)" : "DISCREPANCY DETECTED";
+      elBadge.textContent = report.isVerified
+        ? "100% RECONCILED (OK)"
+        : "DISCREPANCY DETECTED";
       elBadge.style.color = report.isVerified ? "#34d399" : "#f43f5e";
     }
 
@@ -1115,14 +1327,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const userTableBody = document.getElementById("recon-user-tbody");
     if (userTableBody) {
-      userTableBody.innerHTML = report.userAudits.map(u => `
+      userTableBody.innerHTML = report.userAudits
+        .map(
+          (u) => `
         <tr>
           <td><strong>${u.userName}</strong></td>
           <td><code>${u.userId}</code></td>
           <td style="font-family:var(--font-mono); font-weight:bold; color:#38bdf8;">${u.derivedBalance} CR</td>
           <td style="color:#34d399; font-weight:600;">✓ ${u.status}</td>
         </tr>
-      `).join("");
+      `
+        )
+        .join("");
     }
 
     modal.classList.add("active");

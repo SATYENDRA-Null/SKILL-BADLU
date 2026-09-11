@@ -10,9 +10,10 @@
 
 ## 1. Context and Executive Summary
 
-**Skill Badlu** is a decentralized, peer-to-peer skill-exchange marketplace designed to remove financial friction from continuous learning. Users list skills they possess (*Have*) and skills they wish to learn (*Want*), are matched with complementary peers, schedule teach/learn sessions, and earn platform credits recorded in an immutable, auditable financial ledger. Credits earned can subsequently be redeemed for sessions with other tutors or cashed out as fiat currency.
+**Skill Badlu** is a decentralized, peer-to-peer skill-exchange marketplace designed to remove financial friction from continuous learning. Users list skills they possess (_Have_) and skills they wish to learn (_Want_), are matched with complementary peers, schedule teach/learn sessions, and earn platform credits recorded in an immutable, auditable financial ledger. Credits earned can subsequently be redeemed for sessions with other tutors or cashed out as fiat currency.
 
 ### 1.1 Core Business Principles
+
 1. **Reciprocal Value Creation:** Every user is simultaneously a learner and an educator.
 2. **Financial Ledger Integrity:** Credits represent real monetary liability. The ledger is treated with banking-grade immutability—never updated, never deleted.
 3. **Trust & Verification:** Sybil resistance is established via upfront verification, identity screening, and two-party cryptographic session confirmations.
@@ -22,6 +23,7 @@
 ## 2. System Requirements & Design Constraints
 
 ### 2.1 Functional Requirements
+
 - **User Onboarding & Verification:** Multi-stage funnel (Signup $\rightarrow$ Email Verification $\rightarrow$ One-time Onboarding Fee $\rightarrow$ Admin Review Queue $\rightarrow$ Active).
 - **Skill Taxonomy & Profiles:** Categorized directory (Technology, Languages, Arts & Crafts, Business, Academics) with proficiency self-assessment (Beginner, Intermediate, Advanced, Expert).
 - **Matchmaking Engine:** Rule-based algorithm calculating affinity scores based on mutual skill overlap, reciprocal interest, ratings, and activity recency.
@@ -31,6 +33,7 @@
 - **Admin Moderation Portal:** Verification queue management, dispute mediation, and ledger reconciliation auditing.
 
 ### 2.2 Non-Functional Requirements
+
 - **Integrity Over Speed:** Financial correctness is paramount. Ledger writes must execute in strictly isolated ACID transactions.
 - **Deterministic Auditability:** Every credit transaction must link directly to an approved session ID or platform payout ID.
 - **Horizontal Scalability:** Modular monolith architecture capable of supporting 5,000+ Daily Active Users (DAU) on single-node managed PostgreSQL before requiring service extraction.
@@ -165,6 +168,7 @@ sequenceDiagram
 The credit ledger represents financial balances and platform liability. **No rows in `ledger_transactions` may ever be updated or deleted.**
 
 #### Balance Derivation Formula
+
 A user's balance is computed deterministically from the immutable audit log:
 
 $$\text{Balance}(u) = \sum_{t \in T, \text{to\_user} = u} \text{amount}(t) - \sum_{t \in T, \text{from\_user} = u} \text{amount}(t)$$
@@ -176,21 +180,21 @@ flowchart TD
     Start([Session Completion Triggered]) --> CheckStatus{Session status<br/>already SETTLED?}
     CheckStatus -- Yes --> ReturnIdempotent[Return 200 OK<br/>Idempotent No-Op]
     CheckStatus -- No --> CheckA{confirmed_by_a<br/>== true?}
-    
+
     CheckA -- No --> WaitB[Update confirmed_by_b = true<br/>Status: PENDING_CONFIRMATION]
     CheckA -- Yes --> CheckB{confirmed_by_b<br/>== true?}
-    
+
     CheckB -- No --> WaitA[Update confirmed_by_a = true<br/>Status: PENDING_CONFIRMATION]
     CheckB -- Yes --> BeginTx[BEGIN DB TRANSACTION<br/>Isolation: SERIALIZABLE / REPEATABLE READ]
-    
+
     BeginTx --> LockSession[SELECT * FROM sessions<br/>WHERE id = :id FOR UPDATE]
     LockSession --> RecheckSettled{Status == SETTLED?}
     RecheckSettled -- Yes --> RollbackTx[ROLLBACK TRANSACTION]
     RecheckSettled -- No --> InsertLedger[INSERT INTO ledger_transactions<br/>from_user = learner_id<br/>to_user = teacher_id<br/>amount = agreed_credits<br/>session_id = session.id]
-    
+
     InsertLedger --> UpdateSession[UPDATE sessions<br/>SET status = 'SETTLED',<br/>settled_at = NOW()]
     UpdateSession --> CommitTx[COMMIT TRANSACTION]
-    
+
     CommitTx --> InvalidateCache[Invalidate Redis Cached Balance<br/>DEL cache:balance:user_a<br/>DEL cache:balance:user_b]
     InvalidateCache --> NotifyUsers[Dispatch Push / Email Notifications]
     NotifyUsers --> Done([End])
@@ -302,6 +306,7 @@ The Phase 1 matchmaking algorithm uses deterministic, explainable multi-factor s
 $$\text{TotalScore}(C, U) = w_1 \cdot O(C, U) + w_2 \cdot L(C, U) + w_3 \cdot M(C, U) + w_4 \cdot R(C) + w_5 \cdot A(C)$$
 
 Where:
+
 - **$O(C, U)$ [Skill Overlap]:** Jaccard overlap coefficient between Candidate skills have ($C_{\text{have}}$) and User skills want ($U_{\text{want}}$).
   $$O(C, U) = \frac{|C_{\text{have}} \cap U_{\text{want}}|}{|C_{\text{have}} \cup U_{\text{want}}|}$$
 - **$L(C, U)$ [Level Compatibility]:** Distance between teacher skill level and learner target level. Score is 1.0 if teacher level $\ge$ learner desired level; penalty is applied if teacher level $<$ learner level.
@@ -311,39 +316,40 @@ Where:
   $$A(C) = \exp\left(-\frac{\Delta t_{\text{days}}}{14}\right)$$
 
 #### Weight Distribution (Tuned for Reciprocal Swaps)
-| Weight | Parameter | Value | Rationale |
-| :--- | :--- | :--- | :--- |
-| $w_1$ | Skill Tag Overlap | **0.30** | Candidate must teach what the user desires. |
-| $w_2$ | Level Compatibility | **0.15** | Prevents beginner teaching advanced topics. |
-| $w_3$ | Mutual Swap Bonus | **0.35** | **Primary driver:** 2-way swaps maintain ledger equilibrium. |
-| $w_4$ | Historical Rating | **0.10** | Rewards proven tutor quality. |
-| $w_5$ | Activity Recency | **0.10** | Prioritizes responsive, active community members. |
+
+| Weight | Parameter           | Value    | Rationale                                                    |
+| :----- | :------------------ | :------- | :----------------------------------------------------------- |
+| $w_1$  | Skill Tag Overlap   | **0.30** | Candidate must teach what the user desires.                  |
+| $w_2$  | Level Compatibility | **0.15** | Prevents beginner teaching advanced topics.                  |
+| $w_3$  | Mutual Swap Bonus   | **0.35** | **Primary driver:** 2-way swaps maintain ledger equilibrium. |
+| $w_4$  | Historical Rating   | **0.10** | Rewards proven tutor quality.                                |
+| $w_5$  | Activity Recency    | **0.10** | Prioritizes responsive, active community members.            |
 
 #### Matchmaking Flowchart
 
 ```mermaid
 flowchart TD
     Req([Match Request: User U]) --> QueryPool[Filter Candidate Pool:<br/>Candidates where C.have INTERSECTS U.want<br/>AND C.id != U.id AND C.verified == true]
-    
+
     QueryPool --> LoopCandidates{For Each Candidate C}
-    
+
     LoopCandidates --> CalcOverlap["1. Tag Overlap: Jaccard(C.have, U.want)"]
     CalcOverlap --> CalcLevel["2. Level Compatibility: Level(C.skill) >= Level(U.target)"]
     CalcLevel --> CalcMutual{"3. Reciprocal Swap?<br/>(U.have INTERSECTS C.want)"}
-    
+
     CalcMutual -- Yes --> SetMutualBonus["MutualBonus = 1.0 (Weight: 0.35)"]
     CalcMutual -- No --> ZeroMutual["MutualBonus = 0.0"]
-    
+
     SetMutualBonus --> CalcRating["4. Rating Factor: Normalize(C.avg_rating)"]
     ZeroMutual --> CalcRating
-    
+
     CalcRating --> CalcRecency["5. Recency Factor: exp(-days_inactive / 14)"]
     CalcRecency --> AggregateScore["TotalScore = Σ (weight_i * factor_i)"]
-    
+
     AggregateScore --> NextCandidate{More candidates?}
     NextCandidate -- Yes --> LoopCandidates
     NextCandidate -- No --> SortRank[Sort by TotalScore DESC]
-    
+
     SortRank --> Paginate[Return Top N Recommendations]
     Paginate --> End([Deliver Matches to Client])
 ```
@@ -446,27 +452,27 @@ flowchart TD
     Start([User Initiates Signup]) --> FormSubmit[Submit Email & Password]
     FormSubmit --> FirebaseSignup[Firebase Auth User Created]
     FirebaseSignup --> SendVerify[Send Email Verification Link]
-    
+
     SendVerify --> VerifyEmail{User clicks link in email?}
     VerifyEmail -- No / Pending --> WaitForVerify[State: EMAIL_UNVERIFIED]
     VerifyEmail -- Yes --> VerifiedState[State: EMAIL_VERIFIED]
-    
+
     VerifiedState --> PromptFee[Prompt One-Time Onboarding Fee<br/>₹499 / $10 via Razorpay]
     PromptFee --> PayFee{Payment Gateway Status}
-    
+
     PayFee -- Failed --> RetryPayment[Retry Payment Notification]
     RetryPayment --> PromptFee
     PayFee -- Succeeded --> RecordPayment[Record Onboarding Payment in DB]
-    
+
     RecordPayment --> QueueAdmin[Enqueue User into Admin Review Queue<br/>State: PENDING_REVIEW]
-    
+
     QueueAdmin --> AdminInspect[Admin Inspects ID, Social Proof, & Profile]
     AdminInspect --> AdminDecision{Admin Decision}
-    
+
     AdminDecision -- Approve --> ApproveUser[Update user.status = 'VERIFIED'<br/>Credit 50 Welcome Platform Credits]
     ApproveUser --> SendWelcome[Send Welcome Email<br/>Activate Matchmaking Access]
     SendWelcome --> Ready([Active Verified User])
-    
+
     AdminDecision -- Reject --> RejectUser[Update user.status = 'REJECTED'<br/>Provide Rejection Reason]
     RejectUser --> RefundCheck{Eligible for Refund?}
     RefundCheck -- Yes --> GatewayRefund[Issue Automatic Gateway Refund]
@@ -487,23 +493,23 @@ When a user converts accrued credits to fiat currency, the system must guarantee
 flowchart TD
     ReqPayout([User Requests Payout]) --> CheckKYC{User kyc_status<br/>== 'VERIFIED'?}
     CheckKYC -- No --> RejectKYC[Return 403 Forbidden<br/>KYC Verification Required]
-    
+
     CheckKYC -- Yes --> CheckBalance{Ledger.getBalance(u)<br/>>= requested_amount?}
     CheckBalance -- No --> RejectBalance[Return 400 Bad Request<br/>Insufficient Available Credits]
-    
+
     CheckBalance -- Yes --> BeginTx[BEGIN DB TRANSACTION]
     BeginTx --> InsertPayout[INSERT INTO payouts<br/>status = 'PENDING'<br/>user_id = u.id, amount = amount]
     InsertPayout --> InsertDebit[INSERT INTO ledger_transactions<br/>from_user = u.id<br/>to_user = 'PLATFORM_CASHOUT'<br/>amount = amount<br/>type = 'PAYOUT_RESERVATION']
     InsertDebit --> CommitTx[COMMIT DB TRANSACTION]
-    
+
     CommitTx --> CallGateway[Dispatch Gateway API Request<br/>RazorpayX / Stripe Payouts API]
-    
+
     CallGateway --> GatewayResult{Gateway HTTP Status}
-    
+
     GatewayResult -- 200 Success --> PayoutSuccess[UPDATE payouts<br/>SET status = 'COMPLETED',<br/>gateway_ref = response.id]
     PayoutSuccess --> NotifySuccess[Send Payout Confirmation Email]
     NotifySuccess --> DoneSuccess([Payout Finalized])
-    
+
     GatewayResult -- Error / Failure --> PayoutFailed[UPDATE payouts<br/>SET status = 'FAILED',<br/>error_log = response.error]
     PayoutFailed --> CompensatingTx[INSERT INTO ledger_transactions<br/>from_user = 'PLATFORM_CASHOUT'<br/>to_user = u.id<br/>amount = amount<br/>type = 'PAYOUT_COMPENSATING_REVERSAL']
     CompensatingTx --> NotifyFailure[Notify User of Payout Failure<br/>Credits Restored to Balance]
@@ -527,9 +533,9 @@ PLATFORM_CASHOUT_ACCOUNT = uuid.UUID("00000000-0000-0000-0000-000000000001")
 class PayoutService:
     @staticmethod
     async def request_payout(
-        db: AsyncSession, 
-        user_id: uuid.UUID, 
-        amount: int, 
+        db: AsyncSession,
+        user_id: uuid.UUID,
+        amount: int,
         gateway_client
     ) -> dict:
         # 1. Verification of KYC
@@ -579,7 +585,7 @@ class PayoutService:
                 amount_in_cents=amount * 100,  # 1 Credit = 100 Cents / INR
                 idempotency_key=str(payout_id)
             )
-            
+
             # Succeeded: mark payout COMPLETED
             async with db.begin():
                 payout_record = (await db.execute(select(PayoutModel).where(PayoutModel.id == payout_id))).scalar_one()
@@ -623,25 +629,25 @@ stateDiagram-v2
     REQUESTED --> ACCEPTED: Teacher accepts request
     REQUESTED --> REJECTED: Teacher declines
     REQUESTED --> EXPIRED: 48h timeout without response
-    
+
     ACCEPTED --> SCHEDULED: Mutual calendar time confirmed
     SCHEDULED --> IN_PROGRESS: Scheduled session start time reached
-    
+
     IN_PROGRESS --> PENDING_CONFIRMATION: Session concludes
-    
+
     PENDING_CONFIRMATION --> CONFIRMED_BY_A: User A confirms
     PENDING_CONFIRMATION --> CONFIRMED_BY_B: User B confirms
-    
+
     CONFIRMED_BY_A --> SETTLED: User B confirms (Both Confirmed)
     CONFIRMED_BY_B --> SETTLED: User A confirms (Both Confirmed)
-    
+
     PENDING_CONFIRMATION --> DISPUTED: Either user raises dispute
     CONFIRMED_BY_A --> DISPUTED: User B flags non-attendance
     CONFIRMED_BY_B --> DISPUTED: User A flags poor quality / no-show
-    
+
     DISPUTED --> RESOLVED_SETTLED: Admin mediates in favor of Teacher
     DISPUTED --> RESOLVED_CANCELLED: Admin cancels session with refund
-    
+
     SETTLED --> [*]: Ledger credited & balance updated
     REJECTED --> [*]
     EXPIRED --> [*]
@@ -839,8 +845,8 @@ CREATE TABLE ledger_transactions (
 );
 
 -- Protect against double crediting for the same session
-CREATE UNIQUE INDEX uq_ledger_session_settlement 
-ON ledger_transactions(session_id) 
+CREATE UNIQUE INDEX uq_ledger_session_settlement
+ON ledger_transactions(session_id)
 WHERE transaction_type = 'SESSION_SETTLEMENT';
 
 -- Optimized indexes for derivation queries: SUM(amount) WHERE to_user = :u
@@ -886,10 +892,10 @@ flowchart TD
     Cron([Cron: Every 60 Minutes]) --> QueryUsers[Fetch Batched User List]
     QueryUsers --> CalcDerived["For each user:<br/>Calculate Ledger Sum:<br/>SUM(to_user) - SUM(from_user)"]
     CalcDerived --> CompareCached{"Derived Balance ==<br/>users.cached_balance?"}
-    
+
     CompareCached -- Match --> UpdateReconTime[Record audit_timestamp = NOW()]
     CompareCached -- Mismatch --> TriggerAlert[Trigger P1 Security Alert!<br/>Report User ID, Cached Value, Derived Value]
-    
+
     TriggerAlert --> QuarantineUser[Auto-flag account for investigation<br/>Block Payout Requests]
     QuarantineUser --> WriteAuditLog[Write Reconciliation Audit Report]
     UpdateReconTime --> WriteAuditLog
@@ -901,10 +907,10 @@ flowchart TD
 ## 8. Summary of Architectural Decisions (ADRs)
 
 - **ADR-1: Modular Monolith vs. Microservices**  
-  *Decision:* Retain a single codebase with clean internal domain boundaries. Microservice splitting is deferred until transaction volume requires dedicated isolation.
+  _Decision:_ Retain a single codebase with clean internal domain boundaries. Microservice splitting is deferred until transaction volume requires dedicated isolation.
 - **ADR-2: PostgreSQL for Ledger Storage**  
-  *Decision:* PostgreSQL provides ACID compliance, row-level locks (`SELECT ... FOR UPDATE`), and triggers preventing `UPDATE/DELETE` on the ledger.
+  _Decision:_ PostgreSQL provides ACID compliance, row-level locks (`SELECT ... FOR UPDATE`), and triggers preventing `UPDATE/DELETE` on the ledger.
 - **ADR-3: Rule-Based Matchmaking Prior to Semantic Embeddings**  
-  *Decision:* Phase 1 implements a deterministic, explainable scoring equation ($w_1..w_5$). Vector embeddings and cosine similarity will replace $w_1$ in Phase 2 once skill corpus data is gathered.
+  _Decision:_ Phase 1 implements a deterministic, explainable scoring equation ($w_1..w_5$). Vector embeddings and cosine similarity will replace $w_1$ in Phase 2 once skill corpus data is gathered.
 - **ADR-4: Razorpay (Primary) & Stripe (Fallback)**  
-  *Decision:* Razorpay offers native Indian banking rails (UPI, IMPS, NEFT) with automated KYC checks; Stripe Connect remains the fallback for international expansion.
+  _Decision:_ Razorpay offers native Indian banking rails (UPI, IMPS, NEFT) with automated KYC checks; Stripe Connect remains the fallback for international expansion.

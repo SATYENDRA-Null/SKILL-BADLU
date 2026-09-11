@@ -7,7 +7,9 @@
     "start": "node server/server.js",
     "dev": "node --watch server/server.js",
     "test": "node scripts/test_backend_api.js",
-    "test:client": "node scripts/test_onboarding_payment.js"
+    "test:client": "node scripts/test_onboarding_payment.js",
+    "format": "prettier --write \"**/*.{js,json,css,html,md}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{js,json,css,html,md}\" --ignore-path .prettierignore"
   },
   "keywords": [
     "skill-exchange",
@@ -25,5 +27,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6"
   }
 }

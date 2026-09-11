@@ -1,1627 +1,1033 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKILL BADLU // ADMIN CONSOLE — Moderation & Ledger Audit</title>
+    <meta
+      name="description"
+      content="Skill Badlu System Administrator Portal for KYC verification, dispute resolution, and double-entry ledger audits."
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SKILL BADLU // ADMIN CONSOLE — Moderation & Ledger Audit</title>
-  <meta name="description"
-    content="Skill Badlu System Administrator Portal for KYC verification, dispute resolution, and double-entry ledger audits." />
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Preconnect to Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap"
-    rel="stylesheet" />
+    <!-- Main Stylesheet & Admin Console Styles -->
+    <link rel="stylesheet" href="css/styles.css?v=4.4.0" />
+    <link rel="stylesheet" href="css/admin.css?v=1.0.0" />
+  </head>
 
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=4.4.0" />
-
-  <style>
-    /* Admin Console Custom Theme Adjustments */
-    .admin-brand-tag {
-      background-color: #ffe600;
-      color: #000000;
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 900;
-      font-size: 0.72rem;
-      padding: 3px 8px;
-      border: 2px solid #000000;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .admin-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .admin-stat-card {
-      background-color: #ffffff;
-      border: 3px solid #000000;
-      box-shadow: 4px 4px 0px #000000;
-      padding: 20px;
-      position: relative;
-    }
-
-    .admin-stat-label {
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 800;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: #555555;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .admin-stat-value {
-      font-family: var(--font-mono, monospace);
-      font-weight: 900;
-      font-size: 1.8rem;
-      color: #000000;
-    }
-
-    .admin-stat-subtext {
-      font-size: 0.76rem;
-      color: #666666;
-      margin-top: 6px;
-      font-weight: 600;
-    }
-
-    .admin-panel-card {
-      background-color: #ffffff;
-      border: 3.5px solid #000000;
-      box-shadow: 6px 6px 0px #000000;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .admin-panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 3px solid #000000;
-      padding-bottom: 14px;
-      margin-bottom: 20px;
-    }
-
-    .admin-panel-title {
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 900;
-      font-size: 1.15rem;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .admin-review-row {
-      background-color: #faf9f5;
-      border: 2.5px solid #000000;
-      box-shadow: 3px 3px 0px #000000;
-      padding: 16px 20px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      transition: all 0.1s ease;
-    }
-
-    .admin-review-row:hover {
-      background-color: #fffde6;
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0px #000000;
-    }
-
-    .admin-actions-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-admin-action {
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 900;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      padding: 8px 16px;
-      border: 2px solid #000000;
-      cursor: pointer;
-      box-shadow: 3px 3px 0px #000000;
-      transition: all 0.1s ease;
-    }
-
-    .btn-admin-action:hover {
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0px #000000;
-    }
-
-    .btn-admin-action:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0px #000000;
-    }
-
-    .btn-admin-approve {
-      background-color: #00ff66;
-      color: #000000;
-    }
-
-    .btn-admin-reject {
-      background-color: #ff2d55;
-      color: #ffffff;
-    }
-
-    .btn-admin-neutral {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .badge-kyc-pill {
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 900;
-      font-size: 0.7rem;
-      padding: 2px 7px;
-      border: 1.5px solid #000000;
-      text-transform: uppercase;
-    }
-
-    .badge-kyc-pending {
-      background-color: #ffe600;
-      color: #000000;
-    }
-
-    .badge-kyc-verified {
-      background-color: #00ff66;
-      color: #000000;
-    }
-
-    .admin-ledger-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--font-mono, monospace);
-      font-size: 0.82rem;
-    }
-
-    .admin-ledger-table th {
-      background-color: #000000;
-      color: #ffffff;
-      padding: 10px 12px;
-      text-align: left;
-      font-family: var(--font-heading, sans-serif);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      border: 1.5px solid #000000;
-    }
-
-    .admin-ledger-table td {
-      padding: 10px 12px;
-      border: 1.5px solid #000000;
-      background-color: #ffffff;
-    }
-
-    .admin-ledger-table tr:nth-child(even) td {
-      background-color: #f7f6f0;
-    }
-
-    /* Tab switcher for admin console */
-    .admin-nav-tab {
-      background-color: #ffffff;
-      color: #000000;
-      border: 2.5px solid #000000;
-      box-shadow: 3px 3px 0px #ffffff;
-      font-family: var(--font-heading, sans-serif);
-      font-weight: 900;
-      font-size: 0.82rem;
-      padding: 8px 16px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: background-color 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      user-select: none;
-    }
-
-    .admin-nav-tab:hover {
-      background-color: #ffe600;
-    }
-
-    .admin-nav-tab.active {
-      background-color: #ffe600;
-      box-shadow: 3px 3px 0px #ffffff;
-      border-color: #000000;
-    }
-
-    .admin-section-pane {
-      display: none;
-      min-height: 520px;
-    }
-
-    .admin-section-pane.active {
-      display: block;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="page-wrapper">
-    <!-- Main Window Frame (Neo-Brutalist Dashboard Card) -->
-    <div class="app-window-frame">
-
-      <!-- =========================================================
+  <body>
+    <div class="page-wrapper">
+      <!-- Main Window Frame (Neo-Brutalist Dashboard Card) -->
+      <div class="app-window-frame">
+        <!-- =========================================================
            1. TOP BLACK BAR (ADMIN CONSOLE ONLY):
            Logo 'SB SKILL BADLU' + Yellow 'ADMIN PORTAL' Tag
            Admin Navigation: ADMIN DESK | VIDEO UPLOAD APPROVALS | USER KYC QUEUE | DISPUTES | LEDGER AUDIT
            ========================================================= -->
-      <header class="top-black-bar">
-        <a href="admin.html" class="brand-group" id="brand-logo-link" style="text-decoration:none;">
-          <span class="brand-badge-sb">SB</span>
-          <span class="brand-title-text">SKILL BADLU</span>
-          <span class="admin-brand-tag">ADMIN PORTAL</span>
-        </a>
+        <header class="top-black-bar">
+          <a
+            href="admin.html"
+            class="brand-group"
+            id="brand-logo-link"
+            style="text-decoration: none"
+          >
+            <span class="brand-badge-sb">SB</span>
+            <span class="brand-title-text">SKILL BADLU</span>
+            <span class="admin-brand-tag">ADMIN PORTAL</span>
+          </a>
 
-        <!-- ONLY ADMIN TABS -->
-        <nav class="nav-tabs-row" id="admin-platform-nav" role="tablist" aria-label="Admin Navigation">
-          <button class="admin-nav-tab active" data-tab="tab-admin-overview" id="nav-btn-overview" role="tab">
-            <span>ADMIN DESK</span>
-          </button>
+          <!-- ONLY ADMIN TABS -->
+          <nav
+            class="nav-tabs-row"
+            id="admin-platform-nav"
+            role="tablist"
+            aria-label="Admin Navigation"
+          >
+            <button
+              class="admin-nav-tab active"
+              data-tab="tab-admin-overview"
+              id="nav-btn-overview"
+              role="tab"
+            >
+              <span>ADMIN DESK</span>
+            </button>
 
-          <button class="admin-nav-tab" data-tab="tab-admin-courses" id="nav-btn-courses" role="tab">
-            <span>📹 VIDEO UPLOAD APPROVALS</span>
-            <span class="badge-sessions-red" id="admin-courses-badge" style="display:inline-block;">1</span>
-          </button>
+            <button
+              class="admin-nav-tab"
+              data-tab="tab-admin-courses"
+              id="nav-btn-courses"
+              role="tab"
+            >
+              <span>📹 VIDEO UPLOAD APPROVALS</span>
+              <span
+                class="badge-sessions-red"
+                id="admin-courses-badge"
+                style="display: inline-block"
+                >1</span
+              >
+            </button>
 
-          <button class="admin-nav-tab" data-tab="tab-admin-kyc" id="nav-btn-kyc" role="tab">
-            <span>USER KYC QUEUE</span>
-            <span class="badge-sessions-red" id="admin-kyc-badge" style="display:inline-block;">1</span>
-          </button>
+            <button
+              class="admin-nav-tab"
+              data-tab="tab-admin-kyc"
+              id="nav-btn-kyc"
+              role="tab"
+            >
+              <span>USER KYC QUEUE</span>
+              <span
+                class="badge-sessions-red"
+                id="admin-kyc-badge"
+                style="display: inline-block"
+                >1</span
+              >
+            </button>
 
-          <button class="admin-nav-tab" data-tab="tab-admin-payments" id="nav-btn-payments" role="tab">
-            <span>💳 ONBOARDING PAYMENTS (&#8377;99)</span>
-            <span class="badge-live-green" id="admin-payments-badge" style="background:#00ff66; color:#000;">4</span>
-          </button>
+            <button
+              class="admin-nav-tab"
+              data-tab="tab-admin-payments"
+              id="nav-btn-payments"
+              role="tab"
+            >
+              <span>💳 ONBOARDING PAYMENTS (&#8377;99)</span>
+              <span
+                class="badge-live-green"
+                id="admin-payments-badge"
+                style="background: #00ff66; color: #000"
+                >4</span
+              >
+            </button>
 
-          <button class="admin-nav-tab" data-tab="tab-admin-disputes" id="nav-btn-disputes" role="tab">
-            <span>DISPUTE ARBITRATION</span>
-            <span class="badge-live-green" id="admin-disputes-badge" style="background:#ffffff; color:#000;">0</span>
-          </button>
+            <button
+              class="admin-nav-tab"
+              data-tab="tab-admin-disputes"
+              id="nav-btn-disputes"
+              role="tab"
+            >
+              <span>DISPUTE ARBITRATION</span>
+              <span
+                class="badge-live-green"
+                id="admin-disputes-badge"
+                style="background: #ffffff; color: #000"
+                >0</span
+              >
+            </button>
 
-          <button class="admin-nav-tab" data-tab="tab-admin-ledger" id="nav-btn-audit" role="tab">
-            <span>LEDGER AUDIT</span>
-          </button>
-        </nav>
-      </header>
+            <button
+              class="admin-nav-tab"
+              data-tab="tab-admin-ledger"
+              id="nav-btn-audit"
+              role="tab"
+            >
+              <span>LEDGER AUDIT</span>
+            </button>
+          </nav>
+        </header>
 
-      <!-- =========================================================
+        <!-- =========================================================
            2. BLACK STATUS BAR:
            - Left: Platform Cryptographic Hash
            - Right: Admin profile ('System Administrator' [ADMIN]) + SIGN OUT
            ========================================================= -->
-      <section class="black-status-bar">
-        <div class="status-bar-left"></div>
+        <section class="black-status-bar">
+          <div class="status-bar-left"></div>
 
-        <div class="status-bar-right" style="display:flex; align-items:center; gap:12px;">
-          <!-- Admin User Profile Pill -->
-          <div class="auth-user-pill" title="Administrator account">
-            <div class="auth-avatar-box" style="background:#ffe600; color:#000;">AD</div>
-            <div class="auth-user-name">System Administrator</div>
-            <span class="auth-verified-tag" style="background:#ffe600; color:#000;">ADMIN</span>
+          <div
+            class="status-bar-right"
+            style="display: flex; align-items: center; gap: 12px"
+          >
+            <!-- Admin User Profile Pill -->
+            <div class="auth-user-pill" title="Administrator account">
+              <div
+                class="auth-avatar-box"
+                style="background: #ffe600; color: #000"
+              >
+                AD
+              </div>
+              <div class="auth-user-name">System Administrator</div>
+              <span
+                class="auth-verified-tag"
+                style="background: #ffe600; color: #000"
+                >ADMIN</span
+              >
+            </div>
+
+            <!-- Sign Out Button -->
+            <button
+              class="btn-signout-neo"
+              id="admin-btn-signout"
+              onclick="performAdminSignOut()"
+              title="Sign out of admin portal"
+            >
+              SIGN OUT
+            </button>
           </div>
+        </section>
 
-          <!-- Sign Out Button -->
-          <button class="btn-signout-neo" id="admin-btn-signout" onclick="performAdminSignOut()" title="Sign out of admin portal">
-            SIGN OUT
-          </button>
-        </div>
-      </section>
-
-      <!-- =========================================================
+        <!-- =========================================================
            3. MAIN ADMIN CONSOLE CONTENT AREA
            ========================================================= -->
-      <main style="padding: 24px; background-color: var(--bg-dashboard, #f4f3ed);">
-
-        <!-- Global Platform Metrics KPI Grid -->
-        <div class="admin-stats-grid">
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-payments')" style="border: 3.5px solid #000; background: #e6ffed; cursor:pointer;" title="View Onboarding Payments Ledger">
-            <div class="admin-stat-label">
-              <span style="color:#000; font-weight:900;">Onboarding Revenue (&#8377;99)</span>
-              <span>💳</span>
+        <main
+          style="padding: 24px; background-color: var(--bg-dashboard, #f4f3ed)"
+        >
+          <!-- Global Platform Metrics KPI Grid -->
+          <div class="admin-stats-grid">
+            <div
+              class="admin-stat-card"
+              onclick="switchAdminTab('tab-admin-payments')"
+              style="
+                border: 3.5px solid #000;
+                background: #e6ffed;
+                cursor: pointer;
+              "
+              title="View Onboarding Payments Ledger"
+            >
+              <div class="admin-stat-label">
+                <span style="color: #000; font-weight: 900"
+                  >Onboarding Revenue (&#8377;99)</span
+                >
+                <span>💳</span>
+              </div>
+              <div
+                class="admin-stat-value"
+                id="kpi-onboarding-revenue"
+                style="color: #00aa44"
+              >
+                &#8377;396
+              </div>
+              <div
+                class="admin-stat-subtext"
+                id="kpi-onboarding-subtext"
+                style="color: #000; font-weight: 700"
+              >
+                4 Paid &bull; 1 Pending Payment
+              </div>
             </div>
-            <div class="admin-stat-value" id="kpi-onboarding-revenue" style="color:#00aa44;">&#8377;396</div>
-            <div class="admin-stat-subtext" id="kpi-onboarding-subtext" style="color:#000; font-weight:700;">4 Paid &bull; 1 Pending Payment</div>
+
+            <div
+              class="admin-stat-card"
+              onclick="switchAdminTab('tab-admin-ledger')"
+              style="cursor: pointer"
+              title="View Ledger Audit"
+            >
+              <div class="admin-stat-label">
+                <span>Total Circulating Credits</span>
+                <span>🪙</span>
+              </div>
+              <div class="admin-stat-value" id="kpi-circulating-credits">
+                300 CR
+              </div>
+              <div class="admin-stat-subtext">
+                Sum of all active swapper wallets
+              </div>
+            </div>
+
+            <div
+              class="admin-stat-card"
+              onclick="switchAdminTab('tab-admin-kyc')"
+              style="cursor: pointer"
+              title="Review KYC Queue"
+            >
+              <div class="admin-stat-label">
+                <span>Pending KYC Queue</span>
+                <span>⏳</span>
+              </div>
+              <div
+                class="admin-stat-value"
+                id="kpi-pending-reviews"
+                style="color: #ff9900"
+              >
+                1 USER
+              </div>
+              <div class="admin-stat-subtext">
+                Awaiting admin identity curation
+              </div>
+            </div>
+
+            <div
+              class="admin-stat-card"
+              onclick="switchAdminTab('tab-admin-courses')"
+              style="
+                border: 3.5px solid #000;
+                background: #fffde6;
+                cursor: pointer;
+              "
+              title="Review Video Upload Approvals"
+            >
+              <div class="admin-stat-label">
+                <span style="color: #000; font-weight: 900"
+                  >Video Upload Approvals</span
+                >
+                <span>📹</span>
+              </div>
+              <div
+                class="admin-stat-value"
+                id="kpi-pending-courses"
+                style="color: #ff2d55"
+              >
+                1 PENDING
+              </div>
+              <div
+                class="admin-stat-subtext"
+                style="color: #000; font-weight: 700"
+              >
+                Awaiting admin video approval
+              </div>
+            </div>
           </div>
 
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-ledger')" style="cursor:pointer;" title="View Ledger Audit">
-            <div class="admin-stat-label">
-              <span>Total Circulating Credits</span>
-              <span>🪙</span>
-            </div>
-            <div class="admin-stat-value" id="kpi-circulating-credits">300 CR</div>
-            <div class="admin-stat-subtext">Sum of all active swapper wallets</div>
-          </div>
-
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-kyc')" style="cursor:pointer;" title="Review KYC Queue">
-            <div class="admin-stat-label">
-              <span>Pending KYC Queue</span>
-              <span>⏳</span>
-            </div>
-            <div class="admin-stat-value" id="kpi-pending-reviews" style="color:#ff9900;">1 USER</div>
-            <div class="admin-stat-subtext">Awaiting admin identity curation</div>
-          </div>
-
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-courses')" style="border: 3.5px solid #000; background: #fffde6; cursor:pointer;" title="Review Video Upload Approvals">
-            <div class="admin-stat-label">
-              <span style="color:#000; font-weight:900;">Video Upload Approvals</span>
-              <span>📹</span>
-            </div>
-            <div class="admin-stat-value" id="kpi-pending-courses" style="color:#ff2d55;">1 PENDING</div>
-            <div class="admin-stat-subtext" style="color:#000; font-weight:700;">Awaiting admin video approval</div>
-          </div>
-        </div>
-
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 1: ADMIN DESK (OVERVIEW & QUICK ACTIONS)
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane active" id="tab-admin-overview">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>⚡ Welcome to the Skill Badlu Admin Desk</span>
-              </div>
-              <button class="btn-admin-action btn-admin-approve" onclick="runLedgerAuditModal()">
-                Run System Audit Report
-              </button>
-            </div>
-
-            <p style="font-size:0.92rem; color:#444444; line-height:1.5; margin-bottom:20px;">
-              As the platform curator and auditor, you maintain ecosystem trust. Review onboarding applicants, approve educational video uploads, mediate peer dispute sessions, and reconcile the double-entry credit ledger against the platform treasury.
-            </p>
-
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
-              <!-- Quick Video Courses Tray -->
-              <div style="background:#fffde6; border:3px solid #000; padding:18px; box-shadow:4px 4px 0px #000;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
-                    📹 Pending Video Upload Approvals
-                  </span>
-                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-courses')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW QUEUE →</a>
+          <div class="admin-section-pane active" id="tab-admin-overview">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span>⚡ Welcome to the Skill Badlu Admin Desk</span>
                 </div>
-                <div id="overview-courses-container"></div>
+                <button
+                  class="btn-admin-action btn-admin-approve"
+                  onclick="runLedgerAuditModal()"
+                >
+                  Run System Audit Report
+                </button>
               </div>
 
-              <!-- Quick KYC Tray -->
-              <div style="background:#faf9f5; border:2.5px solid #000; padding:18px; box-shadow:3px 3px 0px #000;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
-                    📋 Pending KYC Applications
-                  </span>
-                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-kyc')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
-                </div>
-                <div id="overview-pending-container"></div>
-              </div>
+              <p
+                style="
+                  font-size: 0.92rem;
+                  color: #444444;
+                  line-height: 1.5;
+                  margin-bottom: 20px;
+                "
+              >
+                As the platform curator and auditor, you maintain ecosystem
+                trust. Review onboarding applicants, approve educational video
+                uploads, mediate peer dispute sessions, and reconcile the
+                double-entry credit ledger against the platform treasury.
+              </p>
 
-              <!-- Quick Dispute Tray -->
-              <div style="background:#faf9f5; border:2.5px solid #000; padding:18px; box-shadow:3px 3px 0px #000;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px;">
-                  <span style="font-family:var(--font-heading); font-weight:900; font-size:0.92rem; text-transform:uppercase;">
-                    ⚖️ Open Session Disputes
-                  </span>
-                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-disputes')" style="font-size:0.75rem; font-weight:900; color:#000; text-decoration:underline;">VIEW ALL →</a>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                  gap: 20px;
+                "
+              >
+                <!-- Quick Video Courses Tray -->
+                <div
+                  style="
+                    background: #fffde6;
+                    border: 3px solid #000;
+                    padding: 18px;
+                    box-shadow: 4px 4px 0px #000;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      margin-bottom: 12px;
+                      border-bottom: 2px solid #000;
+                      padding-bottom: 8px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-family: var(--font-heading);
+                        font-weight: 900;
+                        font-size: 0.92rem;
+                        text-transform: uppercase;
+                      "
+                    >
+                      📹 Pending Video Upload Approvals
+                    </span>
+                    <a
+                      href="javascript:void(0);"
+                      onclick="switchAdminTab('tab-admin-courses')"
+                      style="
+                        font-size: 0.75rem;
+                        font-weight: 900;
+                        color: #000;
+                        text-decoration: underline;
+                      "
+                      >VIEW QUEUE →</a
+                    >
+                  </div>
+                  <div id="overview-courses-container"></div>
                 </div>
-                <div id="overview-disputes-container"></div>
+
+                <!-- Quick KYC Tray -->
+                <div
+                  style="
+                    background: #faf9f5;
+                    border: 2.5px solid #000;
+                    padding: 18px;
+                    box-shadow: 3px 3px 0px #000;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      margin-bottom: 12px;
+                      border-bottom: 2px solid #000;
+                      padding-bottom: 8px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-family: var(--font-heading);
+                        font-weight: 900;
+                        font-size: 0.92rem;
+                        text-transform: uppercase;
+                      "
+                    >
+                      📋 Pending KYC Applications
+                    </span>
+                    <a
+                      href="javascript:void(0);"
+                      onclick="switchAdminTab('tab-admin-kyc')"
+                      style="
+                        font-size: 0.75rem;
+                        font-weight: 900;
+                        color: #000;
+                        text-decoration: underline;
+                      "
+                      >VIEW ALL →</a
+                    >
+                  </div>
+                  <div id="overview-pending-container"></div>
+                </div>
+
+                <!-- Quick Dispute Tray -->
+                <div
+                  style="
+                    background: #faf9f5;
+                    border: 2.5px solid #000;
+                    padding: 18px;
+                    box-shadow: 3px 3px 0px #000;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      margin-bottom: 12px;
+                      border-bottom: 2px solid #000;
+                      padding-bottom: 8px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-family: var(--font-heading);
+                        font-weight: 900;
+                        font-size: 0.92rem;
+                        text-transform: uppercase;
+                      "
+                    >
+                      ⚖️ Open Session Disputes
+                    </span>
+                    <a
+                      href="javascript:void(0);"
+                      onclick="switchAdminTab('tab-admin-disputes')"
+                      style="
+                        font-size: 0.75rem;
+                        font-weight: 900;
+                        color: #000;
+                        text-decoration: underline;
+                      "
+                      >VIEW ALL →</a
+                    >
+                  </div>
+                  <div id="overview-disputes-container"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 2: VIDEO UPLOAD APPROVALS & MODERATION QUEUE
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-courses">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>📹 Video Upload Approvals &amp; Educator Moderation</span>
+          <div class="admin-section-pane" id="tab-admin-courses">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span
+                    >📹 Video Upload Approvals &amp; Educator Moderation</span
+                  >
+                </div>
+                <span
+                  class="badge-kyc-pill badge-kyc-pending"
+                  id="pane-courses-count"
+                  style="
+                    background: #ffe600;
+                    color: #000;
+                    font-size: 0.8rem;
+                    padding: 4px 10px;
+                  "
+                  >1 PENDING APPROVAL</span
+                >
               </div>
-              <span class="badge-kyc-pill badge-kyc-pending" id="pane-courses-count" style="background:#ffe600; color:#000; font-size:0.8rem; padding:4px 10px;">1 PENDING APPROVAL</span>
-            </div>
 
-            <p style="font-size:0.88rem; color:#444444; margin-bottom:18px; line-height:1.5;">
-              Users submit educational video masterclasses to earn credits. <strong>Only when you grant Admin Approval</strong> does the video get published to the public Academy library where learners can unlock it. Review audio/video clarity and verify anti-skip stream integrity below.
-            </p>
+              <p
+                style="
+                  font-size: 0.88rem;
+                  color: #444444;
+                  margin-bottom: 18px;
+                  line-height: 1.5;
+                "
+              >
+                Users submit educational video masterclasses to earn credits.
+                <strong>Only when you grant Admin Approval</strong> does the
+                video get published to the public Academy library where learners
+                can unlock it. Review audio/video clarity and verify anti-skip
+                stream integrity below.
+              </p>
 
-            <!-- Video Moderation Subtabs -->
-            <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:3px solid #000; padding-bottom:12px; flex-wrap:wrap;">
-              <button class="btn-admin-action btn-admin-approve" id="subtab-btn-pending-videos" onclick="switchVideoSubTab('pending')">
-                Pending Approvals (<span id="subtab-count-pending">1</span>)
-              </button>
-              <button class="btn-admin-action btn-admin-neutral" id="subtab-btn-published-videos" onclick="switchVideoSubTab('published')">
-                All Published Masterclasses (<span id="subtab-count-published">4</span>)
-              </button>
-              <button class="btn-admin-action btn-admin-neutral" id="subtab-btn-creator-perms" onclick="switchVideoSubTab('creators')">
-                Educator Upload Permissions (<span id="subtab-count-creators">6</span>)
-              </button>
-            </div>
+              <!-- Video Moderation Subtabs -->
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  margin-bottom: 20px;
+                  border-bottom: 3px solid #000;
+                  padding-bottom: 12px;
+                  flex-wrap: wrap;
+                "
+              >
+                <button
+                  class="btn-admin-action btn-admin-approve"
+                  id="subtab-btn-pending-videos"
+                  onclick="switchVideoSubTab('pending')"
+                >
+                  Pending Approvals (<span id="subtab-count-pending">1</span>)
+                </button>
+                <button
+                  class="btn-admin-action btn-admin-neutral"
+                  id="subtab-btn-published-videos"
+                  onclick="switchVideoSubTab('published')"
+                >
+                  All Published Masterclasses (<span id="subtab-count-published"
+                    >4</span
+                  >)
+                </button>
+                <button
+                  class="btn-admin-action btn-admin-neutral"
+                  id="subtab-btn-creator-perms"
+                  onclick="switchVideoSubTab('creators')"
+                >
+                  Educator Upload Permissions (<span id="subtab-count-creators"
+                    >6</span
+                  >)
+                </button>
+              </div>
 
-            <div id="admin-courses-list-container">
-              <!-- Rendered dynamically -->
-            </div>
+              <div id="admin-courses-list-container">
+                <!-- Rendered dynamically -->
+              </div>
 
-            <div id="admin-educators-list-container" style="display:none; margin-top:16px;">
-              <!-- Rendered dynamically -->
+              <div
+                id="admin-educators-list-container"
+                style="display: none; margin-top: 16px"
+              >
+                <!-- Rendered dynamically -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 3: USER KYC & IDENTITY REVIEW QUEUE
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-kyc">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>📋 Identity Verification &amp; KYC Queue</span>
+          <div class="admin-section-pane" id="tab-admin-kyc">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span>📋 Identity Verification &amp; KYC Queue</span>
+                </div>
+                <span
+                  class="badge-kyc-pill badge-kyc-pending"
+                  id="pane-kyc-count"
+                  >1 PENDING</span
+                >
               </div>
-              <span class="badge-kyc-pill badge-kyc-pending" id="pane-kyc-count">1 PENDING</span>
-            </div>
 
-            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
-              All applicant identities are verified by the Administrator prior to login. Once verified, applicants complete their one-time <strong>&#8377;99 onboarding fee</strong> at login time, unlocking 50 Welcome Credits and platform trading permissions.
-            </p>
+              <p
+                style="font-size: 0.86rem; color: #555555; margin-bottom: 18px"
+              >
+                All applicant identities are verified by the Administrator prior
+                to login. Once verified, applicants complete their one-time
+                <strong>&#8377;99 onboarding fee</strong> at login time,
+                unlocking 50 Welcome Credits and platform trading permissions.
+              </p>
 
-            <!-- KYC Subtabs -->
-            <div style="display:flex; gap:10px; margin-bottom:18px; border-bottom:3px solid #000; padding-bottom:10px;">
-              <button class="btn-admin-action btn-admin-approve" id="kyc-subtab-btn-pending" onclick="switchKycSubTab('pending')">
-                Pending Applicants (<span id="kyc-subtab-count-pending">1</span>)
-              </button>
-              <button class="btn-admin-action btn-admin-neutral" id="kyc-subtab-btn-all" onclick="switchKycSubTab('all')">
-                All Verified Members (<span id="kyc-subtab-count-all">5</span>)
-              </button>
-            </div>
+              <!-- KYC Subtabs -->
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  margin-bottom: 18px;
+                  border-bottom: 3px solid #000;
+                  padding-bottom: 10px;
+                "
+              >
+                <button
+                  class="btn-admin-action btn-admin-approve"
+                  id="kyc-subtab-btn-pending"
+                  onclick="switchKycSubTab('pending')"
+                >
+                  Pending Applicants (<span id="kyc-subtab-count-pending"
+                    >1</span
+                  >)
+                </button>
+                <button
+                  class="btn-admin-action btn-admin-neutral"
+                  id="kyc-subtab-btn-all"
+                  onclick="switchKycSubTab('all')"
+                >
+                  All Verified Members (<span id="kyc-subtab-count-all">5</span
+                  >)
+                </button>
+              </div>
 
-            <div id="admin-kyc-list-container">
-              <!-- Rendered dynamically -->
+              <div id="admin-kyc-list-container">
+                <!-- Rendered dynamically -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 4: ONBOARDING PAYMENTS & REVENUE LEDGER (₹99)
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-payments">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>💳 &#8377;99 Onboarding Fee Ledger &amp; Revenue Analytics</span>
+          <div class="admin-section-pane" id="tab-admin-payments">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span
+                    >💳 &#8377;99 Onboarding Fee Ledger &amp; Revenue
+                    Analytics</span
+                  >
+                </div>
+                <button
+                  class="btn-admin-action btn-admin-approve"
+                  onclick="downloadPaymentsCSV()"
+                >
+                  📥 Export Payments CSV
+                </button>
               </div>
-              <button class="btn-admin-action btn-admin-approve" onclick="downloadPaymentsCSV()">
-                📥 Export Payments CSV
-              </button>
-            </div>
 
-            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
-              All verified users complete a one-time <strong>&#8377;99 platform screening fee</strong> at login time. Revenue is tracked here with immutable transaction reference IDs, settlement timestamps, and payment gateway methods.
-            </p>
+              <p
+                style="font-size: 0.86rem; color: #555555; margin-bottom: 18px"
+              >
+                All verified users complete a one-time
+                <strong>&#8377;99 platform screening fee</strong> at login time.
+                Revenue is tracked here with immutable transaction reference
+                IDs, settlement timestamps, and payment gateway methods.
+              </p>
 
-            <!-- Revenue Summary Banner -->
-            <div style="background:#000000; color:#ffffff; padding:16px 20px; border:3px solid #000; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-              <div>
-                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; font-weight:800;">Total Onboarding Revenue Collected</div>
-                <div style="font-family:var(--font-heading); font-size:1.6rem; font-weight:900; color:#00ff66;" id="payments-total-revenue">&#8377;396.00</div>
+              <!-- Revenue Summary Banner -->
+              <div
+                style="
+                  background: #000000;
+                  color: #ffffff;
+                  padding: 16px 20px;
+                  border: 3px solid #000;
+                  margin-bottom: 20px;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  flex-wrap: wrap;
+                  gap: 12px;
+                "
+              >
+                <div>
+                  <div
+                    style="
+                      font-size: 0.75rem;
+                      color: #aaa;
+                      text-transform: uppercase;
+                      font-weight: 800;
+                    "
+                  >
+                    Total Onboarding Revenue Collected
+                  </div>
+                  <div
+                    style="
+                      font-family: var(--font-heading);
+                      font-size: 1.6rem;
+                      font-weight: 900;
+                      color: #00ff66;
+                    "
+                    id="payments-total-revenue"
+                  >
+                    &#8377;396.00
+                  </div>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    gap: 16px;
+                    font-size: 0.85rem;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <div>
+                    <strong>Verified Paid Members:</strong>
+                    <span
+                      id="payments-paid-count"
+                      style="color: #00ff66; font-weight: 900"
+                      >4</span
+                    >
+                  </div>
+                  <div>
+                    <strong>Awaiting Login Payment:</strong>
+                    <span
+                      id="payments-pending-count"
+                      style="color: #ffe600; font-weight: 900"
+                      >1</span
+                    >
+                  </div>
+                  <div>
+                    <strong>Fee Per Swapper:</strong>
+                    <span style="font-weight: 900">&#8377;99.00</span>
+                  </div>
+                </div>
               </div>
-              <div style="display:flex; gap:16px; font-size:0.85rem; flex-wrap:wrap;">
-                <div><strong>Verified Paid Members:</strong> <span id="payments-paid-count" style="color:#00ff66; font-weight:900;">4</span></div>
-                <div><strong>Awaiting Login Payment:</strong> <span id="payments-pending-count" style="color:#ffe600; font-weight:900;">1</span></div>
-                <div><strong>Fee Per Swapper:</strong> <span style="font-weight:900;">&#8377;99.00</span></div>
-              </div>
-            </div>
 
-            <div id="admin-payments-list-container">
-              <!-- Rendered dynamically -->
+              <div id="admin-payments-list-container">
+                <!-- Rendered dynamically -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 5: DISPUTE ARBITRATION DESK
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-disputes">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>⚖️ Peer Session Dispute Arbitration</span>
+          <div class="admin-section-pane" id="tab-admin-disputes">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span>⚖️ Peer Session Dispute Arbitration</span>
+                </div>
+                <button
+                  class="btn-admin-action btn-admin-neutral"
+                  onclick="simulateNewDispute()"
+                >
+                  + Simulate Test Dispute
+                </button>
               </div>
-              <button class="btn-admin-action btn-admin-neutral" onclick="simulateNewDispute()">
-                + Simulate Test Dispute
-              </button>
-            </div>
 
-            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
-              When peer confirmations fail (e.g. no-shows or quality complaints), credits are locked in platform escrow. Admin decision unlocks or reverts credits atomically.
-            </p>
+              <p
+                style="font-size: 0.86rem; color: #555555; margin-bottom: 18px"
+              >
+                When peer confirmations fail (e.g. no-shows or quality
+                complaints), credits are locked in platform escrow. Admin
+                decision unlocks or reverts credits atomically.
+              </p>
 
-            <div id="admin-disputes-list-container">
-              <!-- Rendered dynamically -->
+              <div id="admin-disputes-list-container">
+                <!-- Rendered dynamically -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- -------------------------------------------------------------
+          <!-- -------------------------------------------------------------
              PANE 6: DOUBLE-ENTRY MATHEMATICAL AUDIT
              ------------------------------------------------------------- -->
-        <div class="admin-section-pane" id="tab-admin-ledger">
-          <div class="admin-panel-card">
-            <div class="admin-panel-header">
-              <div class="admin-panel-title">
-                <span>🔍 Cryptographic &amp; Mathematical Reconciliation</span>
+          <div class="admin-section-pane" id="tab-admin-ledger">
+            <div class="admin-panel-card">
+              <div class="admin-panel-header">
+                <div class="admin-panel-title">
+                  <span
+                    >🔍 Cryptographic &amp; Mathematical Reconciliation</span
+                  >
+                </div>
+                <button
+                  class="btn-admin-action btn-admin-approve"
+                  onclick="runLedgerAuditModal()"
+                >
+                  Open Verified Proof Modal
+                </button>
               </div>
-              <button class="btn-admin-action btn-admin-approve" onclick="runLedgerAuditModal()">
-                Open Verified Proof Modal
-              </button>
-            </div>
 
-            <div style="overflow-x:auto; margin-top:16px;">
-              <table class="admin-ledger-table" id="admin-full-ledger-table">
-                <thead>
-                  <tr>
-                    <th>TX ID</th>
-                    <th>Timestamp</th>
-                    <th>Type</th>
-                    <th>From Entity</th>
-                    <th>To Entity</th>
-                    <th>Credits</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-ledger-tbody">
-                  <!-- Dynamically populated -->
-                </tbody>
-              </table>
+              <div style="overflow-x: auto; margin-top: 16px">
+                <table class="admin-ledger-table" id="admin-full-ledger-table">
+                  <thead>
+                    <tr>
+                      <th>TX ID</th>
+                      <th>Timestamp</th>
+                      <th>Type</th>
+                      <th>From Entity</th>
+                      <th>To Entity</th>
+                      <th>Credits</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-ledger-tbody">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-
-      </main>
-
+        </main>
+      </div>
     </div>
-  </div>
 
-  <!-- =========================================================
+    <!-- =========================================================
        MODAL 1: FULL MATHEMATICAL AUDIT & PROOF OF SOLVENCY
        ========================================================= -->
-  <div class="modal-overlay" id="modal-reconciliation" role="dialog" aria-modal="true" aria-labelledby="modal-recon-title">
-    <div class="modal-card neo-card" style="max-width: 780px;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span class="tag tag-yellow" style="font-weight:900;">ADMIN AUDIT</span>
-          <h3 id="modal-recon-title" style="margin:0; font-size:1.15rem;">PLATFORM SOLVENCY PROOF &amp; AUDIT</h3>
-        </div>
-        <button class="modal-close" id="modal-recon-close" aria-label="Close modal" onclick="closeLedgerAuditModal()">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="recon-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:18px;">
-          <div class="recon-stat" style="background:#f7f6f0; border:2px solid #000; padding:12px;">
-            <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#666;">Total Minted Supply</div>
-            <div id="modal-total-minted" style="font-family:var(--font-mono); font-size:1.4rem; font-weight:900; margin-top:4px;">0 CR</div>
+    <div
+      class="modal-overlay"
+      id="modal-reconciliation"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-recon-title"
+    >
+      <div class="modal-card neo-card" style="max-width: 780px">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <span class="tag tag-yellow" style="font-weight: 900"
+              >ADMIN AUDIT</span
+            >
+            <h3 id="modal-recon-title" style="margin: 0; font-size: 1.15rem">
+              PLATFORM SOLVENCY PROOF &amp; AUDIT
+            </h3>
           </div>
-          <div class="recon-stat" style="background:#f7f6f0; border:2px solid #000; padding:12px;">
-            <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#666;">Total Wallet Balances</div>
-            <div id="modal-total-balances" style="font-family:var(--font-mono); font-size:1.4rem; font-weight:900; margin-top:4px;">0 CR</div>
-          </div>
-          <div class="recon-stat" style="background:#f7f6f0; border:2px solid #000; padding:12px;">
-            <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:#666;">Variance (&Delta;)</div>
-            <div id="modal-variance" style="font-family:var(--font-mono); font-size:1.4rem; font-weight:900; margin-top:4px; color:#00aa44;">0 CR (0.00%)</div>
-          </div>
+          <button
+            class="modal-close"
+            id="modal-recon-close"
+            aria-label="Close modal"
+            onclick="closeLedgerAuditModal()"
+          >
+            ✕
+          </button>
         </div>
 
-        <div class="recon-status-banner" style="background:#00ff66; border:2.5px solid #000; padding:12px 16px; margin-bottom:18px; font-weight:800; font-size:0.88rem;">
-          ✓ MATHEMATICAL RECONCILIATION VERIFIED: Platform is 100% solvent. Every circulating credit is fully accounted for by immutable double-entry journal entries.
-        </div>
-
-        <h4 style="font-family:var(--font-heading); font-size:0.9rem; margin-bottom:8px; text-transform:uppercase;">User Ledger Balances Breakdown</h4>
-        <div style="max-height:220px; overflow-y:auto; border:2px solid #000;">
-          <table class="admin-ledger-table">
-            <thead>
-              <tr>
-                <th>User Account</th>
-                <th>Derived Balance</th>
-                <th>KYC Status</th>
-                <th>Solvency Check</th>
-              </tr>
-            </thead>
-            <tbody id="modal-user-breakdown-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end; margin-top:16px;">
-        <button class="btn-admin-action btn-admin-approve" onclick="closeLedgerAuditModal()">
-          Close Audit Report
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       MODAL 2: ONBOARDING PAYMENT OFFICIAL RECEIPT
-       ========================================================= -->
-  <div class="modal-overlay" id="modal-payment-receipt" role="dialog" aria-modal="true" aria-labelledby="modal-receipt-title">
-    <div class="modal-card neo-card" style="max-width: 580px;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span class="tag tag-green" style="font-weight:900; background:#00ff66; color:#000;">VERIFIED RECEIPT</span>
-          <h3 id="modal-receipt-title" style="margin:0; font-size:1.15rem;">ONBOARDING FEE INVOICE (&#8377;99)</h3>
-        </div>
-        <button class="modal-close" id="modal-receipt-close" aria-label="Close modal" onclick="closePaymentReceiptModal()">✕</button>
-      </div>
-
-      <div class="modal-body" id="receipt-modal-body" style="padding:20px;">
-        <!-- Injected dynamically -->
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:2px solid #000; padding-top:12px;">
-        <button class="btn-admin-action btn-admin-neutral" onclick="window.print()">
-          🖨️ Print Receipt
-        </button>
-        <button class="btn-admin-action btn-admin-approve" onclick="closePaymentReceiptModal()">
-          Close Invoice
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toast-container"></div>
-
-  <!-- Core Data Stores & API Client -->
-  <script src="js/store.js"></script>
-  <script src="js/ledger.js"></script>
-  <script src="js/admin.js"></script>
-  <script src="js/api.js"></script>
-
-  <!-- Admin Portal Script -->
-  <script>
-    // 1. Authentication & Role Gate
-    document.addEventListener("DOMContentLoaded", () => {
-      const currentUser = store.getCurrentUser();
-      
-      // Auto-set admin if not logged in or in test mode
-      if (!currentUser || currentUser.role !== "admin") {
-        store.login("user_admin");
-      }
-
-      bindAdminTabs();
-      renderAllAdminViews();
-
-      // Subscribe to store updates
-      store.subscribe(() => {
-        renderAllAdminViews();
-      });
-    });
-
-    // 2. Tab Navigation
-    const adminTabs = document.querySelectorAll(".admin-nav-tab");
-    const adminPanes = document.querySelectorAll(".admin-section-pane");
-
-    function bindAdminTabs() {
-      adminTabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          const targetId = tab.getAttribute("data-tab");
-          switchAdminTab(targetId);
-        });
-      });
-    }
-
-    function switchAdminTab(targetId) {
-      adminTabs.forEach(tab => {
-        tab.classList.toggle("active", tab.getAttribute("data-tab") === targetId);
-      });
-      adminPanes.forEach(pane => {
-        pane.classList.toggle("active", pane.id === targetId);
-      });
-    }
-
-    // Current Video Moderation SubTab ('pending', 'published', 'creators')
-    let currentVideoSubTab = 'pending';
-
-    function switchVideoSubTab(tabKey) {
-      currentVideoSubTab = tabKey;
-      const btnPending = document.getElementById("subtab-btn-pending-videos");
-      const btnPublished = document.getElementById("subtab-btn-published-videos");
-      const btnCreators = document.getElementById("subtab-btn-creator-perms");
-      const coursesContainer = document.getElementById("admin-courses-list-container");
-      const educatorsContainer = document.getElementById("admin-educators-list-container");
-
-      if (btnPending) {
-        btnPending.className = tabKey === 'pending' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
-      }
-      if (btnPublished) {
-        btnPublished.className = tabKey === 'published' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
-      }
-      if (btnCreators) {
-        btnCreators.className = tabKey === 'creators' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
-      }
-
-      if (tabKey === 'creators') {
-        if (coursesContainer) coursesContainer.style.display = 'none';
-        if (educatorsContainer) educatorsContainer.style.display = 'block';
-        renderEducatorsTable();
-      } else {
-        if (coursesContainer) coursesContainer.style.display = 'block';
-        if (educatorsContainer) educatorsContainer.style.display = 'none';
-        renderCoursesList();
-      }
-    }
-
-    // Current KYC SubTab ('pending', 'all')
-    let currentKycSubTab = 'pending';
-
-    function switchKycSubTab(tabKey) {
-      currentKycSubTab = tabKey;
-      const btnPending = document.getElementById("kyc-subtab-btn-pending");
-      const btnAll = document.getElementById("kyc-subtab-btn-all");
-
-      if (btnPending) {
-        btnPending.className = tabKey === 'pending' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
-      }
-      if (btnAll) {
-        btnAll.className = tabKey === 'all' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
-      }
-
-      const pendingUsers = admin.getPendingUsers();
-      renderKycList(pendingUsers);
-    }
-
-    // 3. Render Views
-    function renderAllAdminViews() {
-      const pendingUsers = admin.getPendingUsers();
-      const pendingCourses = admin.getPendingCourses();
-      const approvedCourses = store.getApprovedCourses();
-      const disputedSessions = admin.getDisputedSessions();
-      const txs = store.transactions;
-      const revenueStats = store.getRevenueMetrics();
-
-      // Update Circulating Credits
-      let totalCirculating = 0;
-      store.users.forEach(u => {
-        totalCirculating += ledger.getBalance(u.id);
-      });
-
-      const elCirculating = document.getElementById("kpi-circulating-credits");
-      if (elCirculating) elCirculating.textContent = `${totalCirculating} CR`;
-
-      // Update Onboarding Revenue KPI
-      const elRevenue = document.getElementById("kpi-onboarding-revenue");
-      if (elRevenue) elRevenue.textContent = `₹${revenueStats.totalRevenue}`;
-
-      const elRevenueSub = document.getElementById("kpi-onboarding-subtext");
-      if (elRevenueSub) elRevenueSub.textContent = `${revenueStats.paidCount} Paid • ${revenueStats.pendingPaymentCount} Pending Payment`;
-
-      const elPayTotal = document.getElementById("payments-total-revenue");
-      if (elPayTotal) elPayTotal.textContent = `₹${revenueStats.totalRevenue}.00`;
-
-      const elPayPaid = document.getElementById("payments-paid-count");
-      if (elPayPaid) elPayPaid.textContent = revenueStats.paidCount;
-
-      const elPayPending = document.getElementById("payments-pending-count");
-      if (elPayPending) elPayPending.textContent = revenueStats.pendingPaymentCount;
-
-      const elPendingKyc = document.getElementById("kpi-pending-reviews");
-      if (elPendingKyc) elPendingKyc.textContent = `${pendingUsers.length} USER${pendingUsers.length === 1 ? '' : 'S'}`;
-      
-      const elKpiCourses = document.getElementById("kpi-pending-courses");
-      if (elKpiCourses) {
-        elKpiCourses.textContent = `${pendingCourses.length} PENDING`;
-      }
-
-      // Badges
-      const kycBadge = document.getElementById("admin-kyc-badge");
-      if (kycBadge) {
-        kycBadge.textContent = pendingUsers.length;
-        kycBadge.style.display = pendingUsers.length > 0 ? "inline-block" : "none";
-      }
-
-      const paymentsBadge = document.getElementById("admin-payments-badge");
-      if (paymentsBadge) {
-        paymentsBadge.textContent = revenueStats.paidCount;
-      }
-
-      const coursesBadge = document.getElementById("admin-courses-badge");
-      if (coursesBadge) {
-        coursesBadge.textContent = pendingCourses.length;
-        coursesBadge.style.display = pendingCourses.length > 0 ? "inline-block" : "none";
-      }
-
-      const paneKycCount = document.getElementById("pane-kyc-count");
-      if (paneKycCount) {
-        paneKycCount.textContent = `${pendingUsers.length} PENDING`;
-      }
-
-      const paneCoursesCount = document.getElementById("pane-courses-count");
-      if (paneCoursesCount) {
-        paneCoursesCount.textContent = `${pendingCourses.length} PENDING APPROVAL`;
-      }
-
-      // Subtab counts
-      const elSubPending = document.getElementById("subtab-count-pending");
-      const elSubPub = document.getElementById("subtab-count-published");
-      const elSubCreat = document.getElementById("subtab-count-creators");
-
-      if (elSubPending) elSubPending.textContent = pendingCourses.length;
-      if (elSubPub) elSubPub.textContent = approvedCourses.length;
-      if (elSubCreat) elSubCreat.textContent = store.users.length;
-
-      const elKycSubPending = document.getElementById("kyc-subtab-count-pending");
-      const elKycSubAll = document.getElementById("kyc-subtab-count-all");
-      if (elKycSubPending) elKycSubPending.textContent = pendingUsers.length;
-      if (elKycSubAll) elKycSubAll.textContent = store.users.filter(u => u.role !== 'admin').length;
-
-      const disputesBadge = document.getElementById("admin-disputes-badge");
-      if (disputesBadge) {
-        disputesBadge.textContent = disputedSessions.length;
-      }
-
-      // Render Sub-Views
-      renderKycList(pendingUsers);
-      renderPaymentsList();
-
-      if (currentVideoSubTab === 'creators') {
-        renderEducatorsTable();
-      } else {
-        renderCoursesList();
-      }
-
-      renderDisputesList(disputedSessions);
-      renderLedgerTable(txs);
-      renderOverviewTrays(pendingUsers, disputedSessions, pendingCourses);
-    }
-
-    function renderKycList(pendingUsers) {
-      const container = document.getElementById("admin-kyc-list-container");
-      if (!container) return;
-
-      if (currentKycSubTab === 'pending') {
-        if (pendingUsers.length === 0) {
-          container.innerHTML = `
-            <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-              <div style="font-size:2rem; margin-bottom:8px;">✓</div>
-              <div style="font-weight:800; font-size:1rem;">All User Applications Reviewed</div>
-              <div style="font-size:0.8rem; margin-top:4px;">No members currently waiting in the KYC screening queue.</div>
-            </div>
-          `;
-          return;
-        }
-
-        container.innerHTML = pendingUsers.map(user => `
-          <div class="admin-review-row" style="border-left: 6px solid #ffe600;">
-            <div>
-              <div style="font-family:var(--font-heading); font-weight:800; font-size:1.05rem; color:#000;">
-                ${user.name}
+        <div class="modal-body">
+          <div
+            class="recon-grid"
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr 1fr;
+              gap: 12px;
+              margin-bottom: 18px;
+            "
+          >
+            <div
+              class="recon-stat"
+              style="background: #f7f6f0; border: 2px solid #000; padding: 12px"
+            >
+              <div
+                style="
+                  font-size: 0.75rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  color: #666;
+                "
+              >
+                Total Minted Supply
               </div>
-              <div style="font-size:0.82rem; color:#555555; margin-top:3px;">
-                <strong>Email:</strong> ${user.email} &bull; 
-                <strong>Fee:</strong> &#8377;99 (Payable post-verification at login) &bull; 
-                <strong>KYC:</strong> <span class="badge-kyc-pill badge-kyc-pending">PENDING ADMIN REVIEW</span>
-              </div>
-              <div style="font-size:0.75rem; color:#666666; margin-top:3px;">
-                Skills Offered: ${user.skills_have ? user.skills_have.map(s => s.name).join(", ") : "General declaration"}
+              <div
+                id="modal-total-minted"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 1.4rem;
+                  font-weight: 900;
+                  margin-top: 4px;
+                "
+              >
+                0 CR
               </div>
             </div>
-            <div class="admin-actions-group">
-              <button class="btn-admin-action btn-admin-approve" onclick="approveUser('${user.id}')">
-                ✓ Verify &amp; Approve Applicant
-              </button>
-              <button class="btn-admin-action btn-admin-reject" onclick="rejectUser('${user.id}')">
-                ✕ Reject Application
-              </button>
+            <div
+              class="recon-stat"
+              style="background: #f7f6f0; border: 2px solid #000; padding: 12px"
+            >
+              <div
+                style="
+                  font-size: 0.75rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  color: #666;
+                "
+              >
+                Total Wallet Balances
+              </div>
+              <div
+                id="modal-total-balances"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 1.4rem;
+                  font-weight: 900;
+                  margin-top: 4px;
+                "
+              >
+                0 CR
+              </div>
+            </div>
+            <div
+              class="recon-stat"
+              style="background: #f7f6f0; border: 2px solid #000; padding: 12px"
+            >
+              <div
+                style="
+                  font-size: 0.75rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  color: #666;
+                "
+              >
+                Variance (&Delta;)
+              </div>
+              <div
+                id="modal-variance"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 1.4rem;
+                  font-weight: 900;
+                  margin-top: 4px;
+                  color: #00aa44;
+                "
+              >
+                0 CR (0.00%)
+              </div>
             </div>
           </div>
-        `).join("");
-      } else {
-        // All members view
-        const allSwappers = store.users.filter(u => u.role !== 'admin');
-        container.innerHTML = `
-          <div style="overflow-x:auto;">
+
+          <div
+            class="recon-status-banner"
+            style="
+              background: #00ff66;
+              border: 2.5px solid #000;
+              padding: 12px 16px;
+              margin-bottom: 18px;
+              font-weight: 800;
+              font-size: 0.88rem;
+            "
+          >
+            ✓ MATHEMATICAL RECONCILIATION VERIFIED: Platform is 100% solvent.
+            Every circulating credit is fully accounted for by immutable
+            double-entry journal entries.
+          </div>
+
+          <h4
+            style="
+              font-family: var(--font-heading);
+              font-size: 0.9rem;
+              margin-bottom: 8px;
+              text-transform: uppercase;
+            "
+          >
+            User Ledger Balances Breakdown
+          </h4>
+          <div
+            style="max-height: 220px; overflow-y: auto; border: 2px solid #000"
+          >
             <table class="admin-ledger-table">
               <thead>
                 <tr>
-                  <th>Member</th>
-                  <th>Email</th>
-                  <th>Admin Verification</th>
-                  <th>&#8377;99 Onboarding Fee</th>
-                  <th>Credits Balance</th>
-                  <th>Action</th>
+                  <th>User Account</th>
+                  <th>Derived Balance</th>
+                  <th>KYC Status</th>
+                  <th>Solvency Check</th>
                 </tr>
               </thead>
-              <tbody>
-                ${allSwappers.map(u => {
-                  const isVerified = u.verified_status === 'VERIFIED';
-                  const isPaid = u.fee_status === 'PAID';
-                  const bal = ledger.getBalance(u.id);
-
-                  return `
-                    <tr>
-                      <td><strong>${u.name}</strong></td>
-                      <td style="font-family:var(--font-mono); font-size:0.8rem;">${u.email}</td>
-                      <td>
-                        <span class="badge-kyc-pill ${isVerified ? 'badge-kyc-verified' : 'badge-kyc-pending'}">
-                          ${isVerified ? '✓ VERIFIED' : u.verified_status}
-                        </span>
-                      </td>
-                      <td>
-                        ${isPaid ? `
-                          <span style="background:#00ff66; color:#000; font-weight:900; padding:2px 6px; border:1.5px solid #000; font-size:0.75rem;">
-                            ✓ &#8377;99 PAID (${u.payment_ref || 'SETTLED'})
-                          </span>
-                        ` : isVerified ? `
-                          <span style="background:#ffe600; color:#000; font-weight:900; padding:2px 6px; border:1.5px solid #000; font-size:0.75rem;">
-                            ⏳ &#8377;99 PENDING AT LOGIN
-                          </span>
-                        ` : `
-                          <span style="background:#e5e7eb; color:#555; font-weight:700; padding:2px 6px; font-size:0.75rem;">
-                            Unpaid (In Review)
-                          </span>
-                        `}
-                      </td>
-                      <td style="font-family:var(--font-mono); font-weight:900;">${bal} CR</td>
-                      <td>
-                        ${!isVerified ? `
-                          <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">
-                            Approve
-                          </button>
-                        ` : isPaid && u.payment_ref ? `
-                          <button class="btn-admin-action btn-admin-neutral" style="padding:4px 8px; font-size:0.72rem;" onclick="viewPaymentReceiptModal('${u.payment_ref}')">
-                            📄 Receipt
-                          </button>
-                        ` : `
-                          <span style="font-size:0.72rem; color:#666;">Verified</span>
-                        `}
-                      </td>
-                    </tr>
-                  `;
-                }).join("")}
-              </tbody>
+              <tbody id="modal-user-breakdown-tbody"></tbody>
             </table>
           </div>
-        `;
-      }
-    }
-
-    function renderPaymentsList() {
-      const container = document.getElementById("admin-payments-list-container");
-      if (!container) return;
-
-      const payments = store.getOnboardingPayments();
-
-      if (payments.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-            <div style="font-size:2rem; margin-bottom:8px;">💳</div>
-            <div style="font-weight:800; font-size:1rem;">Zero Onboarding Payments Recorded</div>
-            <div style="font-size:0.8rem; margin-top:4px;">When verified users pay &#8377;99 upon login, transactions appear here.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = `
-        <div style="overflow-x:auto;">
-          <table class="admin-ledger-table">
-            <thead>
-              <tr>
-                <th>Payment Reference</th>
-                <th>Member Name</th>
-                <th>Email</th>
-                <th>Amount</th>
-                <th>Payment Gateway Method</th>
-                <th>Settlement Timestamp</th>
-                <th>Audit Status</th>
-                <th>Receipt</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${payments.map(p => {
-                const dateStr = new Date(p.created_at).toLocaleString([], {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                });
-
-                return `
-                  <tr>
-                    <td><span class="mono" style="font-weight:800; font-size:0.82rem; background:#fffde6; padding:2px 6px; border:1px solid #000;">${p.id}</span></td>
-                    <td><strong>${p.user_name}</strong></td>
-                    <td class="mono" style="font-size:0.8rem;">${p.user_email}</td>
-                    <td style="font-weight:900; color:#00aa44; font-size:0.95rem;">&#8377;${p.amount || 99}.00</td>
-                    <td><span style="background:#e5e7eb; padding:2px 6px; font-size:0.75rem; font-weight:800;">${p.method || 'UPI'}</span></td>
-                    <td style="font-size:0.78rem;">${dateStr}</td>
-                    <td><span style="color:#00aa44; font-weight:900; font-size:0.75rem; background:#e6ffed; padding:2px 6px; border:1px solid #00aa44;">✓ ${p.status || 'SETTLED'}</span></td>
-                    <td>
-                      <button class="btn-admin-action btn-admin-neutral" style="padding:4px 8px; font-size:0.72rem;" onclick="viewPaymentReceiptModal('${p.id}')">
-                        📄 Receipt
-                      </button>
-                    </td>
-                  </tr>
-                `;
-              }).join("")}
-            </tbody>
-          </table>
         </div>
-      `;
-    }
 
-    function viewPaymentReceiptModal(payId) {
-      const payments = store.getOnboardingPayments();
-      let payment = payments.find(p => p.id === payId);
-
-      if (!payment) {
-        // Look up by user payment ref
-        const user = store.users.find(u => u.payment_ref === payId || u.id === payId);
-        if (user && user.payment_ref) {
-          payment = payments.find(p => p.id === user.payment_ref) || {
-            id: user.payment_ref,
-            user_name: user.name,
-            user_email: user.email,
-            amount: user.fee_amount || 99,
-            method: user.payment_method || "UPI (Google Pay)",
-            created_at: user.fee_paid_at || new Date(),
-            status: "SETTLED"
-          };
-        }
-      }
-
-      if (!payment) {
-        showToast("Payment record not found.", "error");
-        return;
-      }
-
-      const modalBody = document.getElementById("receipt-modal-body");
-      if (!modalBody) return;
-
-      const dateStr = new Date(payment.created_at).toLocaleString();
-
-      modalBody.innerHTML = `
-        <div style="background:#f9f9f5; border:3px solid #000; padding:18px; box-shadow:4px 4px 0px #000;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px dashed #000; padding-bottom:12px; margin-bottom:14px;">
-            <div>
-              <div style="font-family:var(--font-heading); font-weight:900; font-size:1.15rem;">SKILL BADLU PLATFORM</div>
-              <div style="font-size:0.74rem; color:#666;">Peer-to-Peer Double Entry Credit Ledger &bull; Anti-Sybil Access Gateway</div>
-            </div>
-            <div style="text-align:right;">
-              <span style="background:#00ff66; font-weight:900; padding:2px 8px; border:1.5px solid #000; font-size:0.75rem;">PAID &bull; &#8377;${payment.amount || 99}.00</span>
-              <div class="mono" style="font-size:0.7rem; color:#444; margin-top:4px;">REF: ${payment.id}</div>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.82rem; margin-bottom:14px;">
-            <div>
-              <div style="color:#666; font-size:0.72rem; text-transform:uppercase; font-weight:800;">Billed To Swapper:</div>
-              <div style="font-weight:900; font-size:0.95rem;">${payment.user_name}</div>
-              <div class="mono" style="color:#444;">${payment.user_email}</div>
-            </div>
-            <div>
-              <div style="color:#666; font-size:0.72rem; text-transform:uppercase; font-weight:800;">Payment Details:</div>
-              <div><strong>Gateway Method:</strong> ${payment.method}</div>
-              <div><strong>Date &amp; Time:</strong> ${dateStr}</div>
-              <div><strong>Admin Verification:</strong> <span style="color:#00aa44; font-weight:800;">✓ APPROVED</span></div>
-            </div>
-          </div>
-
-          <table style="width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:14px; background:#ffffff; border:1.5px solid #000;">
-            <thead>
-              <tr style="background:#000; color:#fff;">
-                <th style="padding:6px 10px; text-align:left;">Description</th>
-                <th style="padding:6px 10px; text-align:right;">Rate</th>
-                <th style="padding:6px 10px; text-align:right;">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding:6px 10px; border-bottom:1px solid #ddd;">Pre-Login Identity Curation &amp; Onboarding</td>
-                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd;">&#8377;99.00</td>
-                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd; font-weight:800;">&#8377;99.00</td>
-              </tr>
-              <tr>
-                <td style="padding:6px 10px; border-bottom:1px solid #ddd;">50 Welcome Platform Credits Grant</td>
-                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd;">FREE</td>
-                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd; color:#00aa44; font-weight:800;">+50 CR</td>
-              </tr>
-              <tr style="background:#f4f4f0; font-weight:900;">
-                <td colspan="2" style="padding:8px 10px; text-align:right;">TOTAL PAID:</td>
-                <td style="padding:8px 10px; text-align:right; color:#000; font-size:0.95rem;">&#8377;${payment.amount || 99}.00</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="mono" style="font-size:0.68rem; color:#666; text-align:center;">
-            Cryptographic Integrity Proof: SHA-256 Verified // Tamper-Proof Ledger State // Skill Badlu
-          </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 16px">
+          <button
+            class="btn-admin-action btn-admin-approve"
+            onclick="closeLedgerAuditModal()"
+          >
+            Close Audit Report
+          </button>
         </div>
-      `;
+      </div>
+    </div>
 
-      const modal = document.getElementById("modal-payment-receipt");
-      if (modal) modal.classList.add("active");
-    }
-
-    function closePaymentReceiptModal() {
-      const modal = document.getElementById("modal-payment-receipt");
-      if (modal) modal.classList.remove("active");
-    }
-
-    function downloadPaymentsCSV() {
-      const payments = store.getOnboardingPayments();
-      if (payments.length === 0) {
-        showToast("No payments available to export.", "info");
-        return;
-      }
-
-      let csv = "Transaction_ID,User_Name,User_Email,Amount_INR,Payment_Method,Status,Settled_At\n";
-      payments.forEach(p => {
-        csv += `"${p.id}","${p.user_name}","${p.user_email}",${p.amount || 99},"${p.method}","${p.status}","${new Date(p.created_at).toISOString()}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `skillbadlu_onboarding_payments_${Date.now()}.csv`;
-      link.click();
-      showToast("✓ Onboarding payments CSV exported successfully!", "success");
-    }
-
-    function renderCoursesList() {
-      const container = document.getElementById("admin-courses-list-container");
-      if (!container) return;
-
-      const coursesToShow = currentVideoSubTab === 'published' 
-        ? store.getApprovedCourses() 
-        : admin.getPendingCourses();
-
-      if (coursesToShow.length === 0) {
-        const emptyMsg = currentVideoSubTab === 'published' 
-          ? "No courses currently published in the catalog."
-          : "No peer video courses currently waiting in the upload approval queue.";
-        
-        container.innerHTML = `
-          <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-            <div style="font-size:2rem; margin-bottom:8px;">📹</div>
-            <div style="font-weight:800; font-size:1rem;">${emptyMsg}</div>
-            <div style="font-size:0.8rem; margin-top:4px;">When users submit masterclasses, they will appear here for quality review.</div>
+    <!-- =========================================================
+       MODAL 2: ONBOARDING PAYMENT OFFICIAL RECEIPT
+       ========================================================= -->
+    <div
+      class="modal-overlay"
+      id="modal-payment-receipt"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-receipt-title"
+    >
+      <div class="modal-card neo-card" style="max-width: 580px">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <span
+              class="tag tag-green"
+              style="font-weight: 900; background: #00ff66; color: #000"
+              >VERIFIED RECEIPT</span
+            >
+            <h3 id="modal-receipt-title" style="margin: 0; font-size: 1.15rem">
+              ONBOARDING FEE INVOICE (&#8377;99)
+            </h3>
           </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = coursesToShow.map(course => {
-        const creator = store.getUser(course.creator_id) || { name: course.creator_id, avatar: "CR", email: "creator@peer.io", kyc_status: "VERIFIED" };
-        const catUpper = (course.category || 'tech').toUpperCase();
-        const isPending = course.status === "PENDING_REVIEW";
-
-        return `
-          <div class="admin-review-row" style="border-left: 8px solid ${isPending ? '#ff2d55' : '#00ff66'}; padding: 22px; flex-direction:column; align-items:stretch;">
-            
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
-              <div style="flex:1; min-width:280px;">
-                <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-                  <span class="skill-category-tag cat-${course.category || 'tech'}">${catUpper}</span>
-                  <span class="mono" style="font-size:0.75rem; font-weight:800; background:#ffe600; padding:2px 8px; border:1.5px solid #000;">
-                    PRICE: ${course.credit_cost} CR
-                  </span>
-                  <span style="font-size:0.75rem; color:#444; font-weight:800; background:#f4f4f0; padding:2px 6px; border:1px solid #000;">
-                    ⏱ ${course.duration || '15 mins'}
-                  </span>
-                  <span style="font-size:0.72rem; font-weight:900; padding:2px 6px; border:1.5px solid #000; background:${isPending ? '#ffe600' : '#00ff66'};">
-                    ${isPending ? '⏳ PENDING ADMIN APPROVAL' : '✓ PUBLISHED LIVE'}
-                  </span>
-                </div>
-
-                <div style="font-family:var(--font-heading); font-weight:900; font-size:1.2rem; color:#000; margin:4px 0;">
-                  ${course.title}
-                </div>
-
-                <div style="font-size:0.86rem; color:#444; margin:6px 0 12px 0; line-height:1.5;">
-                  ${course.description}
-                </div>
-
-                <div style="background:#ffffff; border:2px solid #000; padding:10px 14px; display:inline-flex; align-items:center; gap:12px; margin-bottom:14px;">
-                  <div style="width:32px; height:32px; background:#ffe600; border:2px solid #000; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:0.85rem;">
-                    ${creator.avatar || 'CR'}
-                  </div>
-                  <div style="font-size:0.8rem;">
-                    <div><strong>Instructor:</strong> ${creator.name} (${creator.email || 'peer@skillbadlu.com'})</div>
-                    <div style="color:#666; font-size:0.74rem;">KYC: <strong>${creator.kyc_status || 'VERIFIED'}</strong> &bull; Upload Status: <strong style="color:#00aa44;">${creator.creator_status || 'APPROVED'}</strong></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="admin-actions-group" style="align-self:flex-start;">
-                ${isPending ? `
-                  <button class="btn-admin-action btn-admin-approve" style="font-size:0.88rem; padding:10px 18px;" onclick="approveCourse('${course.id}')">
-                    ✓ Approve Video &amp; Publish Live
-                  </button>
-                  <button class="btn-admin-action btn-admin-reject" style="font-size:0.88rem; padding:10px 18px;" onclick="rejectCourse('${course.id}')">
-                    ✕ Reject Video
-                  </button>
-                ` : `
-                  <button class="btn-admin-action btn-admin-reject" style="font-size:0.78rem; padding:6px 12px;" onclick="rejectCourse('${course.id}')">
-                    Unpublish / Revoke
-                  </button>
-                `}
-              </div>
-            </div>
-
-            <!-- Embedded Interactive Video Preview Player -->
-            <div style="margin-top:10px; background:#000000; border:3px solid #000; padding:10px; box-shadow:3px 3px 0px #000;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; color:#fff; font-size:0.75rem; font-weight:800; text-transform:uppercase;">
-                <span>▶ Video Stream Quality &amp; Audio Inspection</span>
-                <span class="mono" style="color:#00ff66;">ANTI-SKIP TRACKING COMPATIBLE</span>
-              </div>
-              <video controls playsinline preload="metadata" style="width:100%; max-height:260px; background:#111; outline:none;">
-                <source src="${course.video_url}" type="video/mp4" />
-                Your browser does not support HTML5 video streaming.
-              </video>
-            </div>
-
-          </div>
-        `;
-      }).join("");
-    }
-
-    function renderEducatorsTable() {
-      const container = document.getElementById("admin-educators-list-container");
-      if (!container) return;
-
-      const users = store.users;
-
-      container.innerHTML = `
-        <div style="overflow-x:auto;">
-          <table class="admin-ledger-table">
-            <thead>
-              <tr>
-                <th>Swapper Member</th>
-                <th>Email</th>
-                <th>KYC Verification</th>
-                <th>Video Upload Permission</th>
-                <th>Courses Submitted</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${users.map(u => {
-                const userCourses = store.courses.filter(c => c.creator_id === u.id);
-                const canUpload = u.can_upload_videos || u.creator_status === 'APPROVED';
-                return `
-                  <tr>
-                    <td><strong>${u.name}</strong></td>
-                    <td style="font-family:var(--font-mono);">${u.email}</td>
-                    <td><span class="badge-kyc-pill ${u.kyc_status === 'VERIFIED' ? 'badge-kyc-verified' : 'badge-kyc-pending'}">${u.kyc_status}</span></td>
-                    <td>
-                      <span style="font-weight:900; padding:2px 6px; border:1.5px solid #000; background:${canUpload ? '#00ff66' : '#ffe600'}; font-size:0.72rem;">
-                        ${canUpload ? '✓ UPLOAD APPROVED' : '⏳ PENDING APPROVAL'}
-                      </span>
-                    </td>
-                    <td style="font-weight:900;">${userCourses.length} Course${userCourses.length === 1 ? '' : 's'}</td>
-                    <td>
-                      ${canUpload ? `
-                        <button class="btn-admin-action btn-admin-reject" style="padding:4px 8px; font-size:0.72rem;" onclick="revokeCreatorAccess('${u.id}')">
-                          Revoke Access
-                        </button>
-                      ` : `
-                        <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="grantCreatorAccess('${u.id}')">
-                          ✓ Grant Video Upload
-                        </button>
-                      `}
-                    </td>
-                  </tr>
-                `;
-              }).join("")}
-            </tbody>
-          </table>
+          <button
+            class="modal-close"
+            id="modal-receipt-close"
+            aria-label="Close modal"
+            onclick="closePaymentReceiptModal()"
+          >
+            ✕
+          </button>
         </div>
-      `;
-    }
 
-    function renderDisputesList(disputedSessions) {
-      const container = document.getElementById("admin-disputes-list-container");
-      if (!container) return;
-
-      if (disputedSessions.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-            <div style="font-size:2rem; margin-bottom:8px;">🛡️</div>
-            <div style="font-weight:800; font-size:1rem;">Zero Open Disputes</div>
-            <div style="font-size:0.8rem; margin-top:4px;">All skill-swap sessions are executing normally without escrow conflicts.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = disputedSessions.map(s => `
-        <div class="admin-review-row" style="border-left: 6px solid #ff2d55;">
-          <div>
-            <div style="font-family:var(--font-heading); font-weight:800; font-size:1.05rem; color:#000;">
-              ${s.skill_name} (${s.agreed_credit_amount} CR)
-            </div>
-            <div style="font-size:0.82rem; color:#ff2d55; font-weight:700; margin-top:3px;">
-              Dispute: "${s.dispute_reason || 'Unresolved attendance dispute'}"
-            </div>
-            <div style="font-size:0.75rem; color:#555555; margin-top:3px;">
-              Learner: ${s.learner_id} &bull; Teacher: ${s.teacher_id}
-            </div>
-          </div>
-          <div class="admin-actions-group">
-            <button class="btn-admin-action btn-admin-approve" onclick="resolveDispute('${s.id}', 'settle_teacher')">
-              Settle to Teacher
-            </button>
-            <button class="btn-admin-action btn-admin-reject" onclick="resolveDispute('${s.id}', 'cancel')">
-              Cancel &amp; Refund
-            </button>
-          </div>
+        <div class="modal-body" id="receipt-modal-body" style="padding: 20px">
+          <!-- Injected dynamically -->
         </div>
-      `).join("");
-    }
 
-    function renderOverviewTrays(pendingUsers, disputedSessions, pendingCourses = []) {
-      const pContainer = document.getElementById("overview-pending-container");
-      const cContainer = document.getElementById("overview-courses-container");
-      const dContainer = document.getElementById("overview-disputes-container");
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            border-top: 2px solid #000;
+            padding-top: 12px;
+          "
+        >
+          <button
+            class="btn-admin-action btn-admin-neutral"
+            onclick="window.print()"
+          >
+            🖨️ Print Receipt
+          </button>
+          <button
+            class="btn-admin-action btn-admin-approve"
+            onclick="closePaymentReceiptModal()"
+          >
+            Close Invoice
+          </button>
+        </div>
+      </div>
+    </div>
 
-      if (cContainer) {
-        if (pendingCourses.length === 0) {
-          cContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending video upload reviews.</div>`;
-        } else {
-          cContainer.innerHTML = pendingCourses.slice(0, 2).map(c => {
-            const creator = store.getUser(c.creator_id) || { name: c.creator_id };
-            return `
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:0.85rem; background:#ffffff; border:2px solid #000; padding:8px 12px;">
-                <div>
-                  <div style="font-weight:900;">${c.title}</div>
-                  <div style="font-size:0.75rem; color:#666;">by <strong>${creator.name}</strong> &bull; ${c.credit_cost} CR</div>
-                </div>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-admin-action btn-admin-approve" style="padding:5px 10px; font-size:0.75rem;" onclick="approveCourse('${c.id}')">
-                    ✓ Approve
-                  </button>
-                  <a href="javascript:void(0);" onclick="switchAdminTab('tab-admin-courses')" class="btn-admin-action btn-admin-neutral" style="padding:5px 10px; font-size:0.75rem; text-decoration:none;">
-                    Preview
-                  </a>
-                </div>
-              </div>
-            `;
-          }).join("");
-        }
-      }
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
 
-      if (pContainer) {
-        if (pendingUsers.length === 0) {
-          pContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero pending user applications.</div>`;
-        } else {
-          pContainer.innerHTML = pendingUsers.slice(0, 2).map(u => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
-              <span><strong>${u.name}</strong> (${u.email})</span>
-              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">Verify</button>
-            </div>
-          `).join("");
-        }
-      }
-
-      if (dContainer) {
-        if (disputedSessions.length === 0) {
-          dContainer.innerHTML = `<div style="color:#666; font-size:0.82rem;">Zero active session disputes.</div>`;
-        } else {
-          dContainer.innerHTML = disputedSessions.slice(0, 2).map(s => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
-              <span><strong>${s.skill_name}</strong> (${s.agreed_credit_amount} CR)</span>
-              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="resolveDispute('${s.id}', 'settle_teacher')">Settle</button>
-            </div>
-          `).join("");
-        }
-      }
-    }
-
-    function renderLedgerTable(txs) {
-      const tbody = document.getElementById("admin-ledger-tbody");
-      if (!tbody) return;
-
-      tbody.innerHTML = txs.map(tx => {
-        const fromUser = store.getUser(tx.from_user) || { name: tx.from_user };
-        const toUser = store.getUser(tx.to_user) || { name: tx.to_user };
-
-        return `
-          <tr>
-            <td><span style="font-weight:700;">${tx.id}</span></td>
-            <td>${new Date(tx.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-            <td><span style="background:#e5e7eb; padding:2px 6px; font-size:0.72rem; font-weight:800;">${tx.transaction_type}</span></td>
-            <td>${fromUser.name}</td>
-            <td>${toUser.name}</td>
-            <td style="font-weight:900; color:#00aa44;">+${tx.amount} CR</td>
-            <td><span style="color:#00aa44; font-weight:800;">✓ SETTLED</span></td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    // 4. Admin Action Handlers
-    async function approveUser(userId) {
-      if (window.SkillBadluAPI) {
-        try {
-          await SkillBadluAPI.admin.approveUser(userId);
-        } catch (e) {
-          console.warn("[Backend API approve notice]:", e.message);
-        }
-      }
-      try {
-        admin.approveUser(userId);
-        showToast(`✓ User ${userId} VERIFIED! Applicant can now pay ₹99 at login to enter.`, "success");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    async function rejectUser(userId) {
-      if (window.SkillBadluAPI) {
-        try {
-          await SkillBadluAPI.admin.rejectUser(userId, "Credentials could not be verified by Admin.");
-        } catch (e) {
-          console.warn("[Backend API reject notice]:", e.message);
-        }
-      }
-      try {
-        const res = admin.rejectUser(userId, "Credentials could not be verified by Admin.");
-        const refundNote = res.refunded ? " (₹99 refunded)" : "";
-        showToast(`User application rejected${refundNote}.`, "info");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    function approveCourse(courseId) {
-      try {
-        const course = admin.approveCourse(courseId);
-        showToast(`✓ Video "${course.title}" APPROVED and published to Academy!`, "success");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    function rejectCourse(courseId) {
-      const reason = prompt("Enter course rejection feedback for the creator:", "Video resolution or audio quality did not meet platform standards.");
-      if (reason) {
-        try {
-          admin.rejectCourse(courseId, reason);
-          showToast("Video rejected and removed from review queue.", "info");
-        } catch (e) {
-          showToast(e.message, "error");
-        }
-      }
-    }
-
-    function grantCreatorAccess(userId) {
-      try {
-        const user = admin.grantCreatorPermission(userId);
-        showToast(`✓ Video Upload Permission GRANTED to ${user.name}!`, "success");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    function revokeCreatorAccess(userId) {
-      try {
-        const user = admin.revokeCreatorPermission(userId);
-        showToast(`Video Upload Permission revoked for ${user.name}.`, "info");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    function resolveDispute(sessionId, res) {
-      try {
-        admin.resolveDispute(sessionId, res);
-        showToast(`Dispute resolved: ${res === 'settle_teacher' ? 'Settled to Teacher' : 'Cancelled & Refunded'}`, "success");
-      } catch (e) {
-        showToast(e.message, "error");
-      }
-    }
-
-    function simulateNewDispute() {
-      // Create a dummy disputed session
-      const dummy = {
-        id: "sess_disp_" + Date.now().toString().slice(-4),
-        match_id: "match_demo",
-        learner_id: "user_a",
-        teacher_id: "user_b",
-        skill_id: "sk_pottery",
-        skill_name: "Ceramics & Pottery Masterclass",
-        agreed_credit_amount: 50,
-        confirmed_by_a: false,
-        confirmed_by_b: false,
-        status: "DISPUTED",
-        dispute_reason: "Instructor connection disconnected midway through the swap.",
-        scheduled_start: new Date()
-      };
-      store.sessions.push(dummy);
-      store.notify("SESSION_DISPUTED", dummy);
-      showToast("Test dispute created for arbitration testing.", "info");
-      switchAdminTab("tab-admin-disputes");
-    }
-
-    function performAdminSignOut() {
-      store.logout();
-      window.location.href = "login.html";
-    }
-
-    // 5. Ledger Audit Modal
-    function runLedgerAuditModal() {
-      const modal = document.getElementById("modal-reconciliation");
-      if (!modal) return;
-
-      // Calculate totals
-      let totalMinted = 0;
-      store.transactions.forEach(tx => {
-        if (tx.from_user === "PLATFORM_TREASURY") {
-          totalMinted += tx.amount;
-        }
-      });
-
-      let totalBalances = 0;
-      const userRows = store.users.map(u => {
-        const bal = ledger.getBalance(u.id);
-        totalBalances += bal;
-        return `
-          <tr>
-            <td><strong>${u.name}</strong></td>
-            <td style="font-family:var(--font-mono); font-weight:800;">${bal} CR</td>
-            <td><span class="badge-kyc-pill ${u.kyc_status === 'VERIFIED' ? 'badge-kyc-verified' : 'badge-kyc-pending'}">${u.kyc_status}</span></td>
-            <td style="color:#00aa44; font-weight:800;">✓ PASSED</td>
-          </tr>
-        `;
-      }).join("");
-
-      document.getElementById("modal-total-minted").textContent = `${totalMinted} CR`;
-      document.getElementById("modal-total-balances").textContent = `${totalBalances} CR`;
-      const variance = totalMinted - totalBalances;
-      document.getElementById("modal-variance").textContent = `${variance} CR (0.00%)`;
-
-      document.getElementById("modal-user-breakdown-tbody").innerHTML = userRows;
-      modal.classList.add("active");
-    }
-
-    function closeLedgerAuditModal() {
-      const modal = document.getElementById("modal-reconciliation");
-      if (modal) modal.classList.remove("active");
-    }
-
-    // Toast Notification Helper
-    function showToast(message, type = "info") {
-      const container = document.getElementById("toast-container");
-      if (!container) return;
-
-      const toast = document.createElement("div");
-      toast.className = `toast toast-${type}`;
-      const icon = type === "success" ? "✓" : type === "error" ? "✕" : "ℹ";
-      toast.innerHTML = `
-        <span style="font-size:1.2rem; font-weight:bold;">${icon}</span>
-        <div style="font-size:0.9rem;">${message}</div>
-      `;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateX(100%)";
-        setTimeout(() => toast.remove(), 300);
-      }, 4000);
-    }
-  </script>
-</body>
-
+    <!-- Core Data Stores, API Client & Admin Console Controller -->
+    <script src="js/store.js"></script>
+    <script src="js/ledger.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/admin-ui.js"></script>
+  </body>
 </html>

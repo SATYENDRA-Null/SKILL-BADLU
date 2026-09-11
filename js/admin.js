@@ -10,11 +10,13 @@ class AdminManager {
   }
 
   getPendingUsers() {
-    return this.store.users.filter(u => u.verified_status === "PENDING_REVIEW");
+    return this.store.users.filter(
+      (u) => u.verified_status === "PENDING_REVIEW"
+    );
   }
 
   getDisputedSessions() {
-    return this.store.sessions.filter(s => s.status === "DISPUTED");
+    return this.store.sessions.filter((s) => s.status === "DISPUTED");
   }
 
   approveUser(userId) {
@@ -30,7 +32,9 @@ class AdminManager {
     // Grant 50 Welcome Platform Credits if not already granted
     let grantTx = null;
     const existingTx = this.store.transactions.find(
-      tx => tx.to_user === user.id && tx.transaction_type === "ONBOARDING_WELCOME_GRANT"
+      (tx) =>
+        tx.to_user === user.id &&
+        tx.transaction_type === "ONBOARDING_WELCOME_GRANT"
     );
     if (!existingTx) {
       grantTx = this.ledger.insertTransaction({
@@ -53,13 +57,18 @@ class AdminManager {
 
     const hadPaid = user.fee_status === "PAID";
     user.verified_status = "REJECTED";
-    user.rejection_reason = reason || "Application credentials could not be verified.";
+    user.rejection_reason =
+      reason || "Application credentials could not be verified.";
     if (hadPaid) {
       user.fee_status = "REFUNDED";
     }
 
     this.store.saveState();
-    this.store.notify("USER_REJECTED", { user, refunded: hadPaid, feeAmount: hadPaid ? 99 : 0 });
+    this.store.notify("USER_REJECTED", {
+      user,
+      refunded: hadPaid,
+      feeAmount: hadPaid ? 99 : 0
+    });
     return { user, refunded: hadPaid, feeAmount: hadPaid ? 99 : 0 };
   }
 
@@ -72,7 +81,7 @@ class AdminManager {
   }
 
   resolveDispute(sessionId, resolution) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     if (resolution === "settle_teacher") {
@@ -93,7 +102,10 @@ class AdminManager {
       // Cancel without debiting learner
       session.status = "CANCELLED";
       this.store.saveState();
-      this.store.notify("DISPUTE_RESOLVED", { session, resolution: "cancelled" });
+      this.store.notify("DISPUTE_RESOLVED", {
+        session,
+        resolution: "cancelled"
+      });
       return { session };
     }
   }
@@ -130,7 +142,9 @@ class AdminManager {
     if (!course) throw new Error("Course not found.");
 
     course.status = "REJECTED";
-    course.rejection_reason = reason || "Course content does not meet platform quality or verification standards.";
+    course.rejection_reason =
+      reason ||
+      "Course content does not meet platform quality or verification standards.";
 
     this.store.saveState();
     this.store.notify("COURSE_REJECTED", { course });

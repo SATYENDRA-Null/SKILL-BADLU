@@ -39,7 +39,7 @@ class SessionManager {
   }
 
   acceptSession(sessionId) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     session.status = "SCHEDULED";
@@ -48,7 +48,7 @@ class SessionManager {
   }
 
   startSession(sessionId) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     session.status = "IN_PROGRESS";
@@ -57,7 +57,7 @@ class SessionManager {
   }
 
   concludeSession(sessionId) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     session.status = "PENDING_CONFIRMATION";
@@ -71,7 +71,7 @@ class SessionManager {
    * automatically calls ledger.completeSession(sessionId)
    */
   confirmSession(sessionId, userRole) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     if (userRole === "learner") {
@@ -81,7 +81,11 @@ class SessionManager {
     }
 
     // If session was in previous states, move it to PENDING_CONFIRMATION
-    if (session.status === "REQUESTED" || session.status === "SCHEDULED" || session.status === "IN_PROGRESS") {
+    if (
+      session.status === "REQUESTED" ||
+      session.status === "SCHEDULED" ||
+      session.status === "IN_PROGRESS"
+    ) {
       session.status = "PENDING_CONFIRMATION";
     }
 
@@ -96,11 +100,12 @@ class SessionManager {
   }
 
   disputeSession(sessionId, reason) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) throw new Error("Session not found.");
 
     session.status = "DISPUTED";
-    session.dispute_reason = reason || "Disputed session outcome by participant";
+    session.dispute_reason =
+      reason || "Disputed session outcome by participant";
     this.store.notify("SESSION_DISPUTED", { session });
     return session;
   }

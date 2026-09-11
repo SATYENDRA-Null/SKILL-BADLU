@@ -1,5 +1,5 @@
 /* Skill Badlu — Neo-Brutalist High-Fidelity Design System */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap");
 
 :root {
   /* Colors */
@@ -7,11 +7,11 @@
   --bg-window: #ffffff;
   --bg-black: #000000;
   --bg-status-bar: #000000;
-  
+
   --color-black: #000000;
   --color-white: #ffffff;
   --color-text-body: #1a1a1a;
-  
+
   /* Neo-Brutalist Neon Colors */
   --neon-green: #00ff66;
   --neon-green-hover: #ffffff;
@@ -19,7 +19,7 @@
   --neon-orange: #ff9900;
   --neon-red: #ff3366;
   --neon-cyan: #00e5ff;
-  
+
   /* Borders & Shadows */
   --border-thick: 3px solid #000000;
   --border-heavy: 4px solid #000000;
@@ -28,16 +28,18 @@
   --shadow-md: 6px 6px 0px #000000;
   --shadow-lg: 8px 8px 0px #000000;
   --shadow-window: 14px 14px 0px #000000;
-  
+
   /* Typography */
-  --font-heading: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
-  --font-body: 'Space Grotesk', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
+  --font-heading: "Plus Jakarta Sans", "Space Grotesk", sans-serif;
+  --font-body: "Space Grotesk", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
   --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -481,9 +483,15 @@ body {
   color: #000000;
 }
 
-.icon-box-green { background-color: var(--neon-green); }
-.icon-box-orange { background-color: var(--neon-orange); }
-.icon-box-red { background-color: var(--neon-red); }
+.icon-box-green {
+  background-color: var(--neon-green);
+}
+.icon-box-orange {
+  background-color: var(--neon-orange);
+}
+.icon-box-red {
+  background-color: var(--neon-red);
+}
 
 .feature-title-text {
   font-size: 1.35rem;
@@ -542,7 +550,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .step-card-neo:hover {
@@ -695,11 +705,26 @@ body {
   box-shadow: 0 0 0 #000;
 }
 
-.neo-btn-primary { background-color: var(--neon-green); color: #000; }
-.neo-btn-yellow { background-color: var(--neon-yellow); color: #000; }
-.neo-btn-orange { background-color: var(--neon-orange); color: #000; }
-.neo-btn-red { background-color: var(--neon-red); color: #fff; }
-.neo-btn-white { background-color: #ffffff; color: #000; }
+.neo-btn-primary {
+  background-color: var(--neon-green);
+  color: #000;
+}
+.neo-btn-yellow {
+  background-color: var(--neon-yellow);
+  color: #000;
+}
+.neo-btn-orange {
+  background-color: var(--neon-orange);
+  color: #000;
+}
+.neo-btn-red {
+  background-color: var(--neon-red);
+  color: #fff;
+}
+.neo-btn-white {
+  background-color: #ffffff;
+  color: #000;
+}
 .neo-btn-sm {
   padding: 6px 14px;
   font-size: 0.8rem;
@@ -734,10 +759,18 @@ body {
   box-shadow: 2px 2px 0px #000;
 }
 
-.cat-tech { background-color: var(--neon-cyan); }
-.cat-lang { background-color: var(--neon-green); }
-.cat-art { background-color: var(--neon-orange); }
-.cat-biz { background-color: var(--neon-yellow); }
+.cat-tech {
+  background-color: var(--neon-cyan);
+}
+.cat-lang {
+  background-color: var(--neon-green);
+}
+.cat-art {
+  background-color: var(--neon-orange);
+}
+.cat-biz {
+  background-color: var(--neon-yellow);
+}
 /* =========================================================
    MATCHMAKER CARDS & CANDIDATE PROFILE STYLING (NEO-BRUTALIST)
    ========================================================= */
@@ -1009,7 +1042,9 @@ input[type="range"]::-webkit-slider-thumb,
   box-shadow: 3px 3px 0px #000000;
   cursor: pointer;
   border-radius: 0px;
-  transition: transform 0.1s ease, background-color 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover,
@@ -1035,7 +1070,9 @@ input[type="range"]::-moz-range-thumb,
   box-shadow: 3px 3px 0px #000000;
   cursor: pointer;
   border-radius: 0px;
-  transition: transform 0.1s ease, background-color 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
 }
 
 input[type="range"]::-moz-range-thumb:hover,
@@ -1210,12 +1247,25 @@ input[type="range"]::-moz-range-thumb:hover,
   text-transform: uppercase;
 }
 
-.status-requested { background-color: var(--neon-cyan); }
-.status-scheduled { background-color: var(--neon-yellow); }
-.status-in_progress { background-color: var(--neon-orange); }
-.status-pending_confirmation { background-color: #fbcfe8; }
-.status-settled { background-color: var(--neon-green); }
-.status-disputed { background-color: var(--neon-red); color: white; }
+.status-requested {
+  background-color: var(--neon-cyan);
+}
+.status-scheduled {
+  background-color: var(--neon-yellow);
+}
+.status-in_progress {
+  background-color: var(--neon-orange);
+}
+.status-pending_confirmation {
+  background-color: #fbcfe8;
+}
+.status-settled {
+  background-color: var(--neon-green);
+}
+.status-disputed {
+  background-color: var(--neon-red);
+  color: white;
+}
 
 .confirmation-stepper {
   display: grid;
@@ -1245,8 +1295,12 @@ input[type="range"]::-moz-range-thumb:hover,
   font-size: 0.85rem;
 }
 
-.confirm-done { background-color: var(--neon-green); }
-.confirm-waiting { background-color: #ffffff; }
+.confirm-done {
+  background-color: var(--neon-green);
+}
+.confirm-waiting {
+  background-color: #ffffff;
+}
 
 .stepper-arrow {
   font-size: 1.5rem;
@@ -1254,7 +1308,8 @@ input[type="range"]::-moz-range-thumb:hover,
 }
 
 /* Ledger Table & Rows */
-.ledger-table, .brutal-table {
+.ledger-table,
+.brutal-table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -1301,7 +1356,10 @@ input[type="range"]::-moz-range-thumb:hover,
 /* Modals */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.65);
   z-index: 2000;
   display: none;
@@ -1323,7 +1381,8 @@ input[type="range"]::-moz-range-thumb:hover,
   padding: 32px;
 }
 
-.neo-input, .neo-select {
+.neo-input,
+.neo-select {
   width: 100%;
   padding: 12px 16px;
   border: var(--border-thick);
@@ -1337,7 +1396,8 @@ input[type="range"]::-moz-range-thumb:hover,
   margin-top: 6px;
 }
 
-.neo-input:focus, .neo-select:focus {
+.neo-input:focus,
+.neo-select:focus {
   background-color: #faf8f5;
   box-shadow: var(--shadow-sm);
 }
@@ -1366,9 +1426,16 @@ input[type="range"]::-moz-range-thumb:hover,
   transition: var(--transition-fast);
 }
 
-.toast-success { background-color: var(--neon-green); }
-.toast-error { background-color: var(--neon-red); color: white; }
-.toast-info { background-color: var(--neon-yellow); }
+.toast-success {
+  background-color: var(--neon-green);
+}
+.toast-error {
+  background-color: var(--neon-red);
+  color: white;
+}
+.toast-info {
+  background-color: var(--neon-yellow);
+}
 
 /* =========================================================
    6. AUTHENTICATION GATING & NEO-BRUTALIST MODAL
@@ -1757,7 +1824,8 @@ body.state-logged-in .guest-only {
   body {
     padding: 8px 6px 36px;
   }
-  .top-black-bar, .black-status-bar {
+  .top-black-bar,
+  .black-status-bar {
     padding: 12px 16px;
   }
   .hero-split-section {
@@ -1883,7 +1951,9 @@ body.state-logged-in .guest-only {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .edu-course-card:hover {
@@ -2163,7 +2233,7 @@ body.state-logged-in .guest-only {
 }
 
 .cert-signature-line {
-  font-family: 'Space Grotesk', cursive, sans-serif;
+  font-family: "Space Grotesk", cursive, sans-serif;
   font-weight: 900;
   font-size: 1.15rem;
   color: #000000;
@@ -2226,7 +2296,8 @@ body.state-logged-in .guest-only {
   body * {
     visibility: hidden;
   }
-  #modal-course-certificate, #modal-course-certificate * {
+  #modal-course-certificate,
+  #modal-course-certificate * {
     visibility: visible;
   }
   #modal-course-certificate {
@@ -2237,4 +2308,3 @@ body.state-logged-in .guest-only {
     background: #ffffff;
   }
 }
-

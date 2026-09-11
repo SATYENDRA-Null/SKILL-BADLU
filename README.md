@@ -2,10 +2,10 @@
 
 > **Peer-to-Peer Zero-Commission Skill Barter Economy & Distributed Ledger Platform**
 
-[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)]()
-[![Version](https://img.shields.io/badge/version-4.4.0-blue.svg)]()
-[![Tech Stack](https://img.shields.io/badge/stack-HTML5%20%7C%20CSS3%20%7C%20ES6%2B%20%7C%20Python-orange.svg)]()
-[![Architecture](https://img.shields.io/badge/architecture-Double--Entry%20Ledger%20%2B%20Saga-purple.svg)]()
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](<>)
+[![Version](https://img.shields.io/badge/version-4.4.0-blue.svg)](<>)
+[![Tech Stack](https://img.shields.io/badge/stack-HTML5%20%7C%20CSS3%20%7C%20ES6%2B%20%7C%20Python-orange.svg)](<>)
+[![Architecture](https://img.shields.io/badge/architecture-Double--Entry%20Ledger%20%2B%20Saga-purple.svg)](<>)
 
 ---
 
@@ -19,14 +19,14 @@ Built on pure web standards (HTML5, Vanilla CSS Design System, Modular ES6 JavaS
 
 ## 🌟 Key Features
 
-| Feature | Description |
-| :--- | :--- |
-| 🎯 **Multi-Factor Matchmaking** | 5-Factor scoring engine balancing skill relevance, rating trust, reciprocal barter symmetry, response latency, and time-zone overlap. |
-| 📒 **Append-Only Double-Entry Ledger** | Dynamic balance derivation from immutable transaction journals with mathematical platform solvency proof ($\sum \text{Debits} = \sum \text{Credits}$). |
-| 🤝 **Dual-Party Consensus Settlement** | Escrow-backed session lifecycle requiring mutual cryptographic-style confirmation from learner & teacher before credit transfer. |
-| 💳 **Saga-Pattern Fiat Cashouts** | Multi-step outbound banking integration with automatic compensating reversals on network timeouts or banking rail rejections. |
-| 🛡️ **3-Tier Role-Based Access Control** | Physical DOM isolation and authentication boundaries between **Guests**, **Verified Swappers**, and **System Administrators**. |
-| ⚖️ **KYC & Dispute Arbitration** | Complete admin moderation pipeline for applicant onboarding, identity verification, welcome grants, and disputed session arbitration. |
+| Feature                                 | Description                                                                                                                                            |
+| :-------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🎯 **Multi-Factor Matchmaking**         | 5-Factor scoring engine balancing skill relevance, rating trust, reciprocal barter symmetry, response latency, and time-zone overlap.                  |
+| 📒 **Append-Only Double-Entry Ledger**  | Dynamic balance derivation from immutable transaction journals with mathematical platform solvency proof ($\sum \text{Debits} = \sum \text{Credits}$). |
+| 🤝 **Dual-Party Consensus Settlement**  | Escrow-backed session lifecycle requiring mutual cryptographic-style confirmation from learner & teacher before credit transfer.                       |
+| 💳 **Saga-Pattern Fiat Cashouts**       | Multi-step outbound banking integration with automatic compensating reversals on network timeouts or banking rail rejections.                          |
+| 🛡️ **3-Tier Role-Based Access Control** | Physical DOM isolation and authentication boundaries between **Guests**, **Verified Swappers**, and **System Administrators**.                         |
+| ⚖️ **KYC & Dispute Arbitration**        | Complete admin moderation pipeline for applicant onboarding, identity verification, welcome grants, and disputed session arbitration.                  |
 
 ---
 
@@ -42,14 +42,14 @@ graph TD
     User[Member / Client Browser]:::client -->|Declares Skills Have & Want| Store[Reactive State Store (js/store.js)]:::engine
     Store -->|Provides User Profile & Candidate Pool| MM[Matchmaking Engine (js/matchmaker.js)]:::engine
     MM -->|Outputs Scored & Ranked Swaps| Marketplace[Marketplace UI View]:::client
-    
+
     Marketplace -->|Initiates Booking| SM[Session Manager (js/sessions.js)]:::engine
     SM -->|Two-Way Confirmation A + B| Ledger[Double-Entry Ledger Engine (js/ledger.js)]:::ledger
     SM -->|Disputed Session Escalation| AdminDesk[Admin Arbitration Portal (js/admin.js)]:::admin
-    
+
     AdminDesk -->|Mediated Settlement Resolution| Ledger
     AdminDesk -->|Approves KYC Application| Ledger
-    
+
     User -->|Submits Cashout Request| Payout[Payout Engine (js/payouts.js)]:::engine
     Payout -->|Reserves Credits Debit| Ledger
 ```
@@ -102,11 +102,13 @@ SKILL-BADLU/
 ### 💻 Running the Live Backend Server & UI
 
 #### Step 1: Install Dependencies
+
 ```bash
 npm install
 ```
 
 #### Step 2: Start the Backend Server (Express + Payment Gateway + Static Server)
+
 ```bash
 npm start
 # or development mode with file watching:
@@ -114,6 +116,7 @@ npm run dev
 ```
 
 #### Step 3: Open in Browser
+
 - **Live Platform Portal:** [http://localhost:5000/index.html](http://localhost:5000/index.html)
 - **Login / Access Gateway (Admin KYC & ₹99 Fee):** [http://localhost:5000/login.html](http://localhost:5000/login.html)
 - **Admin Sovereign Console & Revenue Desk:** [http://localhost:5000/admin.html](http://localhost:5000/admin.html)
@@ -159,6 +162,7 @@ python scripts/check_ids.py
 ## 📚 In-Depth Documentation
 
 For complete mathematical formulations, state machine transition tables, and sequence diagrams, refer to:
+
 - 📑 [Comprehensive Technical Manual (DOCUMENTATION.md)](./DOCUMENTATION.md)
 - 📐 [Algorithms & Flowcharts Specification](./docs/architecture/ALGORITHMS_AND_FLOWCHARTS.md)
 - 🏗️ [Full System Design Specification](./docs/architecture/system-design.md)

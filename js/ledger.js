@@ -33,28 +33,39 @@ class LedgerEngine {
    */
   insertTransaction({ sessionId, fromUser, toUser, amount, type }) {
     if (!fromUser || !toUser) {
-      throw new Error("Ledger transaction requires valid from_user and to_user.");
+      throw new Error(
+        "Ledger transaction requires valid from_user and to_user."
+      );
     }
     if (amount <= 0) {
       throw new Error("Transaction amount must be strictly greater than zero.");
     }
     if (fromUser === toUser) {
-      throw new Error("Transacting parties must be distinct (from_user != to_user).");
+      throw new Error(
+        "Transacting parties must be distinct (from_user != to_user)."
+      );
     }
 
     // Idempotency check for session settlements
     if (type === "SESSION_SETTLEMENT" && sessionId) {
       const existing = this.store.transactions.find(
-        tx => tx.session_id === sessionId && tx.transaction_type === "SESSION_SETTLEMENT"
+        (tx) =>
+          tx.session_id === sessionId &&
+          tx.transaction_type === "SESSION_SETTLEMENT"
       );
       if (existing) {
-        console.warn(`Idempotency guard triggered: session ${sessionId} already settled.`);
+        console.warn(
+          `Idempotency guard triggered: session ${sessionId} already settled.`
+        );
         return existing;
       }
     }
 
     const newTx = {
-      id: "tx_" + Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
+      id:
+        "tx_" +
+        Math.random().toString(36).substring(2, 9) +
+        Date.now().toString(36),
       session_id: sessionId || null,
       from_user: fromUser,
       to_user: toUser,
@@ -73,7 +84,7 @@ class LedgerEngine {
    * Settles a completed session atomically once both parties have confirmed.
    */
   completeSession(sessionId) {
-    const session = this.store.sessions.find(s => s.id === sessionId);
+    const session = this.store.sessions.find((s) => s.id === sessionId);
     if (!session) {
       throw new Error(`Session ${sessionId} not found.`);
     }
@@ -83,7 +94,9 @@ class LedgerEngine {
     }
 
     if (!session.confirmed_by_a || !session.confirmed_by_b) {
-      throw new Error("Session settlement requires two-way confirmation (both learner and teacher).");
+      throw new Error(
+        "Session settlement requires two-way confirmation (both learner and teacher)."
+      );
     }
 
     // Atomic write to ledger
@@ -149,7 +162,7 @@ class LedgerEngine {
     auditReport.totalCashedOut = totalCashedOut;
     auditReport.circulatingSupply = sumOfAllUserBalances;
     auditReport.discrepancy = discrepancy;
-    auditReport.isVerified = (discrepancy === 0);
+    auditReport.isVerified = discrepancy === 0;
 
     return auditReport;
   }

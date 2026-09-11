@@ -4,15 +4,64 @@
  */
 
 const INITIAL_SKILLS = [
-  { id: "sk_python", name: "Python & FastAPI", category: "tech", description: "Backend development, async APIs, and data engineering." },
-  { id: "sk_french", name: "Conversational French", category: "lang", description: "Everyday dialogues, pronunciation, and Parisian culture." },
-  { id: "sk_uiux", name: "UI/UX & Figma", category: "art", description: "Design systems, auto-layout, wireframing, and micro-interactions." },
-  { id: "sk_growth", name: "Growth Marketing", category: "biz", description: "SEO, conversion rate optimization, and user acquisition funnels." },
-  { id: "sk_docker", name: "Docker & Kubernetes", category: "tech", description: "Containerization, microservice orchestration, and CI/CD." },
-  { id: "sk_japanese", name: "Japanese (JLPT N4)", category: "lang", description: "Grammar, kanji fundamentals, and natural conversational cadence." },
-  { id: "sk_pottery", name: "Ceramics & Pottery", category: "art", description: "Hand-building, wheel-throwing techniques, and glaze chemistry." },
-  { id: "sk_finance", name: "Startup Valuation & VC", category: "biz", description: "Financial modeling, cap table management, and fundraising." },
-  { id: "sk_react", name: "React & Next.js", category: "tech", description: "Server components, hooks, Tailwind, and fullstack TypeScript." }
+  {
+    id: "sk_python",
+    name: "Python & FastAPI",
+    category: "tech",
+    description: "Backend development, async APIs, and data engineering."
+  },
+  {
+    id: "sk_french",
+    name: "Conversational French",
+    category: "lang",
+    description: "Everyday dialogues, pronunciation, and Parisian culture."
+  },
+  {
+    id: "sk_uiux",
+    name: "UI/UX & Figma",
+    category: "art",
+    description:
+      "Design systems, auto-layout, wireframing, and micro-interactions."
+  },
+  {
+    id: "sk_growth",
+    name: "Growth Marketing",
+    category: "biz",
+    description:
+      "SEO, conversion rate optimization, and user acquisition funnels."
+  },
+  {
+    id: "sk_docker",
+    name: "Docker & Kubernetes",
+    category: "tech",
+    description: "Containerization, microservice orchestration, and CI/CD."
+  },
+  {
+    id: "sk_japanese",
+    name: "Japanese (JLPT N4)",
+    category: "lang",
+    description:
+      "Grammar, kanji fundamentals, and natural conversational cadence."
+  },
+  {
+    id: "sk_pottery",
+    name: "Ceramics & Pottery",
+    category: "art",
+    description:
+      "Hand-building, wheel-throwing techniques, and glaze chemistry."
+  },
+  {
+    id: "sk_finance",
+    name: "Startup Valuation & VC",
+    category: "biz",
+    description: "Financial modeling, cap table management, and fundraising."
+  },
+  {
+    id: "sk_react",
+    name: "React & Next.js",
+    category: "tech",
+    description: "Server components, hooks, Tailwind, and fullstack TypeScript."
+  }
 ];
 
 const INITIAL_USERS = [
@@ -29,13 +78,22 @@ const INITIAL_USERS = [
     payment_ref: "SYSTEM_EXEMPT",
     creator_status: "APPROVED",
     can_upload_videos: true,
-    avg_rating: 5.00,
+    avg_rating: 5.0,
     last_active: new Date(),
     skills_have: [
-      { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 4 }
+      {
+        skill_id: "sk_python",
+        name: "Python & FastAPI",
+        category: "tech",
+        level: 4
+      }
     ],
     skills_want: [],
-    bank_details: { bank: "Platform Treasury", ifsc: "TREASURY01", account: "•••• 0001" }
+    bank_details: {
+      bank: "Platform Treasury",
+      ifsc: "TREASURY01",
+      account: "•••• 0001"
+    }
   },
   {
     id: "user_a",
@@ -55,14 +113,33 @@ const INITIAL_USERS = [
     avg_rating: 4.95,
     last_active: new Date(Date.now() - 1000 * 60 * 30), // 30 mins ago
     skills_have: [
-      { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 4 }, // Expert
-      { skill_id: "sk_docker", name: "Docker & Kubernetes", category: "tech", level: 3 } // Advanced
+      {
+        skill_id: "sk_python",
+        name: "Python & FastAPI",
+        category: "tech",
+        level: 4
+      }, // Expert
+      {
+        skill_id: "sk_docker",
+        name: "Docker & Kubernetes",
+        category: "tech",
+        level: 3
+      } // Advanced
     ],
     skills_want: [
-      { skill_id: "sk_french", name: "Conversational French", category: "lang", level: 2 }, // Intermediate
+      {
+        skill_id: "sk_french",
+        name: "Conversational French",
+        category: "lang",
+        level: 2
+      }, // Intermediate
       { skill_id: "sk_uiux", name: "UI/UX & Figma", category: "art", level: 3 }
     ],
-    bank_details: { bank: "HDFC Bank", ifsc: "HDFC0001234", account: "•••• 9042" }
+    bank_details: {
+      bank: "HDFC Bank",
+      ifsc: "HDFC0001234",
+      account: "•••• 9042"
+    }
   },
   {
     id: "user_b",
@@ -79,17 +156,41 @@ const INITIAL_USERS = [
     payment_method: "Credit Card",
     creator_status: "APPROVED",
     can_upload_videos: true,
-    avg_rating: 4.90,
+    avg_rating: 4.9,
     last_active: new Date(Date.now() - 1000 * 60 * 120), // 2 hours ago
     skills_have: [
-      { skill_id: "sk_french", name: "Conversational French", category: "lang", level: 4 },
-      { skill_id: "sk_pottery", name: "Ceramics & Pottery", category: "art", level: 3 }
+      {
+        skill_id: "sk_french",
+        name: "Conversational French",
+        category: "lang",
+        level: 4
+      },
+      {
+        skill_id: "sk_pottery",
+        name: "Ceramics & Pottery",
+        category: "art",
+        level: 3
+      }
     ],
     skills_want: [
-      { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 2 }, // Perfect mutual swap!
-      { skill_id: "sk_growth", name: "Growth Marketing", category: "biz", level: 1 }
+      {
+        skill_id: "sk_python",
+        name: "Python & FastAPI",
+        category: "tech",
+        level: 2
+      }, // Perfect mutual swap!
+      {
+        skill_id: "sk_growth",
+        name: "Growth Marketing",
+        category: "biz",
+        level: 1
+      }
     ],
-    bank_details: { bank: "BNP Paribas", ifsc: "BNPA0009988", account: "•••• 4410" }
+    bank_details: {
+      bank: "BNP Paribas",
+      ifsc: "BNPA0009988",
+      account: "•••• 4410"
+    }
   },
   {
     id: "user_c",
@@ -106,16 +207,30 @@ const INITIAL_USERS = [
     payment_method: "UPI (PhonePe)",
     creator_status: "APPROVED",
     can_upload_videos: true,
-    avg_rating: 4.80,
+    avg_rating: 4.8,
     last_active: new Date(Date.now() - 1000 * 60 * 60 * 18), // 18 hrs ago
     skills_have: [
       { skill_id: "sk_uiux", name: "UI/UX & Figma", category: "art", level: 4 },
-      { skill_id: "sk_react", name: "React & Next.js", category: "tech", level: 3 }
+      {
+        skill_id: "sk_react",
+        name: "React & Next.js",
+        category: "tech",
+        level: 3
+      }
     ],
     skills_want: [
-      { skill_id: "sk_docker", name: "Docker & Kubernetes", category: "tech", level: 2 } // Another mutual swap!
+      {
+        skill_id: "sk_docker",
+        name: "Docker & Kubernetes",
+        category: "tech",
+        level: 2
+      } // Another mutual swap!
     ],
-    bank_details: { bank: "ICICI Bank", ifsc: "ICIC0005511", account: "•••• 7821" }
+    bank_details: {
+      bank: "ICICI Bank",
+      ifsc: "ICIC0005511",
+      account: "•••• 7821"
+    }
   },
   {
     id: "user_d",
@@ -132,13 +247,23 @@ const INITIAL_USERS = [
     payment_method: "Net Banking",
     creator_status: "NOT_REQUESTED",
     can_upload_videos: false,
-    avg_rating: 4.70,
+    avg_rating: 4.7,
     last_active: new Date(Date.now() - 1000 * 60 * 60 * 48), // 2 days ago
     skills_have: [
-      { skill_id: "sk_japanese", name: "Japanese (JLPT N4)", category: "lang", level: 4 }
+      {
+        skill_id: "sk_japanese",
+        name: "Japanese (JLPT N4)",
+        category: "lang",
+        level: 4
+      }
     ],
     skills_want: [
-      { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 3 }
+      {
+        skill_id: "sk_python",
+        name: "Python & FastAPI",
+        category: "tech",
+        level: 3
+      }
     ],
     bank_details: null
   },
@@ -156,15 +281,29 @@ const INITIAL_USERS = [
     payment_method: null,
     creator_status: "PENDING_APPROVAL",
     can_upload_videos: false,
-    avg_rating: 5.00,
+    avg_rating: 5.0,
     last_active: new Date(Date.now() - 1000 * 60 * 15),
     skills_have: [
-      { skill_id: "sk_finance", name: "Startup Valuation & VC", category: "biz", level: 4 }
+      {
+        skill_id: "sk_finance",
+        name: "Startup Valuation & VC",
+        category: "biz",
+        level: 4
+      }
     ],
     skills_want: [
-      { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 1 }
+      {
+        skill_id: "sk_python",
+        name: "Python & FastAPI",
+        category: "tech",
+        level: 1
+      }
     ],
-    bank_details: { bank: "Axis Bank", ifsc: "UTIB0001099", account: "•••• 3190" }
+    bank_details: {
+      bank: "Axis Bank",
+      ifsc: "UTIB0001099",
+      account: "•••• 3190"
+    }
   },
   {
     id: "user_f",
@@ -180,13 +319,23 @@ const INITIAL_USERS = [
     payment_method: null,
     creator_status: "NOT_REQUESTED",
     can_upload_videos: false,
-    avg_rating: 5.00,
+    avg_rating: 5.0,
     last_active: new Date(),
     skills_have: [
-      { skill_id: "sk_growth", name: "Growth Marketing", category: "biz", level: 4 }
+      {
+        skill_id: "sk_growth",
+        name: "Growth Marketing",
+        category: "biz",
+        level: 4
+      }
     ],
     skills_want: [
-      { skill_id: "sk_react", name: "React & Next.js", category: "tech", level: 2 }
+      {
+        skill_id: "sk_react",
+        name: "React & Next.js",
+        category: "tech",
+        level: 2
+      }
     ],
     bank_details: null
   }
@@ -262,7 +411,7 @@ const INITIAL_SESSIONS = [
     skill_id: "sk_docker",
     skill_name: "Docker & Kubernetes Deployment Architecture",
     agreed_credit_amount: 50,
-    confirmed_by_a: true,  // Aarav confirmed
+    confirmed_by_a: true, // Aarav confirmed
     confirmed_by_b: false, // Waiting on Leo to confirm
     status: "PENDING_CONFIRMATION",
     scheduled_start: new Date(Date.now() - 1000 * 60 * 120),
@@ -342,8 +491,10 @@ const INITIAL_COURSES = [
     credit_cost: 30,
     duration: "15 mins",
     duration_seconds: 45,
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    description: "Learn production async Python patterns, dependency injection, and Pydantic v2 schemas for high-concurrency APIs.",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    description:
+      "Learn production async Python patterns, dependency injection, and Pydantic v2 schemas for high-concurrency APIs.",
     status: "APPROVED", // APPROVED, PENDING_REVIEW, REJECTED
     rating: 4.95,
     enrolled_count: 14,
@@ -357,8 +508,10 @@ const INITIAL_COURSES = [
     credit_cost: 40,
     duration: "20 mins",
     duration_seconds: 60,
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    description: "Container orchestration, Helm charts, ingress controllers, and zero-downtime rolling updates in production.",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    description:
+      "Container orchestration, Helm charts, ingress controllers, and zero-downtime rolling updates in production.",
     status: "APPROVED",
     rating: 4.88,
     enrolled_count: 9,
@@ -372,8 +525,10 @@ const INITIAL_COURSES = [
     credit_cost: 25,
     duration: "12 mins",
     duration_seconds: 30,
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    description: "Master Parisian cadence, slang, and everyday conversational confidence without memorizing rigid grammar tables.",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    description:
+      "Master Parisian cadence, slang, and everyday conversational confidence without memorizing rigid grammar tables.",
     status: "APPROVED",
     rating: 4.92,
     enrolled_count: 22,
@@ -387,8 +542,10 @@ const INITIAL_COURSES = [
     credit_cost: 35,
     duration: "18 mins",
     duration_seconds: 50,
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-    description: "Build scalable tokens, responsive auto-layout components, and neo-brutalist micro-interactions with Figma.",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    description:
+      "Build scalable tokens, responsive auto-layout components, and neo-brutalist micro-interactions with Figma.",
     status: "APPROVED",
     rating: 4.85,
     enrolled_count: 17,
@@ -402,10 +559,12 @@ const INITIAL_COURSES = [
     credit_cost: 50,
     duration: "25 mins",
     duration_seconds: 60,
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    description: "DCF models, convertible notes, SAFE agreements, and seed round term sheet negotiations for founders.",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    description:
+      "DCF models, convertible notes, SAFE agreements, and seed round term sheet negotiations for founders.",
     status: "PENDING_REVIEW", // In admin review queue
-    rating: 5.00,
+    rating: 5.0,
     enrolled_count: 0,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 2)
   }
@@ -430,16 +589,22 @@ class StateStore {
   constructor() {
     this.currentUserId = localStorage.getItem("sb_current_user_id") || null;
     this.skills = [...INITIAL_SKILLS];
-    
+
     // Load persisted users or fallback to initial seed
     const savedUsers = localStorage.getItem("sb_users_v3");
-    this.users = savedUsers ? JSON.parse(savedUsers) : JSON.parse(JSON.stringify(INITIAL_USERS));
+    this.users = savedUsers
+      ? JSON.parse(savedUsers)
+      : JSON.parse(JSON.stringify(INITIAL_USERS));
 
     const savedPayments = localStorage.getItem("sb_onboarding_payments_v3");
-    this.onboarding_payments = savedPayments ? JSON.parse(savedPayments) : JSON.parse(JSON.stringify(INITIAL_ONBOARDING_PAYMENTS));
+    this.onboarding_payments = savedPayments
+      ? JSON.parse(savedPayments)
+      : JSON.parse(JSON.stringify(INITIAL_ONBOARDING_PAYMENTS));
 
     const savedTx = localStorage.getItem("sb_transactions_v3");
-    this.transactions = savedTx ? JSON.parse(savedTx) : JSON.parse(JSON.stringify(INITIAL_TRANSACTIONS));
+    this.transactions = savedTx
+      ? JSON.parse(savedTx)
+      : JSON.parse(JSON.stringify(INITIAL_TRANSACTIONS));
 
     this.sessions = [...INITIAL_SESSIONS];
     this.courses = [...INITIAL_COURSES];
@@ -452,8 +617,14 @@ class StateStore {
   saveState() {
     try {
       localStorage.setItem("sb_users_v3", JSON.stringify(this.users));
-      localStorage.setItem("sb_onboarding_payments_v3", JSON.stringify(this.onboarding_payments));
-      localStorage.setItem("sb_transactions_v3", JSON.stringify(this.transactions));
+      localStorage.setItem(
+        "sb_onboarding_payments_v3",
+        JSON.stringify(this.onboarding_payments)
+      );
+      localStorage.setItem(
+        "sb_transactions_v3",
+        JSON.stringify(this.transactions)
+      );
     } catch (e) {
       console.error("Failed to save state to localStorage", e);
     }
@@ -462,12 +633,12 @@ class StateStore {
   subscribe(callback) {
     this.subscribers.push(callback);
     return () => {
-      this.subscribers = this.subscribers.filter(cb => cb !== callback);
+      this.subscribers = this.subscribers.filter((cb) => cb !== callback);
     };
   }
 
   notify(event, data) {
-    this.subscribers.forEach(cb => cb(event, data));
+    this.subscribers.forEach((cb) => cb(event, data));
   }
 
   isAuthenticated() {
@@ -480,7 +651,11 @@ class StateStore {
   checkLoginEligibility(userId) {
     const user = this.getUser(userId);
     if (!user) {
-      return { eligible: false, reason: "NOT_FOUND", message: "User account not found." };
+      return {
+        eligible: false,
+        reason: "NOT_FOUND",
+        message: "User account not found."
+      };
     }
 
     if (user.role === "admin") {
@@ -493,7 +668,8 @@ class StateStore {
         eligible: false,
         reason: "PENDING_VERIFICATION",
         user,
-        message: "Your application is currently pending Admin Verification. Please wait for administrator review."
+        message:
+          "Your application is currently pending Admin Verification. Please wait for administrator review."
       };
     }
 
@@ -502,7 +678,9 @@ class StateStore {
         eligible: false,
         reason: "REJECTED",
         user,
-        message: user.rejection_reason || "Your application was rejected by the platform administrator."
+        message:
+          user.rejection_reason ||
+          "Your application was rejected by the platform administrator."
       };
     }
 
@@ -513,7 +691,8 @@ class StateStore {
         reason: "PAYMENT_REQUIRED",
         user,
         feeAmount: 99,
-        message: "Admin Verification Successful! Complete your one-time ₹99 Onboarding & Ledger Activation Fee to enter."
+        message:
+          "Admin Verification Successful! Complete your one-time ₹99 Onboarding & Ledger Activation Fee to enter."
       };
     }
 
@@ -549,15 +728,15 @@ class StateStore {
 
   getCurrentUser() {
     if (!this.currentUserId) return null;
-    return this.users.find(u => u.id === this.currentUserId) || null;
+    return this.users.find((u) => u.id === this.currentUserId) || null;
   }
 
   getUser(userId) {
-    return this.users.find(u => u.id === userId);
+    return this.users.find((u) => u.id === userId);
   }
 
   getSkill(skillId) {
-    return this.skills.find(s => s.id === skillId);
+    return this.skills.find((s) => s.id === skillId);
   }
 
   /**
@@ -565,13 +744,21 @@ class StateStore {
    */
   registerUser({ name, email, password, skillsHave = [], skillsWant = [] }) {
     const cleanEmail = email.trim().toLowerCase();
-    const existing = this.users.find(u => u.email.toLowerCase() === cleanEmail);
+    const existing = this.users.find(
+      (u) => u.email.toLowerCase() === cleanEmail
+    );
     if (existing) {
       throw new Error("An account with this email address already exists.");
     }
 
     const userId = "user_" + Math.random().toString(36).substring(2, 8);
-    const initials = name.split(" ").map(p => p[0]).join("").toUpperCase().substring(0, 2) || "NW";
+    const initials =
+      name
+        .split(" ")
+        .map((p) => p[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2) || "NW";
 
     const newUser = {
       id: userId,
@@ -587,10 +774,30 @@ class StateStore {
       payment_method: null,
       creator_status: "NOT_REQUESTED",
       can_upload_videos: false,
-      avg_rating: 5.00,
+      avg_rating: 5.0,
       last_active: new Date(),
-      skills_have: skillsHave.length > 0 ? skillsHave : [{ skill_id: "sk_python", name: "Python / General Dev", category: "tech", level: 3 }],
-      skills_want: skillsWant.length > 0 ? skillsWant : [{ skill_id: "sk_uiux", name: "UI/UX & Figma", category: "art", level: 2 }],
+      skills_have:
+        skillsHave.length > 0
+          ? skillsHave
+          : [
+              {
+                skill_id: "sk_python",
+                name: "Python / General Dev",
+                category: "tech",
+                level: 3
+              }
+            ],
+      skills_want:
+        skillsWant.length > 0
+          ? skillsWant
+          : [
+              {
+                skill_id: "sk_uiux",
+                name: "UI/UX & Figma",
+                category: "art",
+                level: 2
+              }
+            ],
       bank_details: null
     };
 
@@ -603,15 +810,22 @@ class StateStore {
   /**
    * Records the post-verification ₹99 onboarding payment and mints 50 Welcome Credits
    */
-  recordOnboardingPayment(userId, { method = "UPI (Instant)", transactionRef = null } = {}) {
+  recordOnboardingPayment(
+    userId,
+    { method = "UPI (Instant)", transactionRef = null } = {}
+  ) {
     const user = this.getUser(userId);
     if (!user) throw new Error("User not found.");
 
     if (user.verified_status !== "VERIFIED") {
-      throw new Error("Admin verification required before completing onboarding payment.");
+      throw new Error(
+        "Admin verification required before completing onboarding payment."
+      );
     }
 
-    const payId = transactionRef || "PAY_99_" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const payId =
+      transactionRef ||
+      "PAY_99_" + Math.random().toString(36).substring(2, 8).toUpperCase();
     const now = new Date();
 
     user.fee_status = "PAID";
@@ -636,7 +850,9 @@ class StateStore {
 
     // Mint 50 Welcome Platform Credits in ledger if not already minted
     const existingGrant = this.transactions.find(
-      tx => tx.to_user === user.id && tx.transaction_type === "ONBOARDING_WELCOME_GRANT"
+      (tx) =>
+        tx.to_user === user.id &&
+        tx.transaction_type === "ONBOARDING_WELCOME_GRANT"
     );
     if (!existingGrant) {
       this.transactions.unshift({
@@ -662,9 +878,18 @@ class StateStore {
   getRevenueMetrics() {
     const payments = this.getOnboardingPayments();
     const totalRevenue = payments.reduce((acc, p) => acc + (p.amount || 99), 0);
-    const paidCount = this.users.filter(u => u.role !== "admin" && u.fee_status === "PAID").length;
-    const pendingVerificationCount = this.users.filter(u => u.verified_status === "PENDING_REVIEW").length;
-    const pendingPaymentCount = this.users.filter(u => u.verified_status === "VERIFIED" && u.fee_status !== "PAID" && u.role !== "admin").length;
+    const paidCount = this.users.filter(
+      (u) => u.role !== "admin" && u.fee_status === "PAID"
+    ).length;
+    const pendingVerificationCount = this.users.filter(
+      (u) => u.verified_status === "PENDING_REVIEW"
+    ).length;
+    const pendingPaymentCount = this.users.filter(
+      (u) =>
+        u.verified_status === "VERIFIED" &&
+        u.fee_status !== "PAID" &&
+        u.role !== "admin"
+    ).length;
 
     return {
       totalRevenue,
@@ -681,36 +906,49 @@ class StateStore {
   }
 
   getApprovedCourses() {
-    return this.courses.filter(c => c.status === "APPROVED");
+    return this.courses.filter((c) => c.status === "APPROVED");
   }
 
   getPendingCourses() {
-    return this.courses.filter(c => c.status === "PENDING_REVIEW");
+    return this.courses.filter((c) => c.status === "PENDING_REVIEW");
   }
 
   getCourse(courseId) {
-    return this.courses.find(c => c.id === courseId);
+    return this.courses.find((c) => c.id === courseId);
   }
 
   getUserEnrollment(userId, courseId) {
-    return this.enrollments.find(e => e.user_id === userId && e.course_id === courseId) || null;
+    return (
+      this.enrollments.find(
+        (e) => e.user_id === userId && e.course_id === courseId
+      ) || null
+    );
   }
 
   getUserEnrollments(userId) {
-    return this.enrollments.filter(e => e.user_id === userId);
+    return this.enrollments.filter((e) => e.user_id === userId);
   }
 
   getUserCertificates(userId) {
-    return this.certificates.filter(c => c.user_id === userId);
+    return this.certificates.filter((c) => c.user_id === userId);
   }
 
   getCertificate(certId) {
-    return this.certificates.find(c => c.id === certId);
+    return this.certificates.find((c) => c.id === certId);
   }
 
-  submitCourse({ title, category, creditCost, duration, durationSeconds, videoUrl, description }) {
+  submitCourse({
+    title,
+    category,
+    creditCost,
+    duration,
+    durationSeconds,
+    videoUrl,
+    description
+  }) {
     const currentUser = this.getCurrentUser();
-    if (!currentUser) throw new Error("User must be authenticated to submit a course.");
+    if (!currentUser)
+      throw new Error("User must be authenticated to submit a course.");
 
     const newCourse = {
       id: "course_" + Math.random().toString(36).substring(2, 9),
@@ -720,7 +958,9 @@ class StateStore {
       credit_cost: parseInt(creditCost, 10) || 10,
       duration: duration || "10 mins",
       duration_seconds: durationSeconds || 45,
-      video_url: videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      video_url:
+        videoUrl ||
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
       description,
       status: "PENDING_REVIEW", // Always starts in review queue for admin approval
       rating: 5.0,
@@ -735,4 +975,3 @@ class StateStore {
 }
 
 window.store = new StateStore();
-

@@ -42,14 +42,23 @@ class EducationManager {
     }
 
     // Check if already enrolled
-    const existingEnrollment = this.store.getUserEnrollment(currentUser.id, courseId);
+    const existingEnrollment = this.store.getUserEnrollment(
+      currentUser.id,
+      courseId
+    );
     if (existingEnrollment) {
-      return { success: true, alreadyEnrolled: true, enrollment: existingEnrollment };
+      return {
+        success: true,
+        alreadyEnrolled: true,
+        enrollment: existingEnrollment
+      };
     }
 
     const currentBalance = this.ledger.getBalance(currentUser.id);
     if (currentBalance < course.credit_cost) {
-      throw new Error(`Insufficient credits (${currentBalance} CR). Unlocking requires ${course.credit_cost} CR.`);
+      throw new Error(
+        `Insufficient credits (${currentBalance} CR). Unlocking requires ${course.credit_cost} CR.`
+      );
     }
 
     // Insert ledger transaction (Learner -> Course Creator)
@@ -83,7 +92,11 @@ class EducationManager {
       transaction: purchaseTx
     });
 
-    return { success: true, enrollment: newEnrollment, transaction: purchaseTx };
+    return {
+      success: true,
+      enrollment: newEnrollment,
+      transaction: purchaseTx
+    };
   }
 
   // --- 2. ANTI-SKIP VIDEO PLAYER & INTEGRITY TRACKER ---
@@ -109,21 +122,31 @@ class EducationManager {
     // DOM indicators in modal (safe check if document exists)
     if (typeof document !== "undefined") {
       const elSkipAlert = document.getElementById("player-skip-warning");
-      const elCompleteBanner = document.getElementById("player-complete-banner");
+      const elCompleteBanner = document.getElementById(
+        "player-complete-banner"
+      );
       const elClaimCertBtn = document.getElementById("btn-claim-certificate");
-      const elIntegrityBadge = document.getElementById("player-integrity-badge");
+      const elIntegrityBadge = document.getElementById(
+        "player-integrity-badge"
+      );
 
       if (elSkipAlert) elSkipAlert.style.display = "none";
-      if (elCompleteBanner) elCompleteBanner.style.display = enrollment?.completed ? "flex" : "none";
+      if (elCompleteBanner)
+        elCompleteBanner.style.display = enrollment?.completed
+          ? "flex"
+          : "none";
       if (elClaimCertBtn) {
         elClaimCertBtn.disabled = !enrollment?.completed;
-        elClaimCertBtn.textContent = enrollment?.completed ? "🎓 Claim & View Certificate" : "🔒 Complete Video to Earn Certificate";
+        elClaimCertBtn.textContent = enrollment?.completed
+          ? "🎓 Claim & View Certificate"
+          : "🔒 Complete Video to Earn Certificate";
       }
     }
 
     // Wire HTML5 video events
     videoEl.onloadedmetadata = () => {
-      this.playbackTracker.totalDuration = videoEl.duration || course.duration_seconds || 45;
+      this.playbackTracker.totalDuration =
+        videoEl.duration || course.duration_seconds || 45;
       this.updatePlayerUI();
     };
 
@@ -150,7 +173,10 @@ class EducationManager {
     const tracker = this.playbackTracker;
 
     // Detect forward skipping beyond the allowed tolerance
-    if (currentTime - tracker.lastPlaybackTime > tracker.maxAllowedForwardJump) {
+    if (
+      currentTime - tracker.lastPlaybackTime >
+      tracker.maxAllowedForwardJump
+    ) {
       tracker.forwardSkipOccurred = true;
       this.showSkippedWarning(true);
     } else if (currentTime >= tracker.lastPlaybackTime) {
@@ -184,7 +210,9 @@ class EducationManager {
     if (end <= start) return;
     this.playbackTracker.watchedIntervals.push([start, end]);
     // Merge overlapping intervals
-    this.playbackTracker.watchedIntervals = this.mergeIntervals(this.playbackTracker.watchedIntervals);
+    this.playbackTracker.watchedIntervals = this.mergeIntervals(
+      this.playbackTracker.watchedIntervals
+    );
   }
 
   mergeIntervals(intervals) {
@@ -213,11 +241,14 @@ class EducationManager {
 
   handleVideoEnded() {
     const tracker = this.playbackTracker;
-    const totalDuration = this.activeVideoEl?.duration || tracker.totalDuration || 1;
+    const totalDuration =
+      this.activeVideoEl?.duration || tracker.totalDuration || 1;
     const watchedSeconds = this.calculateTotalWatchedSeconds();
     const coverageRatio = watchedSeconds / totalDuration;
 
-    console.log(`[AntiSkip Watch Integrity Check] Watched: ${watchedSeconds.toFixed(1)}s / Total: ${totalDuration.toFixed(1)}s (Coverage: ${(coverageRatio * 100).toFixed(1)}%). Forward Skip: ${tracker.forwardSkipOccurred}`);
+    console.log(
+      `[AntiSkip Watch Integrity Check] Watched: ${watchedSeconds.toFixed(1)}s / Total: ${totalDuration.toFixed(1)}s (Coverage: ${(coverageRatio * 100).toFixed(1)}%). Forward Skip: ${tracker.forwardSkipOccurred}`
+    );
 
     // Verification Criteria:
     // 1. No forward skip was left unaddressed
@@ -226,7 +257,10 @@ class EducationManager {
       // Video was skipped!
       this.showSkippedWarning(true);
       if (window.appToast) {
-        window.appToast("⚠️ Anti-Skip Protection: Video was skipped and not fully completed. Watch continuously to unlock certification.", "error");
+        window.appToast(
+          "⚠️ Anti-Skip Protection: Video was skipped and not fully completed. Watch continuously to unlock certification.",
+          "error"
+        );
       }
     } else {
       // Successful authentic completion!
@@ -281,9 +315,13 @@ class EducationManager {
     this.showSkippedWarning(false);
 
     if (typeof document !== "undefined") {
-      const elCompleteBanner = document.getElementById("player-complete-banner");
+      const elCompleteBanner = document.getElementById(
+        "player-complete-banner"
+      );
       const elClaimCertBtn = document.getElementById("btn-claim-certificate");
-      const elIntegrityBadge = document.getElementById("player-integrity-badge");
+      const elIntegrityBadge = document.getElementById(
+        "player-integrity-badge"
+      );
 
       if (elCompleteBanner) elCompleteBanner.style.display = "flex";
       if (elIntegrityBadge) {
@@ -308,12 +346,18 @@ class EducationManager {
   updatePlayerUI() {
     if (!this.activeVideoEl || typeof document === "undefined") return;
     const currentTime = this.activeVideoEl.currentTime || 0;
-    const totalDuration = this.activeVideoEl.duration || this.playbackTracker.totalDuration || 1;
+    const totalDuration =
+      this.activeVideoEl.duration || this.playbackTracker.totalDuration || 1;
     const watchedSeconds = this.calculateTotalWatchedSeconds();
 
-    const percent = Math.min(100, Math.round((watchedSeconds / totalDuration) * 100));
+    const percent = Math.min(
+      100,
+      Math.round((watchedSeconds / totalDuration) * 100)
+    );
 
-    const elProgressFill = document.getElementById("player-watched-progress-fill");
+    const elProgressFill = document.getElementById(
+      "player-watched-progress-fill"
+    );
     const elProgressPct = document.getElementById("player-watched-percent");
     const elTimeCur = document.getElementById("player-time-current");
     const elTimeTotal = document.getElementById("player-time-total");
@@ -324,7 +368,7 @@ class EducationManager {
     const fmt = (sec) => {
       const m = Math.floor(sec / 60);
       const s = Math.floor(sec % 60);
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
+      return `${m}:${s < 10 ? "0" : ""}${s}`;
     };
 
     if (elTimeCur) elTimeCur.textContent = fmt(currentTime);
@@ -338,19 +382,26 @@ class EducationManager {
    */
   claimCertificate(courseId) {
     const currentUser = this.store.getCurrentUser();
-    if (!currentUser) throw new Error("Please log in to claim your certificate.");
+    if (!currentUser)
+      throw new Error("Please log in to claim your certificate.");
 
     const course = this.store.getCourse(courseId);
     if (!course) throw new Error("Course not found.");
 
     const enrollment = this.store.getUserEnrollment(currentUser.id, courseId);
     if (!enrollment || !enrollment.completed) {
-      throw new Error("You must complete the full video course without skipping to claim this certificate.");
+      throw new Error(
+        "You must complete the full video course without skipping to claim this certificate."
+      );
     }
 
-    let cert = this.store.certificates.find(c => c.user_id === currentUser.id && c.course_id === courseId);
+    let cert = this.store.certificates.find(
+      (c) => c.user_id === currentUser.id && c.course_id === courseId
+    );
     if (!cert) {
-      const creator = this.store.getUser(course.creator_id) || { name: "Accredited Peer Mentor" };
+      const creator = this.store.getUser(course.creator_id) || {
+        name: "Accredited Peer Mentor"
+      };
       cert = {
         id: "CERT-SB-" + Math.floor(100000 + Math.random() * 900000) + "-2026",
         user_id: currentUser.id,
@@ -361,13 +412,21 @@ class EducationManager {
         creator_id: course.creator_id,
         creator_name: creator.name.split(" (")[0],
         issued_at: new Date(),
-        verification_hash: "0x" + Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join(""),
+        verification_hash:
+          "0x" +
+          Array.from({ length: 32 }, () =>
+            Math.floor(Math.random() * 16).toString(16)
+          ).join(""),
         accreditation_score: "100% (Anti-Skip Verified)"
       };
 
       this.store.certificates.unshift(cert);
       enrollment.certificate_id = cert.id;
-      this.store.notify("CERTIFICATE_ISSUED", { certificate: cert, course, enrollment });
+      this.store.notify("CERTIFICATE_ISSUED", {
+        certificate: cert,
+        course,
+        enrollment
+      });
     }
 
     return cert;

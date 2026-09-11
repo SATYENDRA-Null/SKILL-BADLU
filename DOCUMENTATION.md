@@ -62,15 +62,18 @@
 ## 1. System Architecture & Core Principles
 
 ### 1.1 Executive System Overview
+
 **Skill Badlu** is an immutable, peer-to-peer (P2P) skill-exchange platform designed to eliminate financial friction from continuous learning. The platform operates on a **zero-commission barter economy**: members exchange pedagogical hours (measured in platform Credits, where 1 Hour = 50 Credits) without platform cuts.
 
 The system is built on modern web standards (HTML5, Vanilla CSS Design System, Modular ES6 JavaScript) and implements industrial-grade financial and cryptographic patterns:
+
 - **Append-Only Double-Entry Ledger:** Balances are derived dynamically from immutable transaction journals rather than being updated in-place.
 - **Dual-Party Consensus:** Credit transfer requires simultaneous cryptographic confirmation from both learner and teacher.
 - **Saga Pattern for Cashouts:** Outbound fiat transfers to banking rails use atomic reservations and automatic compensating reversals on network failure.
 - **Strict Role Isolation:** Guest visitors, verified swappers, and system administrators access distinct UI surfaces with isolated DOM structures and authorization boundaries.
 
 ### 1.2 Core Architectural Principles & Invariants
+
 1. **Currency Conservation:** Credits cannot be minted or destroyed except by platform treasury grants or cashouts.
 2. **Zero-Trust Session Settlement:** No single participant can unilaterally force credit transfer without mutual confirmation or administrative arbitration.
 3. **Idempotency Guarantee:** Duplicate network requests for session settlement or payouts produce identical, non-duplicative state mutations.
@@ -88,14 +91,14 @@ graph TD
     User[Member / Client Browser]:::client -->|Declares Skills Have/Want| Store[Reactive State Store js/store.js]:::engine
     Store -->|Provides User Profile & Candidate Pool| MM[Matchmaking Engine js/matchmaker.js]:::engine
     MM -->|Outputs Scored & Ranked Swaps| Marketplace[Marketplace UI View]:::client
-    
+
     Marketplace -->|Initiates Booking| SM[Session Manager js/sessions.js]:::engine
     SM -->|Two-Way Confirmation A + B| Ledger[Double-Entry Ledger Engine js/ledger.js]:::ledger
     SM -->|Disputed Session Escalation| AdminDesk[Admin Arbitration Portal js/admin.js]:::admin
-    
+
     AdminDesk -->|Mediated Settlement Resolution| Ledger
     AdminDesk -->|Approves KYC Application| Ledger
-    
+
     User -->|Submits Cashout Request| Payout[Payout Engine js/payouts.js]:::engine
     Payout -->|Reserves Credits Debit| Ledger
     Payout -->|Executes External Transfer| BankRail[Banking Rail Razorpay / Stripe]:::client
@@ -103,6 +106,7 @@ graph TD
 ```
 
 ### 1.4 Frontend & Reactive Event Architecture
+
 The frontend utilizes a clean event-driven publish-subscribe pattern implemented within `StateStore`:
 
 ```mermaid
@@ -132,7 +136,7 @@ erDiagram
     USER ||--o{ SESSION : acts_as_teacher
     USER ||--o{ TRANSACTION : debited_or_credited
     USER ||--o{ PAYOUT : requests
-    
+
     SESSION ||--o| TRANSACTION : settles_via
     SKILL ||--o{ USER_SKILL_HAVE : categorized_in
     SKILL ||--o{ USER_SKILL_WANT : categorized_in
@@ -209,6 +213,7 @@ erDiagram
 ### 2.2 Entity Schema Definitions & In-Memory Data Structures
 
 #### 1. User Entity Schema
+
 ```javascript
 {
   id: "user_a",
@@ -233,6 +238,7 @@ erDiagram
 ```
 
 #### 2. Transaction Entity Schema (Immutable Journal Entry)
+
 ```javascript
 {
   id: "tx_9k2a8f",
@@ -252,6 +258,7 @@ erDiagram
 Implemented in [js/matchmaker.js](file:///d:/SKILL%20BADLU/js/matchmaker.js).
 
 ### 3.1 Mathematical Formulation & Weight Convexity
+
 The Matchmaking Engine matches an active querying user $U$ against candidate pool $C_{\text{pool}}$ to discover optimal barter pairings. The compatibility affinity score $S(C, U) \in [0.0, 1.0]$ is computed as:
 
 $$S(C, U) = \sum_{i=1}^{5} w_i \cdot f_i(C, U)$$
@@ -265,23 +272,28 @@ $$w = \big[ w_1 = 0.30,\; w_2 = 0.15,\; w_3 = 0.35,\; w_4 = 0.10,\; w_5 = 0.10 \
 ### 3.2 Five-Factor Scoring Functions
 
 #### 1. Jaccard Skill Tag Overlap ($f_1$)
+
 Measures the intersection over union between skills offered by candidate $C_{have}$ and desired by user $U_{want}$:
 $$f_1(C, U) = \frac{|C_{have} \cap U_{want}|}{|C_{have} \cup U_{want}|}$$
 
 #### 2. Skill Level Compatibility ($f_2$)
+
 For all matched skills $K = C_{have} \cap U_{want}$, ensures candidate's teaching proficiency meets or exceeds user's learning requirement:
 $$f_2(C, U) = \frac{1}{|K|} \sum_{k \in K} \begin{cases} 1.0 & \text{if } Level(C, k) \ge Level(U, k) \\ 0.5 & \text{if } Level(C, k) < Level(U, k) \end{cases}$$
-*(If $K = \emptyset$, then $f_2 = 0.0$)*
+_(If $K = \emptyset$, then $f_2 = 0.0$)_
 
 #### 3. Mutual Barter Reciprocity Bonus ($f_3$)
+
 Rewards direct 2-way swaps where active user $U$ also possesses a skill desired by candidate $C$:
 $$f_3(C, U) = \begin{cases} 1.0 & \text{if } |U_{have} \cap C_{want}| > 0 \\ 0.0 & \text{otherwise} \end{cases}$$
 
 #### 4. Historical Peer Review Rating ($f_4$)
+
 Normalizes peer rating $R \in [1.0, 5.0]$ onto the unit interval $[0.0, 1.0]$:
 $$f_4(C, U) = \max\left(0.0, \min\left(1.0, \frac{Rating(C) - 1.0}{4.0}\right)\right)$$
 
 #### 5. Exponential Activity Recency Decay ($f_5$)
+
 Penalizes inactive profiles using a half-life exponential decay curve where $\Delta t_{\text{days}}$ is elapsed inactivity:
 $$f_5(C, U) = \exp\left(-\frac{\Delta t_{\text{days}}}{14.0}\right)$$
 
@@ -289,11 +301,11 @@ $$f_5(C, U) = \exp\left(-\frac{\Delta t_{\text{days}}}{14.0}\right)$$
 
 ```text
 ALGORITHM MatchmakingEngine(targetUser, candidatePool, weights):
-    INPUT: 
+    INPUT:
         targetUser: UserProfile (contains skills_have, skills_want)
         candidatePool: List[UserProfile]
         weights: Tuple(w1, w2, w3, w4, w5) summing to 1.0
-    OUTPUT: 
+    OUTPUT:
         rankedMatches: List[ScoredMatch] sorted descending by score
 
     rankedMatches ← []
@@ -354,22 +366,22 @@ ALGORITHM MatchmakingEngine(targetUser, candidatePool, weights):
 flowchart TD
     Start([Start Matchmaking Query]) --> LoadTarget["Load Active Target User U & Candidate Pool"]
     LoadTarget --> Iterate{For Each Candidate C in Pool}
-    
+
     Iterate -->|C.id == U.id| ExcludeSelf[Skip Self] --> Next
     Iterate -->|C.verified_status != VERIFIED| ExcludeUnverified[Skip Unverified] --> Next
     Iterate -->|Eligible Candidate| ComputeF1["Compute f1: Jaccard Overlap = |C.have ∩ U.want| / |C.have ∪ U.want|"]
-    
+
     ComputeF1 --> CheckOverlap{"Overlap > 0 ?"}
     CheckOverlap -->|No| ZeroF2["Set f1 = 0, f2 = 0"] --> ComputeF3
     CheckOverlap -->|Yes| ComputeF2["Compute f2: Level Match (1.0 if Cand.Level >= User.Level else 0.5)"] --> ComputeF3
-    
+
     ComputeF3["Compute f3: Mutual Reciprocity (1.0 if |U.have ∩ C.want| > 0 else 0.0)"]
     ComputeF3 --> ComputeF4["Compute f4: Normalized Rating = (Rating - 1.0) / 4.0"]
     ComputeF4 --> ComputeF5["Compute f5: Recency Decay = exp(-days_inactive / 14)"]
-    
+
     ComputeF5 --> Aggregate["Aggregate Score S = w1·f1 + w2·f2 + w3·f3 + w4·f4 + w5·f5"]
     Aggregate --> AppendList[Append Candidate to Ranked Match List]
-    
+
     AppendList --> Next[Next Candidate] --> Iterate
     Iterate -->|All Processed| SortList["Sort Match List by Score Descending"]
     SortList --> RenderUI["Render Interactive Match Cards in Marketplace"]
@@ -383,14 +395,17 @@ flowchart TD
 Implemented in [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js).
 
 ### 4.1 Double-Entry Principles & Derived Balances
+
 In traditional architectures, account balances are stored in mutable table columns (`UPDATE users SET balance = balance - 50`), creating race conditions, dirty reads, and reconciliation nightmares.
 
 Skill Badlu enforces **append-only ledger transactions**:
+
 - Account balances are **never stored as mutable records**.
 - Any user's balance is dynamically derived by aggregating the complete history of debits and credits:
-$$Balance(u) = \sum_{\substack{t \in T \\ t.\text{to} = u}} t.\text{amount} - \sum_{\substack{t \in T \\ t.\text{from} = u}} t.\text{amount}$$
+  $$Balance(u) = \sum_{\substack{t \in T \\ t.\text{to} = u}} t.\text{amount} - \sum_{\substack{t \in T \\ t.\text{from} = u}} t.\text{amount}$$
 
 ### 4.2 Platform Solvency Invariant Proof ($\Delta = 0$)
+
 The platform guarantees zero mathematical slippage and zero unbacked credit creation. At all times, total treasury emissions must equal circulating user credits plus cashed-out fiat equivalents:
 
 $$\text{Total Minted} = \sum_{\substack{t \in T \\ t.\text{from} = \text{PLATFORM\_TREASURY}}} t.\text{amount}$$
@@ -405,10 +420,12 @@ $$\text{Solvency Discrepancy } \Delta = \text{Total Minted} - (\text{Circulating
 $$\Delta \equiv 0 \quad (\text{System is 100\% Reconciled & Solvent})$$
 
 ### 4.3 Transaction Data Tuple & Idempotency Guards
+
 Every ledger insertion is immutable and satisfies:
 $$T_k = \langle \text{id}, \text{sessionId}, \text{fromUser}, \text{toUser}, \text{amount}, \text{type}, \text{timestamp} \rangle$$
 
 **Constraints Enforced:**
+
 1. `fromUser != toUser` (Self-transfers strictly rejected).
 2. `amount > 0` (Non-positive amounts strictly rejected).
 3. **Idempotency Guard:** For `SESSION_SETTLEMENT`, the ledger verifies if a transaction with the identical `sessionId` already exists. If detected, duplicate emission is prevented.
@@ -419,24 +436,24 @@ $$T_k = \langle \text{id}, \text{sessionId}, \text{fromUser}, \text{toUser}, \te
 flowchart TD
     Trigger([Audit Reconciliation Invoked]) --> FetchData["Fetch All Immutable Transactions T and Users U"]
     FetchData --> Init["Initialize: TotalMinted = 0, TotalCashed = 0, CirculatingSupply = 0"]
-    
+
     Init --> ScanTx{For Each Transaction t in T}
     ScanTx -->|t.from == PLATFORM_TREASURY| IncMinted["TotalMinted += t.amount"] --> NextTx
     ScanTx -->|t.to == PLATFORM_CASHOUT| IncCashed["TotalCashed += t.amount"] --> NextTx
     ScanTx -->|Peer-to-Peer Transfer| SkipTx[Internal Balance Exchange] --> NextTx
     NextTx --> ScanTx
-    
+
     ScanTx -->|Scan Complete| ScanUsers{For Each User u in U}
     ScanUsers --> DeriveUserBal["Compute Balance(u) = Sum(Credits In) - Sum(Credits Out)"]
     DeriveUserBal --> AddCirculating["CirculatingSupply += Balance(u)"]
     AddCirculating --> NextUser[Next User] --> ScanUsers
-    
+
     ScanUsers -->|Scan Complete| ComputeInvariant["Compute Discrepancy: Δ = TotalMinted - (CirculatingSupply + TotalCashed)"]
     ComputeInvariant --> CheckZero{"Is Δ == 0 ?"}
-    
+
     CheckZero -->|True: Δ == 0| MarkSolvent["Audit Passed: 100% SOLVENT & CRYPTOGRAPHICALLY RECONCILED"]
     CheckZero -->|False: Δ != 0| MarkFault["Audit Failed: SOLVENCY DISCREPANCY DETECTED"]
-    
+
     MarkSolvent --> RenderModal["Display Ledger Audit Proof & Breakdown Modal"]
     MarkFault --> AlertAdmin["Trigger Circuit Breaker & Flag Administrator Console"]
     RenderModal --> EndAudit([Audit Complete])
@@ -450,7 +467,9 @@ flowchart TD
 Implemented in [js/sessions.js](file:///d:/SKILL%20BADLU/js/sessions.js) and [js/admin.js](file:///d:/SKILL%20BADLU/js/admin.js).
 
 ### 5.1 Non-Reversible Dual-Consensus State Machine
+
 To guarantee trust without intermediaries during live video barter:
+
 1. `REQUESTED`: Learner initiates session booking with proposed credit amount.
 2. `SCHEDULED`: Teacher accepts proposed time slot.
 3. `IN_PROGRESS`: Live pedagogical exchange starts.
@@ -460,17 +479,17 @@ To guarantee trust without intermediaries during live video barter:
 
 ### 5.2 State Transition Matrix
 
-| Current State | Event Trigger | Next State | Condition / Ledger Effect |
-| :--- | :--- | :--- | :--- |
-| `[INIT]` | `requestSession()` | `REQUESTED` | Learner requests swap; escrow requirement validated. |
-| `REQUESTED` | `acceptSession()` | `SCHEDULED` | Teacher approves time and curriculum. |
-| `SCHEDULED` | `startSession()` | `IN_PROGRESS` | Live video room launched. |
-| `IN_PROGRESS` | `concludeSession()` | `PENDING_CONFIRMATION` | Session call terminates; triggers confirmation UI. |
-| `PENDING_CONFIRMATION` | `confirmSession('learner')` | `PENDING_CONFIRMATION` | Learner confirmed (`confirmed_by_a = true`), waiting on teacher. |
-| `PENDING_CONFIRMATION` | `confirmSession('teacher')` | `SETTLED` | Both confirmed $\implies$ `ledger.completeSession()` appends transfer. |
-| `PENDING_CONFIRMATION` | `disputeSession(reason)` | `DISPUTED` | Either party flags issue $\implies$ Escalate to Admin Queue. |
-| `DISPUTED` | `admin.resolve('settle_teacher')` | `SETTLED` | Admin awards credits to teacher $\implies$ `DISPUTE_MEDIATED_SETTLEMENT`. |
-| `DISPUTED` | `admin.resolve('cancel')` | `CANCELLED` | Admin dismisses session $\implies$ No ledger debit to learner. |
+| Current State          | Event Trigger                     | Next State             | Condition / Ledger Effect                                                 |
+| :--------------------- | :-------------------------------- | :--------------------- | :------------------------------------------------------------------------ |
+| `[INIT]`               | `requestSession()`                | `REQUESTED`            | Learner requests swap; escrow requirement validated.                      |
+| `REQUESTED`            | `acceptSession()`                 | `SCHEDULED`            | Teacher approves time and curriculum.                                     |
+| `SCHEDULED`            | `startSession()`                  | `IN_PROGRESS`          | Live video room launched.                                                 |
+| `IN_PROGRESS`          | `concludeSession()`               | `PENDING_CONFIRMATION` | Session call terminates; triggers confirmation UI.                        |
+| `PENDING_CONFIRMATION` | `confirmSession('learner')`       | `PENDING_CONFIRMATION` | Learner confirmed (`confirmed_by_a = true`), waiting on teacher.          |
+| `PENDING_CONFIRMATION` | `confirmSession('teacher')`       | `SETTLED`              | Both confirmed $\implies$ `ledger.completeSession()` appends transfer.    |
+| `PENDING_CONFIRMATION` | `disputeSession(reason)`          | `DISPUTED`             | Either party flags issue $\implies$ Escalate to Admin Queue.              |
+| `DISPUTED`             | `admin.resolve('settle_teacher')` | `SETTLED`              | Admin awards credits to teacher $\implies$ `DISPUTE_MEDIATED_SETTLEMENT`. |
+| `DISPUTED`             | `admin.resolve('cancel')`         | `CANCELLED`            | Admin dismisses session $\implies$ No ledger debit to learner.            |
 
 ### 5.3 Sequence Diagram: 2-Party Consensus to Atomic Ledger Settlement
 
@@ -487,15 +506,15 @@ sequenceDiagram
     SM-->>Learner: Session Created (Status: REQUESTED)
     Teacher->>SM: acceptSession(sessionId)
     SM-->>Teacher: Status: SCHEDULED
-    
+
     Note over Learner,Teacher: Live 1-on-1 Swap Call Conducted
-    
+
     Teacher->>SM: concludeSession(sessionId)
     SM-->>Teacher: Status: PENDING_CONFIRMATION
-    
+
     Learner->>SM: confirmSession(sessionId, 'learner')
     Note over SM: confirmed_by_a = true (Waiting for Teacher)
-    
+
     alt Happy Path: Mutual Dual Confirmation
         Teacher->>SM: confirmSession(sessionId, 'teacher')
         Note over SM: confirmed_by_b = true (Consensus A ∧ B == True)
@@ -509,7 +528,7 @@ sequenceDiagram
         SM-->>Learner: Status: DISPUTED (Escrow Locked)
         SM-->>Teacher: Status: DISPUTED
         SM->>Admin: Push Dispute to Admin Arbitration Desk
-        
+
         alt Admin Resolves in Favor of Teacher
             Admin->>SM: resolveDispute(sessionId, 'settle_teacher')
             SM->>Ledger: insertTransaction(Type: DISPUTE_MEDIATED_SETTLEMENT)
@@ -528,14 +547,14 @@ flowchart TD
     DisputeTrigger([User Clicks 'Dispute Session']) --> CollectReason[Capture Specific Dispute Rationale & Evidence]
     CollectReason --> LockSession["Transition Status -> DISPUTED (Lock Session Escrow)"]
     LockSession --> NotifyAdmin[Enqueue in Admin Dispute Desk: admin.html]
-    
+
     NotifyAdmin --> AdminInspects[Admin Reviews Communication Logs & Timing Metrics]
     AdminInspects --> AdminDecision{Admin Arbitration Decision}
-    
+
     AdminDecision -->|Award Teacher| SettleTeacher["Append Ledger Tx: DISPUTE_MEDIATED_SETTLEMENT (Learner -> Teacher: 50 CR)"]
     SettleTeacher --> MarkSettled["Update Session Status: SETTLED (Admin Overridden)"]
     MarkSettled --> NotifyParties[Notify Both Parties of Final Mediation]
-    
+
     AdminDecision -->|Refund / Dismiss| CancelSession["Update Session Status: CANCELLED (Zero Balance Change)"]
     CancelSession --> NotifyParties
     NotifyParties --> EndDispute([Arbitration Closed])
@@ -548,9 +567,11 @@ flowchart TD
 Implemented in [js/payouts.js](file:///d:/SKILL%20BADLU/js/payouts.js).
 
 ### 6.1 Distributed Saga Pattern in Financial Rails
+
 Skill Badlu enables members to liquidate earned credits to fiat currency (₹10 INR per Credit). Because external banking rails (IMPS, UPI, NEFT, Stripe, Razorpay) are distributed and asynchronous, network partitions or beneficiary timeouts could leave systems in inconsistent states.
 
 To solve this, Skill Badlu implements a **Compensating Transaction Saga**:
+
 1. **Debit Step:** User credits are reserved into platform escrow via `PAYOUT_RESERVATION`.
 2. **External Call Step:** Banking transfer API is invoked with user bank details.
 3. **Commit Step:** On HTTP 200, payout status is set to `COMPLETED`.
@@ -576,6 +597,7 @@ Step 6: Invoke Banking Rail API (Asynchronous).
 ```
 
 ### 6.3 Mathematical Balance Restoration Guarantee
+
 Let $B_0$ be the initial balance. After payout reservation of amount $X$:
 $$B_1 = B_0 - X$$
 
@@ -589,21 +611,21 @@ $$\therefore B_{\text{final}} \equiv B_{\text{initial}} \quad (\text{Zero Fund L
 ```mermaid
 flowchart TD
     UserRequest([User Requests Cashout: X Credits]) --> CheckKYC{"User KYC == VERIFIED ?"}
-    
+
     CheckKYC -->|No| RejectKYC[Reject: KYC Verification Required] --> EndPayout([End Workflow])
     CheckKYC -->|Yes| CheckBal{"Derived Balance >= X ?"}
-    
+
     CheckBal -->|No| RejectBal[Reject: Insufficient Available Balance] --> EndPayout
     CheckBal -->|Yes| CreateRecord["Create Payout Record (Status: PENDING)"]
-    
+
     CreateRecord --> LockBalance["Append Ledger Tx: PAYOUT_RESERVATION (User -> PLATFORM_CASHOUT: X CR)"]
     LockBalance --> InvokeGateway["Invoke External Fiat Payment Rail API (Razorpay / Stripe)"]
-    
+
     InvokeGateway --> GatewayResult{Gateway Rail Response}
-    
+
     GatewayResult -->|HTTP 200: Success| MarkSuccess["Update Record: COMPLETED, Assign Gateway Transfer Ref"]
     MarkSuccess --> ToastSuccess[Show Success Toast: Funds Dispatched to Bank] --> EndPayout
-    
+
     GatewayResult -->|HTTP 5xx / Timeout: Failure| MarkFailed["Update Record: FAILED, Log Gateway Exception"]
     MarkFailed --> CompensatingTx["Append Ledger Tx: PAYOUT_COMPENSATING_REVERSAL (PLATFORM_CASHOUT -> User: +X CR)"]
     CompensatingTx --> ToastFail[Show Alert: Rail Failed — Credits Restored to Account] --> EndPayout
@@ -634,6 +656,7 @@ Implemented in [js/app.js](file:///d:/SKILL%20BADLU/js/app.js), [admin.html](fil
 ```
 
 ### 7.2 Session State Validation & Token Lifecycle
+
 1. Current authentication state is read from `localStorage.getItem("sb_current_user_id")`.
 2. When a user logs in via [login.html](file:///d:/SKILL%20BADLU/login.html) or the quick modal:
    - `store.login(userId)` updates local session state and notifies subscribers.
@@ -647,26 +670,27 @@ Implemented in [js/app.js](file:///d:/SKILL%20BADLU/js/app.js), [admin.html](fil
 ```mermaid
 flowchart TD
     ClientReq([Client Navigates to Platform]) --> ParseURL{Requested Route}
-    
+
     ParseURL -->|index.html| CheckAuthIndex{"isAuthenticated() ?"}
     CheckAuthIndex -->|No: Guest| RenderLanding["Render Public Landing Page (Hero, Features, How It Works, Login/Register)"]
     CheckAuthIndex -->|Yes: Logged In| CheckAdminOnIndex{"User Role == 'admin' ?"}
     CheckAdminOnIndex -->|Yes| AutoForwardAdmin["Auto-Redirect -> admin.html"]
     CheckAdminOnIndex -->|No: Swapper| RenderSwapperPlatform["Render Swapper Dashboard (Marketplace, Matchmaker, Sessions, Cashout)"]
-    
+
     ParseURL -->|login.html| RenderAuthPortal["Render Standalone Multi-Role Gateway with 1-Click Demo Profiles"]
     RenderAuthPortal --> ProfileSelected[User Selects Profile or Submits Credentials]
     ProfileSelected --> SetStorage["store.login(userId) -> Set sb_current_user_id"]
     SetStorage --> TargetRole{"User Role"}
     TargetRole -->|admin| RouteAdmin["Redirect -> admin.html"]
     TargetRole -->|swapper| RouteIndex["Redirect -> index.html"]
-    
+
     ParseURL -->|admin.html| CheckAdminAccess{"User Role == 'admin' ?"}
     CheckAdminAccess -->|Yes| RenderAdminDesk["Render Admin Console (KYC Queue, Disputes, Ledger Audit)"]
     CheckAdminAccess -->|No / Guest| HandleGuestAdmin["Initialize Demo Admin Session or Redirect to login.html"]
 ```
 
 ### 7.4 Verification Test Suite & Isolation Proofs
+
 The automated Python suite [scripts/verify_isolation.py](file:///d:/SKILL%20BADLU/scripts/verify_isolation.py) statically audits the DOM to enforce zero tab bleeding across security boundaries:
 
 ```python
@@ -691,13 +715,17 @@ checks = [
 Implemented in [js/admin.js](file:///d:/SKILL%20BADLU/js/admin.js).
 
 ### 8.1 Applicant Onboarding Pipeline & Security Screening
+
 To prevent spam, sybil attacks, and low-quality accounts, new applicants submit:
+
 1. Proof of identity and skill proficiency portfolio.
 2. Account state is marked as `verified_status = "PENDING_REVIEW"`, `kyc_status = "PENDING"`, `fee_status = "UNPAID"`.
 3. Pre-login verification gate prevents unverified marketplace login.
 
 ### 8.2 Admin Moderation & ₹99 Login Payment Protocol
+
 When an administrator reviews an applicant in the KYC Queue:
+
 - **Approval Path:**
   1. Admin approves applicant: `user.verified_status = "VERIFIED"`, `user.kyc_status = "VERIFIED"`, `fee_status = "PENDING_PAYMENT"`.
   2. At login time on `login.html`, user is prompted with the ₹99 Neo-Brutalist Payment Gateway (UPI / QR / Cards / NetBanking).
@@ -713,15 +741,15 @@ When an administrator reviews an applicant in the KYC Queue:
 flowchart TD
     AppStart([Applicant Submits Registration]) --> SubmitCreds[Submit Skill Credentials]
     SubmitCreds --> EnqueueKYC["Mark PENDING_REVIEW & Insert into Admin KYC Queue"]
-    
+
     EnqueueKYC --> AdminReview{Admin Decision}
-    
+
     AdminReview -->|Approve| ApproveUser["Set verified_status: VERIFIED, kyc_status: VERIFIED"]
     ApproveUser --> LoginPayGate["User Logs In -> Prompt ₹99 Onboarding Payment Gateway"]
     LoginPayGate --> PaySettled["Payment Settled: fee_status: PAID, Record Payment Tx"]
     PaySettled --> MintWelcome["Ledger Append: ONBOARDING_WELCOME_GRANT (PLATFORM_TREASURY -> User: +50 CR)"]
     MintWelcome --> SwapperActive([User Granted Marketplace Access])
-    
+
     AdminReview -->|Reject| RejectUser["Set verified_status: REJECTED, Store Reason"]
     RejectUser --> AppClosed([Application Closed / Notice Displayed])
 ```
@@ -730,22 +758,24 @@ flowchart TD
 
 ## 9. Mathematical Invariant Verification Summary
 
-| Invariant | Mathematical Formulation | Enforced In | Verification Tool / Script |
-| :--- | :--- | :--- | :--- |
-| **Score Boundedness** | $0.0 \le S(C, U) \le 1.0$ | [js/matchmaker.js](file:///d:/SKILL%20BADLU/js/matchmaker.js) | Slider stress test $\sum w_i = 1.0$ |
-| **Ledger Solvency Invariant** | $\Delta = \text{Minted} - (\text{Circulating} + \text{Cashed}) \equiv 0$ | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js) | `ledger.reconcile().isVerified === true` |
-| **Settlement Idempotency** | $\text{Count}(\text{tx\_settlement}, \text{sess\_id}) \le 1$ | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js) | Idempotency guard on line 46 |
-| **Saga Reversal Conservation** | $Balance_{\text{after\_failure}} \equiv Balance_{\text{initial}}$ | [js/payouts.js](file:///d:/SKILL%20BADLU/js/payouts.js) | Gateway failure simulation toggle |
-| **DOM Interface Isolation** | $\text{AdminTabs} \cap \text{SwapperTabs} = \emptyset$ | [admin.html](file:///d:/SKILL%20BADLU/admin.html) | `python scripts/verify_isolation.py` (15/15 PASS) |
-| **Non-Negative Amount Constraint** | $\forall t \in T, \; t.\text{amount} > 0$ | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js) | Input validator line 38 |
-| **Distinct Parties Constraint** | $\forall t \in T, \; t.\text{from} \ne t.\text{to}$ | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js) | Distinct validator line 41 |
+| Invariant                          | Mathematical Formulation                                                 | Enforced In                                                   | Verification Tool / Script                        |
+| :--------------------------------- | :----------------------------------------------------------------------- | :------------------------------------------------------------ | :------------------------------------------------ |
+| **Score Boundedness**              | $0.0 \le S(C, U) \le 1.0$                                                | [js/matchmaker.js](file:///d:/SKILL%20BADLU/js/matchmaker.js) | Slider stress test $\sum w_i = 1.0$               |
+| **Ledger Solvency Invariant**      | $\Delta = \text{Minted} - (\text{Circulating} + \text{Cashed}) \equiv 0$ | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js)         | `ledger.reconcile().isVerified === true`          |
+| **Settlement Idempotency**         | $\text{Count}(\text{tx\_settlement}, \text{sess\_id}) \le 1$             | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js)         | Idempotency guard on line 46                      |
+| **Saga Reversal Conservation**     | $Balance_{\text{after\_failure}} \equiv Balance_{\text{initial}}$        | [js/payouts.js](file:///d:/SKILL%20BADLU/js/payouts.js)       | Gateway failure simulation toggle                 |
+| **DOM Interface Isolation**        | $\text{AdminTabs} \cap \text{SwapperTabs} = \emptyset$                   | [admin.html](file:///d:/SKILL%20BADLU/admin.html)             | `python scripts/verify_isolation.py` (15/15 PASS) |
+| **Non-Negative Amount Constraint** | $\forall t \in T, \; t.\text{amount} > 0$                                | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js)         | Input validator line 38                           |
+| **Distinct Parties Constraint**    | $\forall t \in T, \; t.\text{from} \ne t.\text{to}$                      | [js/ledger.js](file:///d:/SKILL%20BADLU/js/ledger.js)         | Distinct validator line 41                        |
 
 ---
 
 ## 10. Local Development & Verification Instructions
 
 ### 10.1 Active Local Server Access URLs
+
 The local web server is active on port 8000:
+
 - **Main Portal (Landing & Swapper Dashboard):** [http://localhost:8000/index.html](http://localhost:8000/index.html)
 - **Admin Moderation & Audit Console:** [http://localhost:8000/admin.html](http://localhost:8000/admin.html)
 - **Role-Based Access Gateway:** [http://localhost:8000/login.html](http://localhost:8000/login.html)
@@ -776,6 +806,7 @@ python scripts/check_ids.py
 ## 11. Backend Server & Payment Gateway Specification
 
 ### 11.1 Backend Architecture Overview
+
 The backend server is implemented in **Node.js (Express)** with a file-backed JSON database engine (`server/data/db.js` / `server/data/db.json`), JWT authentication (`jsonwebtoken`), and secure password hashing (`bcryptjs`).
 
 ```mermaid
@@ -784,41 +815,45 @@ graph TD
     Router -->|/api/auth/*| AuthRoutes[Auth Engine server/routes/auth.js]
     Router -->|/api/payments/*| PaymentRoutes[Payment Gateway server/routes/payments.js]
     Router -->|/api/admin/*| AdminRoutes[Admin Sovereign Desk server/routes/admin.js]
-    
+
     AuthRoutes --> DB[(Persistent DB server/data/db.js)]
     PaymentRoutes --> DB
     AdminRoutes --> DB
-    
+
     PaymentRoutes -->|Mint 50 Welcome Bonus| Ledger[(Double-Entry Ledger)]
 ```
 
 ### 11.2 API Endpoint Directory
 
 #### Authentication & Pre-Login Security Gates (`/api/auth`)
-| Method | Endpoint | Description | Status Codes |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Register new applicant (`status: PENDING_VERIFICATION`, `fee_status: UNPAID`) | `201 Created`, `400`, `409` |
-| `POST` | `/api/auth/login` | Dual-gate login check: validates admin approval (Gate 1) & ₹99 payment (Gate 2) | `200 OK`, `401`, `402 Payment Required`, `403 Forbidden` |
-| `GET` | `/api/auth/eligibility/:id` | Check verification and payment status without credentials | `200 OK`, `404` |
-| `GET` | `/api/auth/me` | Return authenticated user profile (JWT protected) | `200 OK`, `401`, `403` |
+
+| Method | Endpoint                    | Description                                                                     | Status Codes                                             |
+| :----- | :-------------------------- | :------------------------------------------------------------------------------ | :------------------------------------------------------- |
+| `POST` | `/api/auth/register`        | Register new applicant (`status: PENDING_VERIFICATION`, `fee_status: UNPAID`)   | `201 Created`, `400`, `409`                              |
+| `POST` | `/api/auth/login`           | Dual-gate login check: validates admin approval (Gate 1) & ₹99 payment (Gate 2) | `200 OK`, `401`, `402 Payment Required`, `403 Forbidden` |
+| `GET`  | `/api/auth/eligibility/:id` | Check verification and payment status without credentials                       | `200 OK`, `404`                                          |
+| `GET`  | `/api/auth/me`              | Return authenticated user profile (JWT protected)                               | `200 OK`, `401`, `403`                                   |
 
 #### ₹99 Onboarding Payment Gateway (`/api/payments`)
-| Method | Endpoint | Description | Status Codes |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/payments/create-order` | Create order for ₹99 with 18% GST calculation (₹83.90 Base + ₹15.10 GST) | `201 Created`, `400`, `403` |
-| `POST` | `/api/payments/verify-and-pay` | Verify payment, mark user `PAID`, mint 50 Welcome Credits, and issue JWT session | `200 OK`, `400`, `403` |
-| `GET` | `/api/payments/receipt/:id` | Generate itemized GST tax invoice receipt (SAC 998431) | `200 OK`, `404` |
-| `GET` | `/api/payments/history` | List payment transaction logs | `200 OK` |
+
+| Method | Endpoint                       | Description                                                                      | Status Codes                |
+| :----- | :----------------------------- | :------------------------------------------------------------------------------- | :-------------------------- |
+| `POST` | `/api/payments/create-order`   | Create order for ₹99 with 18% GST calculation (₹83.90 Base + ₹15.10 GST)         | `201 Created`, `400`, `403` |
+| `POST` | `/api/payments/verify-and-pay` | Verify payment, mark user `PAID`, mint 50 Welcome Credits, and issue JWT session | `200 OK`, `400`, `403`      |
+| `GET`  | `/api/payments/receipt/:id`    | Generate itemized GST tax invoice receipt (SAC 998431)                           | `200 OK`, `404`             |
+| `GET`  | `/api/payments/history`        | List payment transaction logs                                                    | `200 OK`                    |
 
 #### Sovereign Admin Control Desk (`/api/admin`)
-| Method | Endpoint | Description | Status Codes |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/admin/pending-users` | Retrieve queue of users awaiting sovereign KYC verification | `200 OK` |
-| `POST` | `/api/admin/approve-user/:id` | Verify applicant & advance state to `PENDING_PAYMENT` (₹99) | `200 OK`, `404` |
-| `POST` | `/api/admin/reject-user/:id` | Reject application with audit reason | `200 OK`, `404` |
-| `GET` | `/api/admin/revenue-metrics` | Aggregated ₹99 revenue analytics, gross counts, and payment breakdowns | `200 OK` |
-| `GET` | `/api/admin/onboarding-payments` | Audit trail of all settled onboarding fees | `200 OK` |
-| `GET` | `/api/admin/ledger` | Full immutable double-entry ledger audit trail | `200 OK` |
+
+| Method | Endpoint                         | Description                                                            | Status Codes    |
+| :----- | :------------------------------- | :--------------------------------------------------------------------- | :-------------- |
+| `GET`  | `/api/admin/pending-users`       | Retrieve queue of users awaiting sovereign KYC verification            | `200 OK`        |
+| `POST` | `/api/admin/approve-user/:id`    | Verify applicant & advance state to `PENDING_PAYMENT` (₹99)            | `200 OK`, `404` |
+| `POST` | `/api/admin/reject-user/:id`     | Reject application with audit reason                                   | `200 OK`, `404` |
+| `GET`  | `/api/admin/revenue-metrics`     | Aggregated ₹99 revenue analytics, gross counts, and payment breakdowns | `200 OK`        |
+| `GET`  | `/api/admin/onboarding-payments` | Audit trail of all settled onboarding fees                             | `200 OK`        |
+| `GET`  | `/api/admin/ledger`              | Full immutable double-entry ledger audit trail                         | `200 OK`        |
 
 ---
-*End of Technical Specification — Skill Badlu Architecture Documentation*
+
+_End of Technical Specification — Skill Badlu Architecture Documentation_

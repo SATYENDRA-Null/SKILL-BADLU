@@ -1,0 +1,232 @@
+/* =========================================================
+   SKILL BADLU — SOVEREIGN ADMIN DESK STYLESHEET
+   Neo-Brutalist Moderation Queue, Revenue Analytics & Ledger Audit
+   ========================================================= */
+
+.admin-brand-tag {
+  background-color: #ffe600;
+  color: #000000;
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 900;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border: 2px solid #000000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-stat-card {
+  background-color: #ffffff;
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  padding: 20px;
+  position: relative;
+}
+
+.admin-stat-label {
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #555555;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-stat-value {
+  font-family: var(--font-mono, monospace);
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #000000;
+}
+
+.admin-stat-subtext {
+  font-size: 0.76rem;
+  color: #666666;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.admin-panel-card {
+  background-color: #ffffff;
+  border: 3.5px solid #000000;
+  box-shadow: 6px 6px 0px #000000;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #000000;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-panel-title {
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 900;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-review-row {
+  background-color: #faf9f5;
+  border: 2.5px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  transition: all 0.1s ease;
+}
+
+.admin-review-row:hover {
+  background-color: #fffde6;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.admin-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-admin-action {
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 900;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 2px solid #000000;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000000;
+  transition: all 0.1s ease;
+}
+
+.btn-admin-action:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.btn-admin-action:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+.btn-admin-approve {
+  background-color: #00ff66;
+  color: #000000;
+}
+
+.btn-admin-reject {
+  background-color: #ff2d55;
+  color: #ffffff;
+}
+
+.btn-admin-neutral {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.badge-kyc-pill {
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 900;
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border: 1.5px solid #000000;
+  text-transform: uppercase;
+}
+
+.badge-kyc-pending {
+  background-color: #ffe600;
+  color: #000000;
+}
+
+.badge-kyc-verified {
+  background-color: #00ff66;
+  color: #000000;
+}
+
+.admin-ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+}
+
+.admin-ledger-table th {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 10px 12px;
+  text-align: left;
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  border: 1.5px solid #000000;
+}
+
+.admin-ledger-table td {
+  padding: 10px 12px;
+  border: 1.5px solid #000000;
+  background-color: #ffffff;
+}
+
+.admin-ledger-table tr:nth-child(even) td {
+  background-color: #f7f6f0;
+}
+
+/* Tab switcher for admin console */
+.admin-nav-tab {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2.5px solid #000000;
+  box-shadow: 3px 3px 0px #ffffff;
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 900;
+  font-size: 0.82rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.admin-nav-tab:hover {
+  background-color: #ffe600;
+}
+
+.admin-nav-tab.active {
+  background-color: #ffe600;
+  box-shadow: 3px 3px 0px #ffffff;
+  border-color: #000000;
+}
+
+.admin-section-pane {
+  display: none;
+  min-height: 520px;
+}
+
+.admin-section-pane.active {
+  display: block;
+}
