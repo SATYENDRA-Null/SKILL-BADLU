@@ -33,12 +33,10 @@ router.post("/register", async (req, res) => {
     } = req.body;
 
     if (!email || !email.trim()) {
-      return res
-        .status(400)
-        .json({
-          error: "INVALID_INPUT",
-          message: "Email address is required."
-        });
+      return res.status(400).json({
+        error: "INVALID_INPUT",
+        message: "Email address is required."
+      });
     }
 
     if (!name || !name.trim()) {
@@ -277,12 +275,10 @@ router.get("/eligibility/:identifier", (req, res) => {
 router.get("/me", authenticateToken, (req, res) => {
   const user = db.findUserById(req.user.id);
   if (!user) {
-    return res
-      .status(404)
-      .json({
-        error: "USER_NOT_FOUND",
-        message: "User profile no longer exists."
-      });
+    return res.status(404).json({
+      error: "USER_NOT_FOUND",
+      message: "User profile no longer exists."
+    });
   }
   return res.json({ user: sanitizeUser(user) });
 });

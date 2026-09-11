@@ -58,12 +58,10 @@ router.post("/approve-user/:userId", checkAdminAuth, (req, res) => {
     const user = db.findUserById(userId);
 
     if (!user) {
-      return res
-        .status(404)
-        .json({
-          error: "USER_NOT_FOUND",
-          message: "User not found in system."
-        });
+      return res.status(404).json({
+        error: "USER_NOT_FOUND",
+        message: "User not found in system."
+      });
     }
 
     const updatedUser = db.updateUser(userId, {
@@ -98,12 +96,10 @@ router.post("/reject-user/:userId", checkAdminAuth, (req, res) => {
 
     const user = db.findUserById(userId);
     if (!user) {
-      return res
-        .status(404)
-        .json({
-          error: "USER_NOT_FOUND",
-          message: "User not found in system."
-        });
+      return res.status(404).json({
+        error: "USER_NOT_FOUND",
+        message: "User not found in system."
+      });
     }
 
     const updatedUser = db.updateUser(userId, {

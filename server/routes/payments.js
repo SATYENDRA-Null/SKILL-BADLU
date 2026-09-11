@@ -23,22 +23,18 @@ router.post("/create-order", (req, res) => {
     const { userId, amount = 99, purpose = "ONBOARDING_FEE" } = req.body;
 
     if (!userId) {
-      return res
-        .status(400)
-        .json({
-          error: "MISSING_USER_ID",
-          message: "User ID is required to initiate order."
-        });
+      return res.status(400).json({
+        error: "MISSING_USER_ID",
+        message: "User ID is required to initiate order."
+      });
     }
 
     const user = db.findUserById(userId);
     if (!user) {
-      return res
-        .status(404)
-        .json({
-          error: "USER_NOT_FOUND",
-          message: "User not found in system."
-        });
+      return res.status(404).json({
+        error: "USER_NOT_FOUND",
+        message: "User not found in system."
+      });
     }
 
     if (user.verification_status !== "APPROVED") {
@@ -104,12 +100,10 @@ router.post("/verify-and-pay", (req, res) => {
     } = req.body;
 
     if (!userId) {
-      return res
-        .status(400)
-        .json({
-          error: "MISSING_USER_ID",
-          message: "User ID is required for payment verification."
-        });
+      return res.status(400).json({
+        error: "MISSING_USER_ID",
+        message: "User ID is required for payment verification."
+      });
     }
 
     const user = db.findUserById(userId);
@@ -208,12 +202,10 @@ router.get("/receipt/:paymentId", (req, res) => {
     const payment = db.findPaymentById(paymentId);
 
     if (!payment) {
-      return res
-        .status(404)
-        .json({
-          error: "RECEIPT_NOT_FOUND",
-          message: "No invoice found for this payment ID."
-        });
+      return res.status(404).json({
+        error: "RECEIPT_NOT_FOUND",
+        message: "No invoice found for this payment ID."
+      });
     }
 
     const receipt = {
