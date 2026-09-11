@@ -690,39 +690,40 @@ checks = [
 
 Implemented in [js/admin.js](file:///d:/SKILL%20BADLU/js/admin.js).
 
-### 8.1 Applicant Onboarding Pipeline & Security Deposit
+### 8.1 Applicant Onboarding Pipeline & Security Screening
 To prevent spam, sybil attacks, and low-quality accounts, new applicants submit:
 1. Proof of identity and skill proficiency portfolio.
-2. ₹499 fully refundable security deposit.
-3. Account state is marked as `verified_status = "PENDING_REVIEW"`, `kyc_status = "PENDING"`.
+2. Account state is marked as `verified_status = "PENDING_REVIEW"`, `kyc_status = "PENDING"`, `fee_status = "UNPAID"`.
+3. Pre-login verification gate prevents unverified marketplace login.
 
-### 8.2 Admin Moderation & Welcome Grant Protocol
+### 8.2 Admin Moderation & ₹99 Login Payment Protocol
 When an administrator reviews an applicant in the KYC Queue:
 - **Approval Path:**
-  1. `user.verified_status = "VERIFIED"`
-  2. `user.kyc_status = "VERIFIED"`
-  3. `ledger.insertTransaction(From: "PLATFORM_TREASURY", To: user.id, Amount: 50, Type: "ONBOARDING_WELCOME_GRANT")`
-  4. User is now active with 50 starting credits.
+  1. Admin approves applicant: `user.verified_status = "VERIFIED"`, `user.kyc_status = "VERIFIED"`, `fee_status = "PENDING_PAYMENT"`.
+  2. At login time on `login.html`, user is prompted with the ₹99 Neo-Brutalist Payment Gateway (UPI / QR / Cards / NetBanking).
+  3. Upon ₹99 payment completion: `user.fee_status = "PAID"`, payment receipt generated with immutable transaction ID, and `ONBOARDING_WELCOME_GRANT` (50 CR) is minted from `PLATFORM_TREASURY`.
+  4. User enters dashboard with 50 starting credits.
 - **Rejection Path:**
-  1. `user.verified_status = "REJECTED"`
-  2. ₹499 security deposit is refunded to applicant's payment method.
+  1. `user.verified_status = "REJECTED"`, rejection reason stored.
+  2. If fee was previously paid, automated refund of ₹99 is triggered.
 
 ### 8.3 User KYC & Dispute Arbitration Lifecycle Flowchart
 
 ```mermaid
 flowchart TD
-    AppStart([Applicant Submits Registration]) --> SubmitDeposit[Submit Skill Credentials + ₹499 Deposit]
-    SubmitDeposit --> EnqueueKYC["Mark PENDING_REVIEW & Insert into Admin KYC Queue"]
+    AppStart([Applicant Submits Registration]) --> SubmitCreds[Submit Skill Credentials]
+    SubmitCreds --> EnqueueKYC["Mark PENDING_REVIEW & Insert into Admin KYC Queue"]
     
     EnqueueKYC --> AdminReview{Admin Decision}
     
     AdminReview -->|Approve| ApproveUser["Set verified_status: VERIFIED, kyc_status: VERIFIED"]
-    ApproveUser --> MintWelcome["Ledger Append: ONBOARDING_WELCOME_GRANT (PLATFORM_TREASURY -> User: +50 CR)"]
+    ApproveUser --> LoginPayGate["User Logs In -> Prompt ₹99 Onboarding Payment Gateway"]
+    LoginPayGate --> PaySettled["Payment Settled: fee_status: PAID, Record Payment Tx"]
+    PaySettled --> MintWelcome["Ledger Append: ONBOARDING_WELCOME_GRANT (PLATFORM_TREASURY -> User: +50 CR)"]
     MintWelcome --> SwapperActive([User Granted Marketplace Access])
     
     AdminReview -->|Reject| RejectUser["Set verified_status: REJECTED, Store Reason"]
-    RejectUser --> RefundDeposit[Trigger ₹499 Automated Deposit Refund]
-    RefundDeposit --> AppClosed([Application Closed])
+    RejectUser --> AppClosed([Application Closed / Notice Displayed])
 ```
 
 ---

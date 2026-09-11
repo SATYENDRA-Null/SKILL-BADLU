@@ -24,6 +24,9 @@ const INITIAL_USERS = [
     avatar: "AD",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    fee_status: "PAID",
+    fee_amount: 0,
+    payment_ref: "SYSTEM_EXEMPT",
     creator_status: "APPROVED",
     can_upload_videos: true,
     avg_rating: 5.00,
@@ -42,6 +45,11 @@ const INITIAL_USERS = [
     avatar: "LV",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    fee_status: "PAID",
+    fee_amount: 99,
+    fee_paid_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6),
+    payment_ref: "PAY_99_LV8921",
+    payment_method: "UPI (Google Pay)",
     creator_status: "APPROVED",
     can_upload_videos: true,
     avg_rating: 4.95,
@@ -60,9 +68,15 @@ const INITIAL_USERS = [
     id: "user_b",
     name: "Camille Dubois",
     email: "camille.dubois@paris.fr",
+    role: "swapper",
     avatar: "CD",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    fee_status: "PAID",
+    fee_amount: 99,
+    fee_paid_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+    payment_ref: "PAY_99_CD4312",
+    payment_method: "Credit Card",
     creator_status: "APPROVED",
     can_upload_videos: true,
     avg_rating: 4.90,
@@ -81,9 +95,15 @@ const INITIAL_USERS = [
     id: "user_c",
     name: "Aarav Sharma",
     email: "aarav.sharma@design.io",
+    role: "swapper",
     avatar: "AS",
     verified_status: "VERIFIED",
     kyc_status: "VERIFIED",
+    fee_status: "PAID",
+    fee_amount: 99,
+    fee_paid_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4),
+    payment_ref: "PAY_99_AS2209",
+    payment_method: "UPI (PhonePe)",
     creator_status: "APPROVED",
     can_upload_videos: true,
     avg_rating: 4.80,
@@ -101,9 +121,15 @@ const INITIAL_USERS = [
     id: "user_d",
     name: "Kaito Tanaka",
     email: "kaito.tanaka@tokyo.jp",
+    role: "swapper",
     avatar: "KT",
     verified_status: "VERIFIED",
-    kyc_status: "UNSUBMITTED",
+    kyc_status: "VERIFIED",
+    fee_status: "PAID",
+    fee_amount: 99,
+    fee_paid_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
+    payment_ref: "PAY_99_KT1094",
+    payment_method: "Net Banking",
     creator_status: "NOT_REQUESTED",
     can_upload_videos: false,
     avg_rating: 4.70,
@@ -120,9 +146,14 @@ const INITIAL_USERS = [
     id: "user_e",
     name: "Zara Chen",
     email: "zara.chen@ventures.co",
+    role: "swapper",
     avatar: "ZC",
     verified_status: "PENDING_REVIEW", // In admin review queue
     kyc_status: "PENDING",
+    fee_status: "UNPAID",
+    fee_amount: 0,
+    payment_ref: null,
+    payment_method: null,
     creator_status: "PENDING_APPROVAL",
     can_upload_videos: false,
     avg_rating: 5.00,
@@ -134,6 +165,77 @@ const INITIAL_USERS = [
       { skill_id: "sk_python", name: "Python & FastAPI", category: "tech", level: 1 }
     ],
     bank_details: { bank: "Axis Bank", ifsc: "UTIB0001099", account: "•••• 3190" }
+  },
+  {
+    id: "user_f",
+    name: "Priya Patel",
+    email: "priya.patel@ai.in",
+    role: "swapper",
+    avatar: "PP",
+    verified_status: "VERIFIED", // Admin-Verified, Ready for ₹99 login payment
+    kyc_status: "VERIFIED",
+    fee_status: "PENDING_PAYMENT",
+    fee_amount: 0,
+    payment_ref: null,
+    payment_method: null,
+    creator_status: "NOT_REQUESTED",
+    can_upload_videos: false,
+    avg_rating: 5.00,
+    last_active: new Date(),
+    skills_have: [
+      { skill_id: "sk_growth", name: "Growth Marketing", category: "biz", level: 4 }
+    ],
+    skills_want: [
+      { skill_id: "sk_react", name: "React & Next.js", category: "tech", level: 2 }
+    ],
+    bank_details: null
+  }
+];
+
+const INITIAL_ONBOARDING_PAYMENTS = [
+  {
+    id: "PAY_99_LV8921",
+    user_id: "user_a",
+    user_name: "Leo Vance",
+    user_email: "leo.vance@example.com",
+    amount: 99,
+    currency: "INR",
+    method: "UPI (Google Pay)",
+    status: "SETTLED",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6)
+  },
+  {
+    id: "PAY_99_CD4312",
+    user_id: "user_b",
+    user_name: "Camille Dubois",
+    user_email: "camille.dubois@paris.fr",
+    amount: 99,
+    currency: "INR",
+    method: "Credit Card",
+    status: "SETTLED",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5)
+  },
+  {
+    id: "PAY_99_AS2209",
+    user_id: "user_c",
+    user_name: "Aarav Sharma",
+    user_email: "aarav.sharma@design.io",
+    amount: 99,
+    currency: "INR",
+    method: "UPI (PhonePe)",
+    status: "SETTLED",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4)
+  },
+  {
+    id: "PAY_99_KT1094",
+    user_id: "user_d",
+    user_name: "Kaito Tanaka",
+    user_email: "kaito.tanaka@tokyo.jp",
+    amount: 99,
+    currency: "INR",
+    method: "Net Banking",
+    status: "SETTLED",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3)
   }
 ];
 
@@ -207,6 +309,15 @@ const INITIAL_TRANSACTIONS = [
     session_id: null,
     from_user: "PLATFORM_TREASURY",
     to_user: "user_c",
+    amount: 100,
+    transaction_type: "ONBOARDING_WELCOME_GRANT",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+  },
+  {
+    id: "tx_init_grant_d",
+    session_id: null,
+    from_user: "PLATFORM_TREASURY",
+    to_user: "user_d",
     amount: 100,
     transaction_type: "ONBOARDING_WELCOME_GRANT",
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
@@ -319,14 +430,33 @@ class StateStore {
   constructor() {
     this.currentUserId = localStorage.getItem("sb_current_user_id") || null;
     this.skills = [...INITIAL_SKILLS];
-    this.users = [...INITIAL_USERS];
+    
+    // Load persisted users or fallback to initial seed
+    const savedUsers = localStorage.getItem("sb_users_v3");
+    this.users = savedUsers ? JSON.parse(savedUsers) : JSON.parse(JSON.stringify(INITIAL_USERS));
+
+    const savedPayments = localStorage.getItem("sb_onboarding_payments_v3");
+    this.onboarding_payments = savedPayments ? JSON.parse(savedPayments) : JSON.parse(JSON.stringify(INITIAL_ONBOARDING_PAYMENTS));
+
+    const savedTx = localStorage.getItem("sb_transactions_v3");
+    this.transactions = savedTx ? JSON.parse(savedTx) : JSON.parse(JSON.stringify(INITIAL_TRANSACTIONS));
+
     this.sessions = [...INITIAL_SESSIONS];
-    this.transactions = [...INITIAL_TRANSACTIONS];
     this.courses = [...INITIAL_COURSES];
     this.enrollments = [...INITIAL_ENROLLMENTS];
     this.certificates = [...INITIAL_CERTIFICATES];
     this.payouts = [];
     this.subscribers = [];
+  }
+
+  saveState() {
+    try {
+      localStorage.setItem("sb_users_v3", JSON.stringify(this.users));
+      localStorage.setItem("sb_onboarding_payments_v3", JSON.stringify(this.onboarding_payments));
+      localStorage.setItem("sb_transactions_v3", JSON.stringify(this.transactions));
+    } catch (e) {
+      console.error("Failed to save state to localStorage", e);
+    }
   }
 
   subscribe(callback) {
@@ -344,9 +474,67 @@ class StateStore {
     return !!this.currentUserId && !!this.getCurrentUser();
   }
 
-  login(userId) {
+  /**
+   * Evaluates if a user is eligible to login or requires admin verification / ₹99 payment
+   */
+  checkLoginEligibility(userId) {
     const user = this.getUser(userId);
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      return { eligible: false, reason: "NOT_FOUND", message: "User account not found." };
+    }
+
+    if (user.role === "admin") {
+      return { eligible: true, user };
+    }
+
+    // Step 1: Pre-login Admin Verification check
+    if (user.verified_status === "PENDING_REVIEW") {
+      return {
+        eligible: false,
+        reason: "PENDING_VERIFICATION",
+        user,
+        message: "Your application is currently pending Admin Verification. Please wait for administrator review."
+      };
+    }
+
+    if (user.verified_status === "REJECTED") {
+      return {
+        eligible: false,
+        reason: "REJECTED",
+        user,
+        message: user.rejection_reason || "Your application was rejected by the platform administrator."
+      };
+    }
+
+    // Step 2: Post-verification ₹99 payment check
+    if (user.verified_status === "VERIFIED" && user.fee_status !== "PAID") {
+      return {
+        eligible: false,
+        reason: "PAYMENT_REQUIRED",
+        user,
+        feeAmount: 99,
+        message: "Admin Verification Successful! Complete your one-time ₹99 Onboarding & Ledger Activation Fee to enter."
+      };
+    }
+
+    return { eligible: true, user };
+  }
+
+  login(userId, { bypassChecks = false } = {}) {
+    const user = this.getUser(userId);
+    if (!user) throw new Error("User not found.");
+
+    if (!bypassChecks) {
+      const eligibility = this.checkLoginEligibility(userId);
+      if (!eligibility.eligible) {
+        const err = new Error(eligibility.message);
+        err.reason = eligibility.reason;
+        err.user = eligibility.user;
+        err.feeAmount = eligibility.feeAmount || 99;
+        throw err;
+      }
+    }
+
     this.currentUserId = userId;
     localStorage.setItem("sb_current_user_id", userId);
     this.notify("AUTH_STATE_CHANGED", { user });
@@ -370,6 +558,121 @@ class StateStore {
 
   getSkill(skillId) {
     return this.skills.find(s => s.id === skillId);
+  }
+
+  /**
+   * Registers a new applicant in the PENDING_REVIEW state
+   */
+  registerUser({ name, email, password, skillsHave = [], skillsWant = [] }) {
+    const cleanEmail = email.trim().toLowerCase();
+    const existing = this.users.find(u => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      throw new Error("An account with this email address already exists.");
+    }
+
+    const userId = "user_" + Math.random().toString(36).substring(2, 8);
+    const initials = name.split(" ").map(p => p[0]).join("").toUpperCase().substring(0, 2) || "NW";
+
+    const newUser = {
+      id: userId,
+      name: name.trim(),
+      email: cleanEmail,
+      role: "swapper",
+      avatar: initials,
+      verified_status: "PENDING_REVIEW", // Pre-login admin review required
+      kyc_status: "PENDING",
+      fee_status: "UNPAID",
+      fee_amount: 0,
+      payment_ref: null,
+      payment_method: null,
+      creator_status: "NOT_REQUESTED",
+      can_upload_videos: false,
+      avg_rating: 5.00,
+      last_active: new Date(),
+      skills_have: skillsHave.length > 0 ? skillsHave : [{ skill_id: "sk_python", name: "Python / General Dev", category: "tech", level: 3 }],
+      skills_want: skillsWant.length > 0 ? skillsWant : [{ skill_id: "sk_uiux", name: "UI/UX & Figma", category: "art", level: 2 }],
+      bank_details: null
+    };
+
+    this.users.unshift(newUser);
+    this.saveState();
+    this.notify("USER_REGISTERED", { user: newUser });
+    return newUser;
+  }
+
+  /**
+   * Records the post-verification ₹99 onboarding payment and mints 50 Welcome Credits
+   */
+  recordOnboardingPayment(userId, { method = "UPI (Instant)", transactionRef = null } = {}) {
+    const user = this.getUser(userId);
+    if (!user) throw new Error("User not found.");
+
+    if (user.verified_status !== "VERIFIED") {
+      throw new Error("Admin verification required before completing onboarding payment.");
+    }
+
+    const payId = transactionRef || "PAY_99_" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const now = new Date();
+
+    user.fee_status = "PAID";
+    user.fee_amount = 99;
+    user.fee_paid_at = now;
+    user.payment_ref = payId;
+    user.payment_method = method;
+
+    const paymentRecord = {
+      id: payId,
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      amount: 99,
+      currency: "INR",
+      method: method,
+      status: "SETTLED",
+      created_at: now
+    };
+
+    this.onboarding_payments.unshift(paymentRecord);
+
+    // Mint 50 Welcome Platform Credits in ledger if not already minted
+    const existingGrant = this.transactions.find(
+      tx => tx.to_user === user.id && tx.transaction_type === "ONBOARDING_WELCOME_GRANT"
+    );
+    if (!existingGrant) {
+      this.transactions.unshift({
+        id: "tx_grant_" + user.id + "_" + Date.now().toString().slice(-4),
+        session_id: null,
+        from_user: "PLATFORM_TREASURY",
+        to_user: user.id,
+        amount: 50,
+        transaction_type: "ONBOARDING_WELCOME_GRANT",
+        created_at: now
+      });
+    }
+
+    this.saveState();
+    this.notify("PAYMENT_RECORDED", { user, payment: paymentRecord });
+    return { user, payment: paymentRecord };
+  }
+
+  getOnboardingPayments() {
+    return this.onboarding_payments || [];
+  }
+
+  getRevenueMetrics() {
+    const payments = this.getOnboardingPayments();
+    const totalRevenue = payments.reduce((acc, p) => acc + (p.amount || 99), 0);
+    const paidCount = this.users.filter(u => u.role !== "admin" && u.fee_status === "PAID").length;
+    const pendingVerificationCount = this.users.filter(u => u.verified_status === "PENDING_REVIEW").length;
+    const pendingPaymentCount = this.users.filter(u => u.verified_status === "VERIFIED" && u.fee_status !== "PAID" && u.role !== "admin").length;
+
+    return {
+      totalRevenue,
+      paidCount,
+      pendingVerificationCount,
+      pendingPaymentCount,
+      totalUsers: this.users.length
+    };
   }
 
   // Course & Education State Accessors
@@ -432,3 +735,4 @@ class StateStore {
 }
 
 window.store = new StateStore();
+

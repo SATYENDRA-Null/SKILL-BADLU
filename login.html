@@ -318,6 +318,123 @@
       letter-spacing: 0.04em;
     }
 
+    /* Modal Backdrop and Containers */
+    .auth-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-modal-backdrop.active {
+      display: flex;
+    }
+
+    .auth-modal-box {
+      max-width: 540px;
+      width: 100%;
+      background: #ffffff;
+      border: 4px solid #000000;
+      box-shadow: 12px 12px 0px #000000;
+      overflow: hidden;
+      animation: popIn 0.15s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .auth-modal-header {
+      background-color: #000000;
+      color: #ffffff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .auth-modal-title {
+      font-family: var(--font-heading, sans-serif);
+      font-weight: 900;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-modal-body {
+      padding: 24px 22px;
+    }
+
+    /* Payment Method Tabs */
+    .pay-methods-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .pay-method-btn {
+      padding: 10px 6px;
+      border: 2px solid #000000;
+      box-shadow: 2.5px 2.5px 0px #000000;
+      background: #ffffff;
+      font-family: var(--font-heading, sans-serif);
+      font-weight: 900;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.1s ease;
+    }
+
+    .pay-method-btn.active {
+      background: #ffe600;
+      transform: translate(1.5px, 1.5px);
+      box-shadow: 1px 1px 0px #000000;
+    }
+
+    .pay-summary-box {
+      background: #f7f6ef;
+      border: 2.5px solid #000000;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .pay-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+    }
+
+    .pay-summary-row.total-row {
+      border-top: 2px dashed #000000;
+      padding-top: 8px;
+      margin-top: 8px;
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: #000000;
+    }
+
+    .badge-pill-small {
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 6px;
+      border: 1.5px solid #000000;
+      text-transform: uppercase;
+    }
+
     #toast-notification {
       position: fixed;
       top: 24px;
@@ -331,7 +448,7 @@
       font-weight: 900;
       font-size: 0.95rem;
       display: none;
-      z-index: 9999;
+      z-index: 11000;
       animation: toastSlideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -379,20 +496,53 @@
       <!-- 1-Click Fast Demo Accounts -->
       <div class="demo-accounts-box">
         <div class="demo-accounts-title">
-          <span>⚡ 1-Click Fast Demo Login</span>
+          <span>⚡ Fast Demo Profiles (Click to test flows)</span>
           <span style="background:#ffe600; padding:2px 7px; border:1.5px solid #000; font-size:0.7rem;">INSTANT</span>
         </div>
         <div class="demo-account-cards">
-          <!-- Leo Vance -->
+          <!-- Leo Vance (Verified & Paid) -->
           <div class="demo-user-card" onclick="performLogin('user_a')">
             <div class="demo-user-info">
               <div class="demo-user-avatar">LV</div>
               <div>
                 <div class="demo-user-name">Leo Vance (Expert Fullstack)</div>
-                <div class="demo-user-skills">Python &amp; FastAPI, Docker &amp; K8s</div>
+                <div class="demo-user-skills">
+                  <span class="badge-pill-small" style="background:#00ff66;">VERIFIED</span>
+                  <span class="badge-pill-small" style="background:#ffffff;">&#8377;99 PAID</span>
+                  &bull; 150 CR
+                </div>
               </div>
             </div>
-            <div class="demo-user-balance">150 CR</div>
+            <div class="demo-user-balance">ENTER →</div>
+          </div>
+
+          <!-- Priya Patel (Admin-Verified, Waiting for ₹99 Payment) -->
+          <div class="demo-user-card" onclick="performLogin('user_f')" style="background:#f0fdf4; border-color:#00aa44;">
+            <div class="demo-user-info">
+              <div class="demo-user-avatar" style="background:#00ff66; color:#000;">PP</div>
+              <div>
+                <div class="demo-user-name">Priya Patel (Admin Verified)</div>
+                <div class="demo-user-skills">
+                  <span class="badge-pill-small" style="background:#00ff66;">✓ ADMIN VERIFIED</span>
+                  <span class="badge-pill-small" style="background:#ffe600;">&#8377;99 PENDING</span>
+                </div>
+              </div>
+            </div>
+            <div class="demo-user-balance" style="background:#ffe600; font-size:0.75rem;">PAY &#8377;99</div>
+          </div>
+
+          <!-- Zara Chen (Pending Admin Verification) -->
+          <div class="demo-user-card" onclick="performLogin('user_e')" style="background:#fffcf0; border-color:#d97706;">
+            <div class="demo-user-info">
+              <div class="demo-user-avatar" style="background:#f59e0b; color:#fff;">ZC</div>
+              <div>
+                <div class="demo-user-name">Zara Chen (Applicant)</div>
+                <div class="demo-user-skills">
+                  <span class="badge-pill-small" style="background:#ffe600; color:#000;">⏳ PENDING ADMIN REVIEW</span>
+                </div>
+              </div>
+            </div>
+            <div class="demo-user-balance" style="background:#f3f4f6; color:#666; font-size:0.72rem;">REVIEW</div>
           </div>
 
           <!-- Camille Dubois -->
@@ -401,22 +551,10 @@
               <div class="demo-user-avatar">CD</div>
               <div>
                 <div class="demo-user-name">Camille Dubois (Paris, FR)</div>
-                <div class="demo-user-skills">French, Ceramics &amp; Pottery</div>
+                <div class="demo-user-skills"><span class="badge-pill-small" style="background:#00ff66;">VERIFIED</span> &bull; 50 CR</div>
               </div>
             </div>
-            <div class="demo-user-balance">50 CR</div>
-          </div>
-
-          <!-- Aarav Sharma -->
-          <div class="demo-user-card" onclick="performLogin('user_c')">
-            <div class="demo-user-info">
-              <div class="demo-user-avatar">AS</div>
-              <div>
-                <div class="demo-user-name">Aarav Sharma (UI/UX Designer)</div>
-                <div class="demo-user-skills">UI/UX &amp; Figma, React</div>
-              </div>
-            </div>
-            <div class="demo-user-balance">100 CR</div>
+            <div class="demo-user-balance">ENTER →</div>
           </div>
 
           <!-- System Administrator (Admin) -->
@@ -425,7 +563,7 @@
               <div class="demo-user-avatar" style="background:#ffe600; color:#000;">AD</div>
               <div>
                 <div class="demo-user-name">System Administrator <span style="font-size:0.68rem; background:#000; color:#fff; padding:1px 5px; font-weight:900;">ADMIN</span></div>
-                <div class="demo-user-skills">Platform Curator &amp; Ledger Audit View</div>
+                <div class="demo-user-skills">Approve Users &amp; Track &#8377;99 Onboarding Revenue</div>
               </div>
             </div>
             <div class="demo-user-balance" style="font-size:0.75rem; font-weight:900; background:#ffe600; color:#000; padding:2px 6px; border:1.5px solid #000;">ADMIN</div>
@@ -440,6 +578,11 @@
           <input type="text" class="auth-input" id="auth-name" placeholder="e.g. Alex Morgan" />
         </div>
 
+        <div class="auth-input-group" id="signup-skills-group" style="display:none;">
+          <label class="auth-label">Skills You Can Teach</label>
+          <input type="text" class="auth-input" id="auth-skills" placeholder="e.g. Python, UI/UX Design, French" />
+        </div>
+
         <div class="auth-input-group">
           <label class="auth-label">Email Address</label>
           <input type="email" class="auth-input" id="auth-email" placeholder="leo.vance@example.com"
@@ -452,16 +595,177 @@
             value="password123" required />
         </div>
 
+        <div id="signup-policy-note" style="display:none; background:#f0fdf4; border:2px dashed #00aa44; padding:10px 12px; margin-bottom:14px; font-size:0.78rem; line-height:1.4;">
+          <strong>🛡️ Verified Onboarding Workflow:</strong><br/>
+          1. Your profile will be submitted for <strong>Admin Identity Verification</strong>.<br/>
+          2. After Admin approves you, you will pay the one-time <strong>&#8377;99 Onboarding Fee</strong> at login to unlock your 50 Welcome Credits!
+        </div>
+
         <button type="submit" class="btn-auth-submit" id="btn-auth-submit">
           Enter Platform →
         </button>
       </form>
 
       <div class="auth-footer-notice">
-        100% Client-Side Reactive State // AES-Encrypted Session Mock // Multi-Factor Ledger
+        100% Client-Side Reactive State // Admin Pre-Verification // &#8377;99 Post-Verification Gateway
       </div>
     </div>
   </main>
+
+  <!-- =========================================================================
+       MODAL 1: PENDING ADMIN VERIFICATION NOTICE
+       ========================================================================= -->
+  <div class="auth-modal-backdrop" id="modal-pending-review">
+    <div class="auth-modal-box">
+      <div class="auth-modal-header" style="background:#000000;">
+        <div class="auth-modal-title">
+          <span style="background:#ffe600; color:#000; padding:2px 6px; font-size:0.75rem;">REVIEW</span>
+          <span>ADMIN VERIFICATION PENDING</span>
+        </div>
+        <button onclick="closeModal('modal-pending-review')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; font-weight:900;">✕</button>
+      </div>
+      <div class="auth-modal-body">
+        <div style="background:#fffcf0; border:2.5px solid #000; padding:16px; margin-bottom:16px; display:flex; gap:12px; align-items:flex-start;">
+          <div style="font-size:2rem; line-height:1;">⏳</div>
+          <div>
+            <div style="font-family:var(--font-heading); font-weight:900; font-size:1.1rem;" id="modal-pending-name">
+              Zara Chen
+            </div>
+            <div style="font-size:0.8rem; color:#555; margin-top:2px;" id="modal-pending-email">
+              zara.chen@ventures.co
+            </div>
+            <div style="margin-top:8px;">
+              <span class="badge-pill-small" style="background:#ffe600; color:#000;">KYC: PENDING ADMIN APPROVAL</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size:0.88rem; color:#333; line-height:1.5; margin-bottom:16px;">
+          As part of Skill Badlu's peer-to-peer security protocol, all member profiles must be <strong>verified by the Administrator</strong> before accessing the marketplace.
+        </p>
+
+        <p style="font-size:0.84rem; color:#555; line-height:1.4; background:#f4f4f0; padding:10px 12px; border-left:4px solid #000; margin-bottom:20px;">
+          <strong>Next Step:</strong> Once the Admin verifies your credentials, you will be prompted at login to complete the <strong>&#8377;99 onboarding fee</strong> and claim your <strong>50 Welcome Credits</strong>.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="admin.html" class="btn-auth-submit" style="text-align:center; text-decoration:none; background:#ffe600; color:#000; padding:12px; font-size:0.95rem;">
+            ⚙️ Open Admin Portal to Approve User →
+          </a>
+          <button type="button" onclick="closeModal('modal-pending-review')" class="btn-auth-submit" style="background:#ffffff; color:#000; padding:10px; font-size:0.88rem; border:2.5px solid #000; box-shadow:3px 3px 0px #000;">
+            Close &amp; Return
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: &#8377;99 POST-VERIFICATION LOGIN PAYMENT GATEWAY
+       ========================================================================= -->
+  <div class="auth-modal-backdrop" id="modal-payment-gateway">
+    <div class="auth-modal-box" style="max-width:560px;">
+      <div class="auth-modal-header" style="background:#000000;">
+        <div class="auth-modal-title">
+          <span style="background:#00ff66; color:#000; padding:2px 6px; font-size:0.75rem;">SECURE PAY</span>
+          <span>&#8377;99 ONBOARDING PAYMENT GATEWAY</span>
+        </div>
+        <button onclick="closeModal('modal-payment-gateway')" style="background:none; border:none; color:#fff; font-size:1.3rem; cursor:pointer; font-weight:900;">✕</button>
+      </div>
+      <div class="auth-modal-body">
+        
+        <!-- Verification Success Banner -->
+        <div style="background:#00ff66; border:2.5px solid #000; padding:12px 14px; margin-bottom:16px; box-shadow:3px 3px 0px #000;">
+          <div style="font-weight:900; font-size:0.92rem; text-transform:uppercase; color:#000;">
+            ✓ Admin Verification Successful!
+          </div>
+          <div style="font-size:0.8rem; color:#111; margin-top:2px;">
+            Member: <strong id="pay-user-name">Priya Patel</strong> (<span id="pay-user-email">priya.patel@ai.in</span>)
+          </div>
+        </div>
+
+        <p style="font-size:0.86rem; color:#444; line-height:1.4; margin-bottom:14px;">
+          Your application has been verified by the Administrator. Complete your one-time &#8377;99 onboarding payment to activate your ledger wallet and unlock 50 Platform Welcome Credits.
+        </p>
+
+        <!-- Itemized Ledger Order Summary -->
+        <div class="pay-summary-box">
+          <div class="pay-summary-row">
+            <span style="color:#555;">Platform Screening &amp; Identity Verification:</span>
+            <span style="font-weight:700;">&#8377;99.00</span>
+          </div>
+          <div class="pay-summary-row">
+            <span style="color:#555;">50 Welcome Platform Credits Grant:</span>
+            <span style="font-weight:900; color:#00aa44;">FREE (+50 CR)</span>
+          </div>
+          <div class="pay-summary-row">
+            <span style="color:#555;">Double-Entry Cryptographic Ledger Setup:</span>
+            <span style="font-weight:700; color:#000;">INCLUDED</span>
+          </div>
+          <div class="pay-summary-row total-row">
+            <span>TOTAL AMOUNT DUE:</span>
+            <span style="color:#000; background:#00ff66; padding:2px 8px; border:1.5px solid #000;">&#8377;99.00</span>
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div style="font-weight:900; font-size:0.82rem; text-transform:uppercase; margin-bottom:6px;">
+          Select Payment Method:
+        </div>
+        <div class="pay-methods-tabs">
+          <button type="button" class="pay-method-btn active" id="pay-tab-upi" onclick="selectPayMethod('upi')">
+            📱 UPI / QR
+          </button>
+          <button type="button" class="pay-method-btn" id="pay-tab-card" onclick="selectPayMethod('card')">
+            💳 Card
+          </button>
+          <button type="button" class="pay-method-btn" id="pay-tab-nb" onclick="selectPayMethod('netbanking')">
+            🏦 NetBanking
+          </button>
+        </div>
+
+        <!-- UPI Form Content -->
+        <div id="pay-content-upi" style="background:#faf9f5; border:2px solid #000; padding:12px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-weight:800; font-size:0.82rem;">Instant UPI Apps &amp; QR:</span>
+            <span style="font-size:0.72rem; font-weight:900; background:#00ff66; padding:1px 5px; border:1px solid #000;">FASTEST</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:10px;">
+            <button type="button" class="pay-method-btn" style="padding:6px; font-size:0.75rem; background:#fff;" onclick="setUpiApp('Google Pay')">Google Pay</button>
+            <button type="button" class="pay-method-btn" style="padding:6px; font-size:0.75rem; background:#fff;" onclick="setUpiApp('PhonePe')">PhonePe</button>
+            <button type="button" class="pay-method-btn" style="padding:6px; font-size:0.75rem; background:#fff;" onclick="setUpiApp('Paytm UPI')">Paytm</button>
+            <button type="button" class="pay-method-btn" style="padding:6px; font-size:0.75rem; background:#fff;" onclick="setUpiApp('BHIM UPI')">BHIM UPI</button>
+          </div>
+          <input type="text" class="auth-input" id="upi-vpa-input" placeholder="e.g. yourname@okhdfcbank" value="swapper@upi" style="width:100%; box-sizing:border-box; padding:8px 10px; font-size:0.85rem;" />
+        </div>
+
+        <!-- Card Form Content -->
+        <div id="pay-content-card" style="display:none; background:#faf9f5; border:2px solid #000; padding:12px; margin-bottom:16px;">
+          <input type="text" class="auth-input" placeholder="Card Number (•••• •••• •••• 4242)" value="4111 •••• •••• 9921" style="width:100%; box-sizing:border-box; padding:8px 10px; font-size:0.85rem; margin-bottom:8px;" />
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <input type="text" class="auth-input" placeholder="MM/YY" value="09/28" style="padding:8px 10px; font-size:0.85rem;" />
+            <input type="password" class="auth-input" placeholder="CVV" value="888" style="padding:8px 10px; font-size:0.85rem;" />
+          </div>
+        </div>
+
+        <!-- NetBanking Form Content -->
+        <div id="pay-content-netbanking" style="display:none; background:#faf9f5; border:2px solid #000; padding:12px; margin-bottom:16px;">
+          <select class="auth-input" style="width:100%; box-sizing:border-box; padding:8px 10px; font-size:0.85rem;" id="netbanking-bank-select">
+            <option value="HDFC Bank">HDFC Bank</option>
+            <option value="ICICI Bank">ICICI Bank</option>
+            <option value="State Bank of India">State Bank of India</option>
+            <option value="Axis Bank">Axis Bank</option>
+          </select>
+        </div>
+
+        <!-- Action Button -->
+        <button type="button" class="btn-auth-submit" id="btn-process-payment" onclick="processOnboardingFeePayment()">
+          ⚡ Pay &#8377;99 &amp; Enter Platform →
+        </button>
+
+      </div>
+    </div>
+  </div>
 
   <!-- Core Data Store -->
   <script src="js/store.js"></script>
@@ -472,18 +776,27 @@
     const tabSignIn = document.getElementById("tab-btn-signin");
     const tabSignUp = document.getElementById("tab-btn-signup");
     const nameGroup = document.getElementById("signup-name-group");
+    const skillsGroup = document.getElementById("signup-skills-group");
+    const policyNote = document.getElementById("signup-policy-note");
     const submitBtn = document.getElementById("btn-auth-submit");
+
+    let currentPendingUserId = null;
+    let currentSelectedPayMethod = "UPI (Instant)";
 
     function setMode(mode) {
       if (mode === "signup") {
         tabSignUp.classList.add("active");
         tabSignIn.classList.remove("active");
         nameGroup.style.display = "flex";
-        submitBtn.textContent = "Create Account & Enter →";
+        skillsGroup.style.display = "flex";
+        policyNote.style.display = "block";
+        submitBtn.textContent = "Submit for Admin Verification →";
       } else {
         tabSignIn.classList.add("active");
         tabSignUp.classList.remove("active");
         nameGroup.style.display = "none";
+        skillsGroup.style.display = "none";
+        policyNote.style.display = "none";
         submitBtn.textContent = "Enter Platform →";
       }
     }
@@ -497,32 +810,174 @@
       setMode("signup");
     }
 
+    // Modal helpers
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add("active");
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove("active");
+    }
+
     // Toast message helper
     function showNotification(msg) {
       const toast = document.getElementById("toast-notification");
       toast.textContent = msg;
       toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3500);
+    }
+
+    // Payment method selector
+    function selectPayMethod(method) {
+      document.querySelectorAll(".pay-method-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("pay-content-upi").style.display = "none";
+      document.getElementById("pay-content-card").style.display = "none";
+      document.getElementById("pay-content-netbanking").style.display = "none";
+
+      if (method === "upi") {
+        document.getElementById("pay-tab-upi").classList.add("active");
+        document.getElementById("pay-content-upi").style.display = "block";
+        currentSelectedPayMethod = "UPI (Instant)";
+      } else if (method === "card") {
+        document.getElementById("pay-tab-card").classList.add("active");
+        document.getElementById("pay-content-card").style.display = "block";
+        currentSelectedPayMethod = "Credit/Debit Card";
+      } else if (method === "netbanking") {
+        document.getElementById("pay-tab-nb").classList.add("active");
+        document.getElementById("pay-content-netbanking").style.display = "block";
+        currentSelectedPayMethod = "NetBanking";
+      }
+    }
+
+    function setUpiApp(app) {
+      const vpa = document.getElementById("upi-vpa-input");
+      if (vpa) vpa.value = "user@" + app.toLowerCase().replace(/[^a-z]/g, "");
+      currentSelectedPayMethod = `UPI (${app})`;
+      showNotification(`Selected ${app} for &#8377;99 payment.`);
     }
 
     // Login performer
     function performLogin(userId) {
       try {
+        const eligibility = store.checkLoginEligibility(userId);
+
+        if (!eligibility.eligible) {
+          if (eligibility.reason === "PENDING_VERIFICATION") {
+            currentPendingUserId = userId;
+            document.getElementById("modal-pending-name").textContent = eligibility.user.name;
+            document.getElementById("modal-pending-email").textContent = eligibility.user.email;
+            openModal("modal-pending-review");
+            return;
+          }
+
+          if (eligibility.reason === "PAYMENT_REQUIRED") {
+            currentPendingUserId = userId;
+            document.getElementById("pay-user-name").textContent = eligibility.user.name;
+            document.getElementById("pay-user-email").textContent = eligibility.user.email;
+            openModal("modal-payment-gateway");
+            return;
+          }
+
+          if (eligibility.reason === "REJECTED") {
+            alert(`Application Not Approved:\n${eligibility.message}`);
+            return;
+          }
+
+          alert("Authentication Notice: " + eligibility.message);
+          return;
+        }
+
+        // User is fully verified and paid (or admin)
         const user = store.login(userId);
         const destination = user.role === "admin" ? "admin.html" : "index.html";
         const label = user.role === "admin" ? "Admin Console" : "Swapper Dashboard";
         showNotification(`✓ Access Granted: ${user.name}! Redirecting to ${label}...`);
         setTimeout(() => {
           window.location.href = destination;
-        }, 300);
+        }, 350);
       } catch (err) {
-        alert("Authentication failed: " + err.message);
+        alert("Authentication error: " + err.message);
       }
+    }
+
+    // Process the ₹99 payment
+    function processOnboardingFeePayment() {
+      if (!currentPendingUserId) return;
+
+      const btn = document.getElementById("btn-process-payment");
+      btn.textContent = "⏳ Processing ₹99 Payment via Gateway...";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        try {
+          const { user, payment } = store.recordOnboardingPayment(currentPendingUserId, {
+            method: currentSelectedPayMethod
+          });
+
+          // Log in user
+          store.login(user.id, { bypassChecks: true });
+
+          showNotification(`✓ Payment of ₹99 Successful (${payment.id})! 50 Welcome Credits Minted.`);
+          closeModal("modal-payment-gateway");
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 400);
+        } catch (err) {
+          alert("Payment processing error: " + err.message);
+          btn.textContent = "⚡ Pay ₹99 & Enter Platform →";
+          btn.disabled = false;
+        }
+      }, 600);
     }
 
     // Form handler
     function handleFormAuth(e) {
       e.preventDefault();
+      const isSignup = tabSignUp.classList.contains("active");
       const email = document.getElementById("auth-email").value.trim().toLowerCase();
+
+      if (isSignup) {
+        const name = document.getElementById("auth-name").value.trim() || "New Applicant";
+        const skillsText = document.getElementById("auth-skills") ? document.getElementById("auth-skills").value.trim() : "";
+        const skillsHave = skillsText ? skillsText.split(",").map((s, idx) => ({
+          skill_id: "sk_custom_" + idx,
+          name: s.trim(),
+          category: "tech",
+          level: 3
+        })) : [];
+
+        try {
+          const newUser = store.registerUser({
+            name,
+            email,
+            password: "password123",
+            skillsHave
+          });
+
+          showNotification(`✓ Application submitted for ${newUser.name}! Awaiting Admin Verification.`);
+          setMode("signin");
+          document.getElementById("auth-email").value = newUser.email;
+
+          // Open the pending review modal for feedback
+          currentPendingUserId = newUser.id;
+          document.getElementById("modal-pending-name").textContent = newUser.name;
+          document.getElementById("modal-pending-email").textContent = newUser.email;
+          setTimeout(() => {
+            openModal("modal-pending-review");
+          }, 400);
+
+        } catch (err) {
+          alert("Registration Error: " + err.message);
+        }
+        return;
+      }
+
+      // Sign in mode
       const existing = store.users.find(u => u.email.toLowerCase() === email);
       const userId = existing ? existing.id : "user_a";
       performLogin(userId);

@@ -284,6 +284,11 @@
             <span class="badge-sessions-red" id="admin-kyc-badge" style="display:inline-block;">1</span>
           </button>
 
+          <button class="admin-nav-tab" data-tab="tab-admin-payments" id="nav-btn-payments" role="tab">
+            <span>💳 ONBOARDING PAYMENTS (&#8377;99)</span>
+            <span class="badge-live-green" id="admin-payments-badge" style="background:#00ff66; color:#000;">4</span>
+          </button>
+
           <button class="admin-nav-tab" data-tab="tab-admin-disputes" id="nav-btn-disputes" role="tab">
             <span>DISPUTE ARBITRATION</span>
             <span class="badge-live-green" id="admin-disputes-badge" style="background:#ffffff; color:#000;">0</span>
@@ -325,6 +330,15 @@
 
         <!-- Global Platform Metrics KPI Grid -->
         <div class="admin-stats-grid">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-payments')" style="border: 3.5px solid #000; background: #e6ffed; cursor:pointer;" title="View Onboarding Payments Ledger">
+            <div class="admin-stat-label">
+              <span style="color:#000; font-weight:900;">Onboarding Revenue (&#8377;99)</span>
+              <span>💳</span>
+            </div>
+            <div class="admin-stat-value" id="kpi-onboarding-revenue" style="color:#00aa44;">&#8377;396</div>
+            <div class="admin-stat-subtext" id="kpi-onboarding-subtext" style="color:#000; font-weight:700;">4 Paid &bull; 1 Pending Payment</div>
+          </div>
+
           <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-ledger')" style="cursor:pointer;" title="View Ledger Audit">
             <div class="admin-stat-label">
               <span>Total Circulating Credits</span>
@@ -334,13 +348,13 @@
             <div class="admin-stat-subtext">Sum of all active swapper wallets</div>
           </div>
 
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-courses')" style="cursor:pointer;" title="View Educator Accounts">
+          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-kyc')" style="cursor:pointer;" title="Review KYC Queue">
             <div class="admin-stat-label">
-              <span>Verified Swapper Accounts</span>
-              <span>👥</span>
+              <span>Pending KYC Queue</span>
+              <span>⏳</span>
             </div>
-            <div class="admin-stat-value" id="kpi-active-users">6 USERS</div>
-            <div class="admin-stat-subtext">Screened &amp; KYC Approved Members</div>
+            <div class="admin-stat-value" id="kpi-pending-reviews" style="color:#ff9900;">1 USER</div>
+            <div class="admin-stat-subtext">Awaiting admin identity curation</div>
           </div>
 
           <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-courses')" style="border: 3.5px solid #000; background: #fffde6; cursor:pointer;" title="Review Video Upload Approvals">
@@ -350,15 +364,6 @@
             </div>
             <div class="admin-stat-value" id="kpi-pending-courses" style="color:#ff2d55;">1 PENDING</div>
             <div class="admin-stat-subtext" style="color:#000; font-weight:700;">Awaiting admin video approval</div>
-          </div>
-
-          <div class="admin-stat-card" onclick="switchAdminTab('tab-admin-kyc')" style="cursor:pointer;" title="Review KYC Queue">
-            <div class="admin-stat-label">
-              <span>Pending KYC Queue</span>
-              <span>⏳</span>
-            </div>
-            <div class="admin-stat-value" id="kpi-pending-reviews" style="color:#ff9900;">1 USER</div>
-            <div class="admin-stat-subtext">Awaiting admin identity curation</div>
           </div>
         </div>
 
@@ -469,8 +474,18 @@
             </div>
 
             <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
-              Users pay a one-time &#8377;499 screening fee upon signup. Approving a user mintage issues 50 Welcome Credits and grants them full marketplace trading permissions.
+              All applicant identities are verified by the Administrator prior to login. Once verified, applicants complete their one-time <strong>&#8377;99 onboarding fee</strong> at login time, unlocking 50 Welcome Credits and platform trading permissions.
             </p>
+
+            <!-- KYC Subtabs -->
+            <div style="display:flex; gap:10px; margin-bottom:18px; border-bottom:3px solid #000; padding-bottom:10px;">
+              <button class="btn-admin-action btn-admin-approve" id="kyc-subtab-btn-pending" onclick="switchKycSubTab('pending')">
+                Pending Applicants (<span id="kyc-subtab-count-pending">1</span>)
+              </button>
+              <button class="btn-admin-action btn-admin-neutral" id="kyc-subtab-btn-all" onclick="switchKycSubTab('all')">
+                All Verified Members (<span id="kyc-subtab-count-all">5</span>)
+              </button>
+            </div>
 
             <div id="admin-kyc-list-container">
               <!-- Rendered dynamically -->
@@ -479,7 +494,44 @@
         </div>
 
         <!-- -------------------------------------------------------------
-             PANE 4: DISPUTE ARBITRATION DESK
+             PANE 4: ONBOARDING PAYMENTS & REVENUE LEDGER (₹99)
+             ------------------------------------------------------------- -->
+        <div class="admin-section-pane" id="tab-admin-payments">
+          <div class="admin-panel-card">
+            <div class="admin-panel-header">
+              <div class="admin-panel-title">
+                <span>💳 &#8377;99 Onboarding Fee Ledger &amp; Revenue Analytics</span>
+              </div>
+              <button class="btn-admin-action btn-admin-approve" onclick="downloadPaymentsCSV()">
+                📥 Export Payments CSV
+              </button>
+            </div>
+
+            <p style="font-size:0.86rem; color:#555555; margin-bottom:18px;">
+              All verified users complete a one-time <strong>&#8377;99 platform screening fee</strong> at login time. Revenue is tracked here with immutable transaction reference IDs, settlement timestamps, and payment gateway methods.
+            </p>
+
+            <!-- Revenue Summary Banner -->
+            <div style="background:#000000; color:#ffffff; padding:16px 20px; border:3px solid #000; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; font-weight:800;">Total Onboarding Revenue Collected</div>
+                <div style="font-family:var(--font-heading); font-size:1.6rem; font-weight:900; color:#00ff66;" id="payments-total-revenue">&#8377;396.00</div>
+              </div>
+              <div style="display:flex; gap:16px; font-size:0.85rem; flex-wrap:wrap;">
+                <div><strong>Verified Paid Members:</strong> <span id="payments-paid-count" style="color:#00ff66; font-weight:900;">4</span></div>
+                <div><strong>Awaiting Login Payment:</strong> <span id="payments-pending-count" style="color:#ffe600; font-weight:900;">1</span></div>
+                <div><strong>Fee Per Swapper:</strong> <span style="font-weight:900;">&#8377;99.00</span></div>
+              </div>
+            </div>
+
+            <div id="admin-payments-list-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+             PANE 5: DISPUTE ARBITRATION DESK
              ------------------------------------------------------------- -->
         <div class="admin-section-pane" id="tab-admin-disputes">
           <div class="admin-panel-card">
@@ -503,7 +555,7 @@
         </div>
 
         <!-- -------------------------------------------------------------
-             PANE 5: DOUBLE-ENTRY MATHEMATICAL AUDIT
+             PANE 6: DOUBLE-ENTRY MATHEMATICAL AUDIT
              ------------------------------------------------------------- -->
         <div class="admin-section-pane" id="tab-admin-ledger">
           <div class="admin-panel-card">
@@ -543,7 +595,7 @@
   </div>
 
   <!-- =========================================================
-       MODAL: FULL MATHEMATICAL AUDIT & PROOF OF SOLVENCY
+       MODAL 1: FULL MATHEMATICAL AUDIT & PROOF OF SOLVENCY
        ========================================================= -->
   <div class="modal-overlay" id="modal-reconciliation" role="dialog" aria-modal="true" aria-labelledby="modal-recon-title">
     <div class="modal-card neo-card" style="max-width: 780px;">
@@ -599,6 +651,34 @@
     </div>
   </div>
 
+  <!-- =========================================================
+       MODAL 2: ONBOARDING PAYMENT OFFICIAL RECEIPT
+       ========================================================= -->
+  <div class="modal-overlay" id="modal-payment-receipt" role="dialog" aria-modal="true" aria-labelledby="modal-receipt-title">
+    <div class="modal-card neo-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="tag tag-green" style="font-weight:900; background:#00ff66; color:#000;">VERIFIED RECEIPT</span>
+          <h3 id="modal-receipt-title" style="margin:0; font-size:1.15rem;">ONBOARDING FEE INVOICE (&#8377;99)</h3>
+        </div>
+        <button class="modal-close" id="modal-receipt-close" aria-label="Close modal" onclick="closePaymentReceiptModal()">✕</button>
+      </div>
+
+      <div class="modal-body" id="receipt-modal-body" style="padding:20px;">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:2px solid #000; padding-top:12px;">
+        <button class="btn-admin-action btn-admin-neutral" onclick="window.print()">
+          🖨️ Print Receipt
+        </button>
+        <button class="btn-admin-action btn-admin-approve" onclick="closePaymentReceiptModal()">
+          Close Invoice
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -615,7 +695,6 @@
       
       // Auto-set admin if not logged in or in test mode
       if (!currentUser || currentUser.role !== "admin") {
-        // Automatically switch session to user_admin for direct admin.html access
         store.login("user_admin");
       }
 
@@ -682,6 +761,25 @@
       }
     }
 
+    // Current KYC SubTab ('pending', 'all')
+    let currentKycSubTab = 'pending';
+
+    function switchKycSubTab(tabKey) {
+      currentKycSubTab = tabKey;
+      const btnPending = document.getElementById("kyc-subtab-btn-pending");
+      const btnAll = document.getElementById("kyc-subtab-btn-all");
+
+      if (btnPending) {
+        btnPending.className = tabKey === 'pending' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
+      }
+      if (btnAll) {
+        btnAll.className = tabKey === 'all' ? 'btn-admin-action btn-admin-approve' : 'btn-admin-action btn-admin-neutral';
+      }
+
+      const pendingUsers = admin.getPendingUsers();
+      renderKycList(pendingUsers);
+    }
+
     // 3. Render Views
     function renderAllAdminViews() {
       const pendingUsers = admin.getPendingUsers();
@@ -689,8 +787,9 @@
       const approvedCourses = store.getApprovedCourses();
       const disputedSessions = admin.getDisputedSessions();
       const txs = store.transactions;
+      const revenueStats = store.getRevenueMetrics();
 
-      // Update KPI Cards
+      // Update Circulating Credits
       let totalCirculating = 0;
       store.users.forEach(u => {
         totalCirculating += ledger.getBalance(u.id);
@@ -699,8 +798,21 @@
       const elCirculating = document.getElementById("kpi-circulating-credits");
       if (elCirculating) elCirculating.textContent = `${totalCirculating} CR`;
 
-      const elUsers = document.getElementById("kpi-active-users");
-      if (elUsers) elUsers.textContent = `${store.users.length} USERS`;
+      // Update Onboarding Revenue KPI
+      const elRevenue = document.getElementById("kpi-onboarding-revenue");
+      if (elRevenue) elRevenue.textContent = `₹${revenueStats.totalRevenue}`;
+
+      const elRevenueSub = document.getElementById("kpi-onboarding-subtext");
+      if (elRevenueSub) elRevenueSub.textContent = `${revenueStats.paidCount} Paid • ${revenueStats.pendingPaymentCount} Pending Payment`;
+
+      const elPayTotal = document.getElementById("payments-total-revenue");
+      if (elPayTotal) elPayTotal.textContent = `₹${revenueStats.totalRevenue}.00`;
+
+      const elPayPaid = document.getElementById("payments-paid-count");
+      if (elPayPaid) elPayPaid.textContent = revenueStats.paidCount;
+
+      const elPayPending = document.getElementById("payments-pending-count");
+      if (elPayPending) elPayPending.textContent = revenueStats.pendingPaymentCount;
 
       const elPendingKyc = document.getElementById("kpi-pending-reviews");
       if (elPendingKyc) elPendingKyc.textContent = `${pendingUsers.length} USER${pendingUsers.length === 1 ? '' : 'S'}`;
@@ -715,6 +827,11 @@
       if (kycBadge) {
         kycBadge.textContent = pendingUsers.length;
         kycBadge.style.display = pendingUsers.length > 0 ? "inline-block" : "none";
+      }
+
+      const paymentsBadge = document.getElementById("admin-payments-badge");
+      if (paymentsBadge) {
+        paymentsBadge.textContent = revenueStats.paidCount;
       }
 
       const coursesBadge = document.getElementById("admin-courses-badge");
@@ -742,28 +859,28 @@
       if (elSubPub) elSubPub.textContent = approvedCourses.length;
       if (elSubCreat) elSubCreat.textContent = store.users.length;
 
+      const elKycSubPending = document.getElementById("kyc-subtab-count-pending");
+      const elKycSubAll = document.getElementById("kyc-subtab-count-all");
+      if (elKycSubPending) elKycSubPending.textContent = pendingUsers.length;
+      if (elKycSubAll) elKycSubAll.textContent = store.users.filter(u => u.role !== 'admin').length;
+
       const disputesBadge = document.getElementById("admin-disputes-badge");
       if (disputesBadge) {
         disputesBadge.textContent = disputedSessions.length;
       }
 
-      // Render KYC list
+      // Render Sub-Views
       renderKycList(pendingUsers);
+      renderPaymentsList();
 
-      // Render Courses list
       if (currentVideoSubTab === 'creators') {
         renderEducatorsTable();
       } else {
         renderCoursesList();
       }
 
-      // Render Disputes list
       renderDisputesList(disputedSessions);
-
-      // Render Ledger Table
       renderLedgerTable(txs);
-
-      // Render Overview Trays
       renderOverviewTrays(pendingUsers, disputedSessions, pendingCourses);
     }
 
@@ -771,42 +888,294 @@
       const container = document.getElementById("admin-kyc-list-container");
       if (!container) return;
 
-      if (pendingUsers.length === 0) {
+      if (currentKycSubTab === 'pending') {
+        if (pendingUsers.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
+              <div style="font-size:2rem; margin-bottom:8px;">✓</div>
+              <div style="font-weight:800; font-size:1rem;">All User Applications Reviewed</div>
+              <div style="font-size:0.8rem; margin-top:4px;">No members currently waiting in the KYC screening queue.</div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = pendingUsers.map(user => `
+          <div class="admin-review-row" style="border-left: 6px solid #ffe600;">
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:800; font-size:1.05rem; color:#000;">
+                ${user.name}
+              </div>
+              <div style="font-size:0.82rem; color:#555555; margin-top:3px;">
+                <strong>Email:</strong> ${user.email} &bull; 
+                <strong>Fee:</strong> &#8377;99 (Payable post-verification at login) &bull; 
+                <strong>KYC:</strong> <span class="badge-kyc-pill badge-kyc-pending">PENDING ADMIN REVIEW</span>
+              </div>
+              <div style="font-size:0.75rem; color:#666666; margin-top:3px;">
+                Skills Offered: ${user.skills_have ? user.skills_have.map(s => s.name).join(", ") : "General declaration"}
+              </div>
+            </div>
+            <div class="admin-actions-group">
+              <button class="btn-admin-action btn-admin-approve" onclick="approveUser('${user.id}')">
+                ✓ Verify &amp; Approve Applicant
+              </button>
+              <button class="btn-admin-action btn-admin-reject" onclick="rejectUser('${user.id}')">
+                ✕ Reject Application
+              </button>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        // All members view
+        const allSwappers = store.users.filter(u => u.role !== 'admin');
+        container.innerHTML = `
+          <div style="overflow-x:auto;">
+            <table class="admin-ledger-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Email</th>
+                  <th>Admin Verification</th>
+                  <th>&#8377;99 Onboarding Fee</th>
+                  <th>Credits Balance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${allSwappers.map(u => {
+                  const isVerified = u.verified_status === 'VERIFIED';
+                  const isPaid = u.fee_status === 'PAID';
+                  const bal = ledger.getBalance(u.id);
+
+                  return `
+                    <tr>
+                      <td><strong>${u.name}</strong></td>
+                      <td style="font-family:var(--font-mono); font-size:0.8rem;">${u.email}</td>
+                      <td>
+                        <span class="badge-kyc-pill ${isVerified ? 'badge-kyc-verified' : 'badge-kyc-pending'}">
+                          ${isVerified ? '✓ VERIFIED' : u.verified_status}
+                        </span>
+                      </td>
+                      <td>
+                        ${isPaid ? `
+                          <span style="background:#00ff66; color:#000; font-weight:900; padding:2px 6px; border:1.5px solid #000; font-size:0.75rem;">
+                            ✓ &#8377;99 PAID (${u.payment_ref || 'SETTLED'})
+                          </span>
+                        ` : isVerified ? `
+                          <span style="background:#ffe600; color:#000; font-weight:900; padding:2px 6px; border:1.5px solid #000; font-size:0.75rem;">
+                            ⏳ &#8377;99 PENDING AT LOGIN
+                          </span>
+                        ` : `
+                          <span style="background:#e5e7eb; color:#555; font-weight:700; padding:2px 6px; font-size:0.75rem;">
+                            Unpaid (In Review)
+                          </span>
+                        `}
+                      </td>
+                      <td style="font-family:var(--font-mono); font-weight:900;">${bal} CR</td>
+                      <td>
+                        ${!isVerified ? `
+                          <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">
+                            Approve
+                          </button>
+                        ` : isPaid && u.payment_ref ? `
+                          <button class="btn-admin-action btn-admin-neutral" style="padding:4px 8px; font-size:0.72rem;" onclick="viewPaymentReceiptModal('${u.payment_ref}')">
+                            📄 Receipt
+                          </button>
+                        ` : `
+                          <span style="font-size:0.72rem; color:#666;">Verified</span>
+                        `}
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    }
+
+    function renderPaymentsList() {
+      const container = document.getElementById("admin-payments-list-container");
+      if (!container) return;
+
+      const payments = store.getOnboardingPayments();
+
+      if (payments.length === 0) {
         container.innerHTML = `
           <div style="text-align:center; padding:36px; color:#666666; background:#faf9f5; border:2px dashed #999;">
-            <div style="font-size:2rem; margin-bottom:8px;">✓</div>
-            <div style="font-weight:800; font-size:1rem;">All User Applications Reviewed</div>
-            <div style="font-size:0.8rem; margin-top:4px;">No members currently waiting in the KYC screening queue.</div>
+            <div style="font-size:2rem; margin-bottom:8px;">💳</div>
+            <div style="font-weight:800; font-size:1rem;">Zero Onboarding Payments Recorded</div>
+            <div style="font-size:0.8rem; margin-top:4px;">When verified users pay &#8377;99 upon login, transactions appear here.</div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = pendingUsers.map(user => `
-        <div class="admin-review-row">
-          <div>
-            <div style="font-family:var(--font-heading); font-weight:800; font-size:1.05rem; color:#000;">
-              ${user.name}
+      container.innerHTML = `
+        <div style="overflow-x:auto;">
+          <table class="admin-ledger-table">
+            <thead>
+              <tr>
+                <th>Payment Reference</th>
+                <th>Member Name</th>
+                <th>Email</th>
+                <th>Amount</th>
+                <th>Payment Gateway Method</th>
+                <th>Settlement Timestamp</th>
+                <th>Audit Status</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${payments.map(p => {
+                const dateStr = new Date(p.created_at).toLocaleString([], {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+
+                return `
+                  <tr>
+                    <td><span class="mono" style="font-weight:800; font-size:0.82rem; background:#fffde6; padding:2px 6px; border:1px solid #000;">${p.id}</span></td>
+                    <td><strong>${p.user_name}</strong></td>
+                    <td class="mono" style="font-size:0.8rem;">${p.user_email}</td>
+                    <td style="font-weight:900; color:#00aa44; font-size:0.95rem;">&#8377;${p.amount || 99}.00</td>
+                    <td><span style="background:#e5e7eb; padding:2px 6px; font-size:0.75rem; font-weight:800;">${p.method || 'UPI'}</span></td>
+                    <td style="font-size:0.78rem;">${dateStr}</td>
+                    <td><span style="color:#00aa44; font-weight:900; font-size:0.75rem; background:#e6ffed; padding:2px 6px; border:1px solid #00aa44;">✓ ${p.status || 'SETTLED'}</span></td>
+                    <td>
+                      <button class="btn-admin-action btn-admin-neutral" style="padding:4px 8px; font-size:0.72rem;" onclick="viewPaymentReceiptModal('${p.id}')">
+                        📄 Receipt
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function viewPaymentReceiptModal(payId) {
+      const payments = store.getOnboardingPayments();
+      let payment = payments.find(p => p.id === payId);
+
+      if (!payment) {
+        // Look up by user payment ref
+        const user = store.users.find(u => u.payment_ref === payId || u.id === payId);
+        if (user && user.payment_ref) {
+          payment = payments.find(p => p.id === user.payment_ref) || {
+            id: user.payment_ref,
+            user_name: user.name,
+            user_email: user.email,
+            amount: user.fee_amount || 99,
+            method: user.payment_method || "UPI (Google Pay)",
+            created_at: user.fee_paid_at || new Date(),
+            status: "SETTLED"
+          };
+        }
+      }
+
+      if (!payment) {
+        showToast("Payment record not found.", "error");
+        return;
+      }
+
+      const modalBody = document.getElementById("receipt-modal-body");
+      if (!modalBody) return;
+
+      const dateStr = new Date(payment.created_at).toLocaleString();
+
+      modalBody.innerHTML = `
+        <div style="background:#f9f9f5; border:3px solid #000; padding:18px; box-shadow:4px 4px 0px #000;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px dashed #000; padding-bottom:12px; margin-bottom:14px;">
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:900; font-size:1.15rem;">SKILL BADLU PLATFORM</div>
+              <div style="font-size:0.74rem; color:#666;">Peer-to-Peer Double Entry Credit Ledger &bull; Anti-Sybil Access Gateway</div>
             </div>
-            <div style="font-size:0.82rem; color:#555555; margin-top:3px;">
-              <strong>Email:</strong> ${user.email} &bull; 
-              <strong>Fee:</strong> &#8377;499 PAID &bull; 
-              <strong>KYC:</strong> <span class="badge-kyc-pill badge-kyc-pending">${user.kyc_status}</span>
-            </div>
-            <div style="font-size:0.75rem; color:#666666; margin-top:3px;">
-              Skills Offered: ${user.skills_have.map(s => s.name).join(", ") || "General declaration"}
+            <div style="text-align:right;">
+              <span style="background:#00ff66; font-weight:900; padding:2px 8px; border:1.5px solid #000; font-size:0.75rem;">PAID &bull; &#8377;${payment.amount || 99}.00</span>
+              <div class="mono" style="font-size:0.7rem; color:#444; margin-top:4px;">REF: ${payment.id}</div>
             </div>
           </div>
-          <div class="admin-actions-group">
-            <button class="btn-admin-action btn-admin-approve" onclick="approveUser('${user.id}')">
-              ✓ Approve &amp; Mint 50 CR
-            </button>
-            <button class="btn-admin-action btn-admin-reject" onclick="rejectUser('${user.id}')">
-              ✕ Reject &amp; Refund Fee
-            </button>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.82rem; margin-bottom:14px;">
+            <div>
+              <div style="color:#666; font-size:0.72rem; text-transform:uppercase; font-weight:800;">Billed To Swapper:</div>
+              <div style="font-weight:900; font-size:0.95rem;">${payment.user_name}</div>
+              <div class="mono" style="color:#444;">${payment.user_email}</div>
+            </div>
+            <div>
+              <div style="color:#666; font-size:0.72rem; text-transform:uppercase; font-weight:800;">Payment Details:</div>
+              <div><strong>Gateway Method:</strong> ${payment.method}</div>
+              <div><strong>Date &amp; Time:</strong> ${dateStr}</div>
+              <div><strong>Admin Verification:</strong> <span style="color:#00aa44; font-weight:800;">✓ APPROVED</span></div>
+            </div>
+          </div>
+
+          <table style="width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:14px; background:#ffffff; border:1.5px solid #000;">
+            <thead>
+              <tr style="background:#000; color:#fff;">
+                <th style="padding:6px 10px; text-align:left;">Description</th>
+                <th style="padding:6px 10px; text-align:right;">Rate</th>
+                <th style="padding:6px 10px; text-align:right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:6px 10px; border-bottom:1px solid #ddd;">Pre-Login Identity Curation &amp; Onboarding</td>
+                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd;">&#8377;99.00</td>
+                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd; font-weight:800;">&#8377;99.00</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 10px; border-bottom:1px solid #ddd;">50 Welcome Platform Credits Grant</td>
+                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd;">FREE</td>
+                <td style="padding:6px 10px; text-align:right; border-bottom:1px solid #ddd; color:#00aa44; font-weight:800;">+50 CR</td>
+              </tr>
+              <tr style="background:#f4f4f0; font-weight:900;">
+                <td colspan="2" style="padding:8px 10px; text-align:right;">TOTAL PAID:</td>
+                <td style="padding:8px 10px; text-align:right; color:#000; font-size:0.95rem;">&#8377;${payment.amount || 99}.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mono" style="font-size:0.68rem; color:#666; text-align:center;">
+            Cryptographic Integrity Proof: SHA-256 Verified // Tamper-Proof Ledger State // Skill Badlu
           </div>
         </div>
-      `).join("");
+      `;
+
+      const modal = document.getElementById("modal-payment-receipt");
+      if (modal) modal.classList.add("active");
+    }
+
+    function closePaymentReceiptModal() {
+      const modal = document.getElementById("modal-payment-receipt");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function downloadPaymentsCSV() {
+      const payments = store.getOnboardingPayments();
+      if (payments.length === 0) {
+        showToast("No payments available to export.", "info");
+        return;
+      }
+
+      let csv = "Transaction_ID,User_Name,User_Email,Amount_INR,Payment_Method,Status,Settled_At\n";
+      payments.forEach(p => {
+        csv += `"${p.id}","${p.user_name}","${p.user_email}",${p.amount || 99},"${p.method}","${p.status}","${new Date(p.created_at).toISOString()}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `skillbadlu_onboarding_payments_${Date.now()}.csv`;
+      link.click();
+      showToast("✓ Onboarding payments CSV exported successfully!", "success");
     }
 
     function renderCoursesList() {
@@ -1040,7 +1409,7 @@
           pContainer.innerHTML = pendingUsers.slice(0, 2).map(u => `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.85rem;">
               <span><strong>${u.name}</strong> (${u.email})</span>
-              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">Approve</button>
+              <button class="btn-admin-action btn-admin-approve" style="padding:4px 8px; font-size:0.72rem;" onclick="approveUser('${u.id}')">Verify</button>
             </div>
           `).join("");
         }
@@ -1086,7 +1455,7 @@
     function approveUser(userId) {
       try {
         admin.approveUser(userId);
-        showToast(`✓ User ${userId} verified & 50 Welcome Credits minted!`, "success");
+        showToast(`✓ User ${userId} VERIFIED! Applicant can now pay ₹99 at login to enter.`, "success");
       } catch (e) {
         showToast(e.message, "error");
       }
@@ -1094,8 +1463,9 @@
 
     function rejectUser(userId) {
       try {
-        admin.rejectUser(userId, "Credentials incomplete.");
-        showToast(`User application rejected and &#8377;499 refunded.`, "info");
+        const res = admin.rejectUser(userId, "Credentials could not be verified by Admin.");
+        const refundNote = res.refunded ? " (₹99 refunded)" : "";
+        showToast(`User application rejected${refundNote}.`, "info");
       } catch (e) {
         showToast(e.message, "error");
       }
