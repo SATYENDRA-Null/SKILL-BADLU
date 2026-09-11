@@ -193,32 +193,65 @@
   background-color: #f7f6f0;
 }
 
+/* Sovereign Admin Header (Row 1: Logo & Profile) */
+.admin-top-header {
+  background-color: #000000;
+  border-bottom: 3.5px solid #000000;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Sovereign Admin Navigation Bar (Row 2: Dedicated In-Line Tabs) */
+.admin-nav-bar-row {
+  background-color: #111111;
+  border-bottom: 3.5px solid #000000;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.admin-nav-bar-row::-webkit-scrollbar {
+  display: none;
+}
+
 /* Tab switcher for admin console */
 .admin-nav-tab {
   background-color: #ffffff;
   color: #000000;
   border: 2.5px solid #000000;
-  box-shadow: 3px 3px 0px #ffffff;
-  font-family: var(--font-heading, sans-serif);
+  box-shadow: 3px 3px 0px #000000;
+  font-family: var(--font-heading, "Plus Jakarta Sans", sans-serif);
   font-weight: 900;
-  font-size: 0.82rem;
-  padding: 8px 16px;
+  font-size: 0.8rem;
+  padding: 7px 14px;
   cursor: pointer;
   text-transform: uppercase;
-  transition: background-color 0.15s ease;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   user-select: none;
+  transition: all 0.1s ease;
+  flex-shrink: 0;
 }
 
 .admin-nav-tab:hover {
   background-color: #ffe600;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000000;
 }
 
 .admin-nav-tab.active {
   background-color: #ffe600;
-  box-shadow: 3px 3px 0px #ffffff;
+  color: #000000;
+  box-shadow: 3px 3px 0px #000000;
   border-color: #000000;
 }
 

@@ -28,10 +28,9 @@
       <div class="app-window-frame">
         <!-- =========================================================
            1. TOP BLACK BAR (ADMIN CONSOLE ONLY):
-           Logo 'SB SKILL BADLU' + Yellow 'ADMIN PORTAL' Tag
-           Admin Navigation: ADMIN DESK | VIDEO UPLOAD APPROVALS | USER KYC QUEUE | DISPUTES | LEDGER AUDIT
+           Row 1: Logo 'SB SKILL BADLU' + Yellow 'ADMIN PORTAL' Tag & Admin User Profile Pill + SIGN OUT
            ========================================================= -->
-        <header class="top-black-bar">
+        <header class="top-black-bar admin-top-header">
           <a
             href="admin.html"
             class="brand-group"
@@ -43,106 +42,11 @@
             <span class="admin-brand-tag">ADMIN PORTAL</span>
           </a>
 
-          <!-- ONLY ADMIN TABS -->
-          <nav
-            class="nav-tabs-row"
-            id="admin-platform-nav"
-            role="tablist"
-            aria-label="Admin Navigation"
-          >
-            <button
-              class="admin-nav-tab active"
-              data-tab="tab-admin-overview"
-              id="nav-btn-overview"
-              role="tab"
-            >
-              <span>ADMIN DESK</span>
-            </button>
-
-            <button
-              class="admin-nav-tab"
-              data-tab="tab-admin-courses"
-              id="nav-btn-courses"
-              role="tab"
-            >
-              <span>📹 VIDEO UPLOAD APPROVALS</span>
-              <span
-                class="badge-sessions-red"
-                id="admin-courses-badge"
-                style="display: inline-block"
-                >1</span
-              >
-            </button>
-
-            <button
-              class="admin-nav-tab"
-              data-tab="tab-admin-kyc"
-              id="nav-btn-kyc"
-              role="tab"
-            >
-              <span>USER KYC QUEUE</span>
-              <span
-                class="badge-sessions-red"
-                id="admin-kyc-badge"
-                style="display: inline-block"
-                >1</span
-              >
-            </button>
-
-            <button
-              class="admin-nav-tab"
-              data-tab="tab-admin-payments"
-              id="nav-btn-payments"
-              role="tab"
-            >
-              <span>💳 ONBOARDING PAYMENTS (&#8377;99)</span>
-              <span
-                class="badge-live-green"
-                id="admin-payments-badge"
-                style="background: #00ff66; color: #000"
-                >4</span
-              >
-            </button>
-
-            <button
-              class="admin-nav-tab"
-              data-tab="tab-admin-disputes"
-              id="nav-btn-disputes"
-              role="tab"
-            >
-              <span>DISPUTE ARBITRATION</span>
-              <span
-                class="badge-live-green"
-                id="admin-disputes-badge"
-                style="background: #ffffff; color: #000"
-                >0</span
-              >
-            </button>
-
-            <button
-              class="admin-nav-tab"
-              data-tab="tab-admin-ledger"
-              id="nav-btn-audit"
-              role="tab"
-            >
-              <span>LEDGER AUDIT</span>
-            </button>
-          </nav>
-        </header>
-
-        <!-- =========================================================
-           2. BLACK STATUS BAR:
-           - Left: Platform Cryptographic Hash
-           - Right: Admin profile ('System Administrator' [ADMIN]) + SIGN OUT
-           ========================================================= -->
-        <section class="black-status-bar">
-          <div class="status-bar-left"></div>
-
+          <!-- Top Right: Admin Profile & Sign Out -->
           <div
             class="status-bar-right"
             style="display: flex; align-items: center; gap: 12px"
           >
-            <!-- Admin User Profile Pill -->
             <div class="auth-user-pill" title="Administrator account">
               <div
                 class="auth-avatar-box"
@@ -158,7 +62,6 @@
               >
             </div>
 
-            <!-- Sign Out Button -->
             <button
               class="btn-signout-neo"
               id="admin-btn-signout"
@@ -168,7 +71,96 @@
               SIGN OUT
             </button>
           </div>
-        </section>
+        </header>
+
+        <!-- =========================================================
+           2. IN-LINE SOVEREIGN ADMIN NAVIGATION TABS BAR (ROW 2):
+           ADMIN DESK | VIDEO UPLOAD APPROVALS | USER KYC QUEUE | ONBOARDING PAYMENTS (₹99) | DISPUTES | LEDGER AUDIT
+           ========================================================= -->
+        <nav
+          class="admin-nav-bar-row"
+          id="admin-platform-nav"
+          role="tablist"
+          aria-label="Admin Navigation"
+        >
+          <button
+            class="admin-nav-tab active"
+            data-tab="tab-admin-overview"
+            id="nav-btn-overview"
+            role="tab"
+          >
+            <span>ADMIN DESK</span>
+          </button>
+
+          <button
+            class="admin-nav-tab"
+            data-tab="tab-admin-courses"
+            id="nav-btn-courses"
+            role="tab"
+          >
+            <span>📹 VIDEO UPLOAD APPROVALS</span>
+            <span
+              class="badge-sessions-red"
+              id="admin-courses-badge"
+              style="display: inline-block"
+              >1</span
+            >
+          </button>
+
+          <button
+            class="admin-nav-tab"
+            data-tab="tab-admin-kyc"
+            id="nav-btn-kyc"
+            role="tab"
+          >
+            <span>USER KYC QUEUE</span>
+            <span
+              class="badge-sessions-red"
+              id="admin-kyc-badge"
+              style="display: inline-block"
+              >1</span
+            >
+          </button>
+
+          <button
+            class="admin-nav-tab"
+            data-tab="tab-admin-payments"
+            id="nav-btn-payments"
+            role="tab"
+          >
+            <span>💳 ONBOARDING PAYMENTS (&#8377;99)</span>
+            <span
+              class="badge-live-green"
+              id="admin-payments-badge"
+              style="background: #00ff66; color: #000"
+              >4</span
+            >
+          </button>
+
+          <button
+            class="admin-nav-tab"
+            data-tab="tab-admin-disputes"
+            id="nav-btn-disputes"
+            role="tab"
+          >
+            <span>DISPUTE ARBITRATION</span>
+            <span
+              class="badge-live-green"
+              id="admin-disputes-badge"
+              style="background: #ffffff; color: #000"
+              >0</span
+            >
+          </button>
+
+          <button
+            class="admin-nav-tab"
+            data-tab="tab-admin-ledger"
+            id="nav-btn-audit"
+            role="tab"
+          >
+            <span>LEDGER AUDIT</span>
+          </button>
+        </nav>
 
         <!-- =========================================================
            3. MAIN ADMIN CONSOLE CONTENT AREA
