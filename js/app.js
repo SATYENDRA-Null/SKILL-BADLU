@@ -1041,9 +1041,9 @@ document.addEventListener("DOMContentLoaded", () => {
             `
                     : course.creator_id === currentUser.id
                       ? `
-              <a href="admin.html" target="_blank" class="neo-btn neo-btn-yellow" style="width:100%; text-align:center; text-decoration:none; display:block; padding:10px 0;">
-                ⚡ Open Admin Console to Approve →
-              </a>
+              <button class="neo-btn neo-btn-white" style="width:100%; cursor:not-allowed;" disabled>
+                ⏳ In Admin Review Queue
+              </button>
             `
                       : `
               <button class="neo-btn neo-btn-white" style="width:100%; cursor:not-allowed;" disabled>
