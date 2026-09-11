@@ -755,15 +755,70 @@ The local web server is active on port 8000:
 To execute test suites and verify system invariants in the PowerShell terminal:
 
 ```powershell
-# 1. Verify strict DOM & interface isolation across admin.html and index.html
+# 1. Start the Live Node.js Express Backend
+npm start
+
+# 2. Run the Full Backend API & Payment Gateway Test Suite (41/41 PASS)
+npm test
+
+# 3. Run the Client-Side Verification & Payment Test Suite (6/6 PASS)
+npm run test:client
+
+# 4. Verify strict DOM & interface isolation across admin.html and index.html
 python scripts/verify_isolation.py
 
-# 2. Audit all DOM element IDs and accessibility anchors
+# 5. Audit all DOM element IDs and accessibility anchors
 python scripts/check_ids.py
-
-# 3. Simulate and test Firebase / OAuth token revocation workflows
-python scripts/revoke_user_tokens.py --help
 ```
+
+---
+
+## 11. Backend Server & Payment Gateway Specification
+
+### 11.1 Backend Architecture Overview
+The backend server is implemented in **Node.js (Express)** with a file-backed JSON database engine (`server/data/db.js` / `server/data/db.json`), JWT authentication (`jsonwebtoken`), and secure password hashing (`bcryptjs`).
+
+```mermaid
+graph TD
+    Client[Browser / Frontend Client] -->|HTTP / JSON| Router[Express Server server/server.js]
+    Router -->|/api/auth/*| AuthRoutes[Auth Engine server/routes/auth.js]
+    Router -->|/api/payments/*| PaymentRoutes[Payment Gateway server/routes/payments.js]
+    Router -->|/api/admin/*| AdminRoutes[Admin Sovereign Desk server/routes/admin.js]
+    
+    AuthRoutes --> DB[(Persistent DB server/data/db.js)]
+    PaymentRoutes --> DB
+    AdminRoutes --> DB
+    
+    PaymentRoutes -->|Mint 50 Welcome Bonus| Ledger[(Double-Entry Ledger)]
+```
+
+### 11.2 API Endpoint Directory
+
+#### Authentication & Pre-Login Security Gates (`/api/auth`)
+| Method | Endpoint | Description | Status Codes |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Register new applicant (`status: PENDING_VERIFICATION`, `fee_status: UNPAID`) | `201 Created`, `400`, `409` |
+| `POST` | `/api/auth/login` | Dual-gate login check: validates admin approval (Gate 1) & ₹99 payment (Gate 2) | `200 OK`, `401`, `402 Payment Required`, `403 Forbidden` |
+| `GET` | `/api/auth/eligibility/:id` | Check verification and payment status without credentials | `200 OK`, `404` |
+| `GET` | `/api/auth/me` | Return authenticated user profile (JWT protected) | `200 OK`, `401`, `403` |
+
+#### ₹99 Onboarding Payment Gateway (`/api/payments`)
+| Method | Endpoint | Description | Status Codes |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/payments/create-order` | Create order for ₹99 with 18% GST calculation (₹83.90 Base + ₹15.10 GST) | `201 Created`, `400`, `403` |
+| `POST` | `/api/payments/verify-and-pay` | Verify payment, mark user `PAID`, mint 50 Welcome Credits, and issue JWT session | `200 OK`, `400`, `403` |
+| `GET` | `/api/payments/receipt/:id` | Generate itemized GST tax invoice receipt (SAC 998431) | `200 OK`, `404` |
+| `GET` | `/api/payments/history` | List payment transaction logs | `200 OK` |
+
+#### Sovereign Admin Control Desk (`/api/admin`)
+| Method | Endpoint | Description | Status Codes |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/admin/pending-users` | Retrieve queue of users awaiting sovereign KYC verification | `200 OK` |
+| `POST` | `/api/admin/approve-user/:id` | Verify applicant & advance state to `PENDING_PAYMENT` (₹99) | `200 OK`, `404` |
+| `POST` | `/api/admin/reject-user/:id` | Reject application with audit reason | `200 OK`, `404` |
+| `GET` | `/api/admin/revenue-metrics` | Aggregated ₹99 revenue analytics, gross counts, and payment breakdowns | `200 OK` |
+| `GET` | `/api/admin/onboarding-payments` | Audit trail of all settled onboarding fees | `200 OK` |
+| `GET` | `/api/admin/ledger` | Full immutable double-entry ledger audit trail | `200 OK` |
 
 ---
 *End of Technical Specification — Skill Badlu Architecture Documentation*

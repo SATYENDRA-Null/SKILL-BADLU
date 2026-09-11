@@ -99,42 +99,43 @@ SKILL-BADLU/
 
 ## ⚡ Quick Start
 
-Skill Badlu has **zero external package dependencies** for frontend runtime, meaning it runs directly in any modern browser!
+### 💻 Running the Live Backend Server & UI
 
-### 🌐 Live Demo & GitHub Pages
+#### Step 1: Install Dependencies
+```bash
+npm install
+```
 
-To view the live application directly in your browser without running any code locally:
-👉 **[Live App (GitHub Pages)](https://satyendra-null.github.io/SKILL-BADLU/)** *(Enable in GitHub Repo **Settings** > **Pages** > Select `main` branch > **Save**)*
+#### Step 2: Start the Backend Server (Express + Payment Gateway + Static Server)
+```bash
+npm start
+# or development mode with file watching:
+npm run dev
+```
+
+#### Step 3: Open in Browser
+- **Live Platform Portal:** [http://localhost:5000/index.html](http://localhost:5000/index.html)
+- **Login / Access Gateway (Admin KYC & ₹99 Fee):** [http://localhost:5000/login.html](http://localhost:5000/login.html)
+- **Admin Sovereign Console & Revenue Desk:** [http://localhost:5000/admin.html](http://localhost:5000/admin.html)
+- **Backend Health Check API:** [http://localhost:5000/api/health](http://localhost:5000/api/health)
 
 ---
 
-### 💻 Running Locally
+## 🧪 Automated Verification & Test Suites
 
-#### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/SATYENDRA-Null/SKILL-BADLU.git
-cd SKILL-BADLU
+# 1. Run full End-to-End Backend API & ₹99 Payment Gateway Test Suite (41 Tests)
+npm test
+
+# 2. Run Client-side Onboarding & Payment Tests
+npm run test:client
+
+# 3. Verify UI and DOM Role-Based Isolation Integrity
+python scripts/verify_isolation.py
+
+# 4. Verify DOM Element IDs and Link Integrity
+python scripts/check_ids.py
 ```
-
-#### Step 2: Start a Local Server
-Because the app uses ES6 JavaScript modules and assets, run a simple local web server in your terminal:
-
-**Using Python (Recommended):**
-```bash
-python -m http.server 8000
-```
-
-**Or using Node / npx:**
-```bash
-npx serve .
-```
-
-#### Step 3: Open in Browser *(while server is running)*
-> 💡 *Note: The `localhost` links below will only load after starting the local server in Step 2 above.*
-
-- **Main App & Marketplace:** [http://localhost:8000/index.html](http://localhost:8000/index.html) *(or view file: [`index.html`](./index.html))*
-- **Login / Role Selector:** [http://localhost:8000/login.html](http://localhost:8000/login.html) *(or view file: [`login.html`](./login.html))*
-- **Admin & Arbitration Portal:** [http://localhost:8000/admin.html](http://localhost:8000/admin.html) *(or view file: [`admin.html`](./admin.html))*
 
 ---
 

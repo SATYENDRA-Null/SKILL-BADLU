@@ -682,10 +682,11 @@
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Core Data Stores -->
+  <!-- Core Data Stores & API Client -->
   <script src="js/store.js"></script>
   <script src="js/ledger.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/api.js"></script>
 
   <!-- Admin Portal Script -->
   <script>
@@ -1452,7 +1453,14 @@
     }
 
     // 4. Admin Action Handlers
-    function approveUser(userId) {
+    async function approveUser(userId) {
+      if (window.SkillBadluAPI) {
+        try {
+          await SkillBadluAPI.admin.approveUser(userId);
+        } catch (e) {
+          console.warn("[Backend API approve notice]:", e.message);
+        }
+      }
       try {
         admin.approveUser(userId);
         showToast(`✓ User ${userId} VERIFIED! Applicant can now pay ₹99 at login to enter.`, "success");
@@ -1461,7 +1469,14 @@
       }
     }
 
-    function rejectUser(userId) {
+    async function rejectUser(userId) {
+      if (window.SkillBadluAPI) {
+        try {
+          await SkillBadluAPI.admin.rejectUser(userId, "Credentials could not be verified by Admin.");
+        } catch (e) {
+          console.warn("[Backend API reject notice]:", e.message);
+        }
+      }
       try {
         const res = admin.rejectUser(userId, "Credentials could not be verified by Admin.");
         const refundNote = res.refunded ? " (₹99 refunded)" : "";
